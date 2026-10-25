@@ -38,9 +38,21 @@ This repo is **public**. Never commit email addresses, Firebase admin credential
 
 ## Workflow
 
-- Work on a branch, push, and let Brady merge via pull request. `main` is what's live.
+**Sessions.** One chat per milestone (see `docs/STATUS.md`). Start a new chat when switching milestones or when a chat gets long or noisy. Cloud sessions are temporary: the repo is the memory, not the chat.
+
+- **Start:** Brady opens a new chat with this repo selected and says "Read CLAUDE.md and docs/STATUS.md, then let's do X." Confirm the current milestone and next step before building.
+- **End:** when Brady says "wrap up" (or work reaches a natural stop), update `docs/STATUS.md` (what changed, what's next, open questions), log new decisions in `docs/DECISIONS.md` and parked ideas in `docs/BACKLOG.md`, then commit and push. Nothing important should live only in a chat.
+
+**Git.**
+- Code changes: work on a branch, push, and Brady merges via pull request. Merging is Brady's review gate and, once the site exists, what deploys it. Explain each pull request in plain English.
 - Keep commits small, with plain-English messages.
-- **Before ending a session, update `docs/STATUS.md`** (what changed, what's next, open questions). Log any new decision in `docs/DECISIONS.md` and any parked idea in `docs/BACKLOG.md`.
+
+**Collaboration.**
+- Brainstorming is welcome anytime. Test each idea against the product principles, say so if it's weak, and park it in `BACKLOG.md` unless it changes the current work.
+- Recommend; don't survey. Settle one decision at a time.
+- Show design options as private claude.ai Artifact mockups (no family data) before writing app code.
+- Use subagents rarely, only for independent side work (research, parallel design drafts), and tell Brady when you do.
+- Brady is learning: explain in depth when asked, otherwise keep it brief.
 - Keep this file short. It's a map, not a manual.
 
 ## Skills
@@ -48,3 +60,4 @@ This repo is **public**. Never commit email addresses, Firebase admin credential
 - **ui-ux-pro-max** (`.claude/skills/ui-ux-pro-max/`): searchable design reference (styles, palettes, fonts, UX rules). Run from the repo root:
   `python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<query>" --domain <domain>`
   Treat results as reference, not authority. Its defaults lean toward generic SaaS/landing-page patterns; the design direction Brady chooses wins.
+- **writing-quality** (built into Claude Code here): use it for user-facing app copy to avoid AI-sounding text.
