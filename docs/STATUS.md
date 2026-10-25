@@ -6,10 +6,21 @@ Update this at the end of every session. Keep it short.
 
 ## Where things stand
 
-- **M1 done (provisional):** snow-globe home plus "Christmas morning" list pages. Starting tokens and known gaps are in `docs/DESIGN.md`; mockups and private family notes are on the canvas linked there.
-- **M2 done:** live at https://bgs3jc.github.io/christmas-list/. The Vite + React + TypeScript app shows a themed "coming soon" gift tag (behind the `comingSoon` flag). Tokens live in `src/theme/theme.css`. Every push to `main` builds and deploys; a failed build doesn't deploy.
-- **Next milestone:** M3 Clickable prototype. Redesign the shopping page first.
-- **Lesson from M1:** round one was generic because it skipped family input and the design skill. `CLAUDE.md` now sets the bar.
+- **M1 and M2 done.** Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`.
+- **M3 in progress: first clickable prototype is live.** It runs on browser storage with made-up sample data. A "Viewing as" bar at the top stands in for sign-in until M4.
+  - **My list:** Brady's sketch. Two big buttons: "Gimme, gimme, gimme" (something specific; paste one link or a whole list) and "Maybe an idea…" (a store, brand or kind of thing). Reorder with arrows, star top picks, edit or remove. No claims are shown.
+  - **Shopping for [person]:** what's new since you last looked, still open, their hints (several gifts can go under each), taken care of, not on their list (tree or stocking), and Overheard ideas. "I'll get it", "Someone else", and a change dialog for who, how far along and price.
+  - **Home:** sleeps until Christmas, plus a snow globe per person with their gift pile.
+  - **Naughty/Nice tag:** set by someone else, shown on your own list.
+  - Two browser tabs as two people stay in sync, a preview of M4's live updates.
+- **Design direction changed** to "quiet paper, one snow globe" (see `DESIGN.md`, `DECISIONS.md`). Mockups are on the canvas linked in `DESIGN.md`, rounds 4 and 5.
+
+## Next steps
+
+1. Brady clicks through the prototype as each person and notes what's off.
+2. Redesign the list rows: gather two or three professional sites that show lists cleanly and borrow from them. Rows live in one style file (`src/shared/ui/List.module.css`), so this is a contained change.
+3. Brady sketches the shopping page the way he sketched "My list", if the current one doesn't feel right.
+4. Tidy wording and form fields from his notes, then call M3 done and start M4 (Firebase + sign-in).
 
 ## Milestones to v1
 
@@ -27,6 +38,5 @@ One chat each. M1–M3 are firm; the order and scope after that can change as we
 ## Open questions
 
 - Is April's @me.com address tied to a Google account? (Doesn't block anything; email-link sign-in works either way.)
-- App name: undecided.
-- Shopping page layout is hard to follow; redesign it before building it in M3.
-- Page links in M3: GitHub Pages can't route paths like `/list/allie`, so use `#/list/allie` style links (simplest) unless there's a reason not to.
+- App name: undecided. "The Family List" is a placeholder.
+- Personal snow globes (pets, interests) need a home in the database, since the code is public. Decide how in M4.

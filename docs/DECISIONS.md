@@ -25,3 +25,19 @@ Newest at the bottom. Each entry: what we decided, and why.
 **2026-10-25: Styles: one theme file plus a CSS file per component.** Tokens are CSS variables in `src/theme/theme.css`. Each component has its own `.module.css` file, so styles can't leak between features. No styling library: plain CSS is easiest for Brady to read.
 
 **2026-10-25: Deploy only from a passing build.** GitHub Actions builds (including the TypeScript check) on every push to `main`; the deploy job runs only if the build succeeds.
+
+**2026-10-25: Design direction: quiet paper, one snow globe.** Replaces the plaid "Christmas morning" look, which Brady found busy. Cream paper and ink; lists separated by lines and space, not boxes; one red main button per screen; pine for done. The only illustration is the person's snow globe: on a shopping page, gifts pile up inside it as they're planned, bought and wrapped. Round 3 mockups were rejected as busy and shopper-only.
+
+**2026-10-25: One display font, Gloock.** Body text is Nunito Sans. Caprasimo and Caveat are dropped.
+
+**2026-10-25: Two kinds of wish: "Gimme, gimme, gimme" and "Maybe an idea…".** From Brady's sketch. A specific item is claimed once. A "Maybe" (a store, brand or kind of thing) stays open, and several people can each add a gift under it, seeing what's already planned so nobody doubles up. Easier for April than naming exact products.
+
+**2026-10-25: Paste-anything intake.** Paste one link or a whole list; each line becomes an item, named from the link, with any text after the link kept as the note. Runs in the browser, no server. Full auto-fill (photo, price) stays in the backlog.
+
+**2026-10-25: Stockings are a place, not a section of their own.** Every gift goes "under the tree" or in the "stocking". No Santa pile: which gifts say "From: Santa" is decided at wrapping time.
+
+**2026-10-25: Naughty/Nice is decoration, set by someone else.** "Nice, says Brady". The joke only works if someone else decides. Not a nudge to make a list: everyone's an adult.
+
+**2026-10-25: Personal details stay out of code.** Pets and inside jokes go in the database. Prototype globes are a generic tree scene; personal scenes come later.
+
+**2026-10-25: Prototype "Viewing as" switch.** Until sign-in exists (M4), a bar at the top lets Brady act as anyone. The data layer already hands each person only what they're allowed to see, matching the M5 rules.

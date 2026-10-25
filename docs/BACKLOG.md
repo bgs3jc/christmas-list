@@ -8,3 +8,8 @@ Ideas parked until v1 works. Each one must pass the feature test in `CLAUDE.md`.
 - **Import Brady's spreadsheet:** one-time import from CSV.
 - **Phone polish:** a proper phone layout.
 - **Side-eye notes:** shoppers can leave a hidden, teasing note on someone's wish list item. Fun, but felt forced in the mockup; revisit only with a better form.
+- **List row redesign:** borrow from two or three professional sites that show lists cleanly. Brady wants rows more compact and structured. (Next up, not really backlog.)
+- **Personal snow globes:** each person's scene (pets, interests) drawn from the database, since the code is public.
+- **Night-sky home:** the M1 snow-globe sky with Santa's sleigh, on the home page.
+- **Drag to reorder:** the list uses up/down arrows for now, which are easier for April.
+- **Phone layout for shopping:** on phones, Overheard currently comes before the list.

@@ -1,46 +1,28 @@
 # Design
 
-**Status: provisional.** The direction below was chosen from mockups in M1. The mockups are rough, not production-grade, so treat every color, font and layout here as a starting point to refine, not a locked spec.
+**Status: working direction (M3).** Still open to refinement as Brady clicks through the prototype.
 
-Mockups (private canvas, Brady's account): https://claude.ai/artifact/BkG8hdVD8inaaT2mk3BX2B
-The canvas also holds a private note with the family details that inspired the design. Those details stay out of this public repo.
+## Direction (M3: quiet paper, one snow globe)
 
-## Direction
+Round-one plaid "Christmas morning" pages were busy. The direction now:
 
-- **Home: snow globes.** Each person gets a snow globe with their own illustrated world (pets, interests), sitting under a night sky where Santa's sleigh slowly crosses. Your own globe never hints at what's coming to you.
-- **Lists and shopping pages: Christmas morning.** Warm daylight, matching-pajama plaid, paper and handwritten tags. A wish list reads like a letter to Santa.
-- **Quiet nods** to the family's favorite Christmas movies, small enough that only people who know will notice.
+- **Calm by default.** Cream paper, ink text. Lists are separated by lines and space, not boxes or tinted panels. Hierarchy comes from type size and weight, not color.
+- **One main action per screen** in plaid red; everything else is an outlined or underlined button. Extra options open on click ("Someone else", "Change").
+- **One festive moment per page: the person's snow globe.** For shoppers, gifts pile up at the bottom of the globe (ribbon = wrapped, plain box = bought, dotted = planned). On your own page it just snows.
+- **The fun is in small touches:** the gift pile, the wording ("Gimme, gimme, gimme"), the Naughty/Nice tag. No stamps, plaid strips, emoji or handwriting fonts.
+- **Quiet nods** to the family's favorite Christmas movies remain welcome, small enough that only the family notices.
 
-## Known gaps (fix in M3)
+Mockups (private canvas, Brady's account): https://claude.ai/artifact/BkG8hdVD8inaaT2mk3BX2B. Rounds 4 and 5 are current; the building-blocks board shows every piece. The canvas also holds a private note with family details; those stay out of this public repo.
 
-- The shopping page is hard to follow. It needs a real rethink of layout and hierarchy, not just polish.
-- The home and shopping pages use different display fonts. Pick one system.
-- Kevin's globe: Patriots / Drake Maye theme (no team logos), not a dog.
-- Brady's globe is a placeholder.
+## Tokens and fonts
 
-## Starting tokens
+`src/theme/theme.css` is the source of truth. Main colors: paper `#FBF5EA`, ink `#2B1D1A`, faded ink `#5E4E48`, plaid red `#A82A30` (main button, "new"), pine `#2F5D46` (wrapped, private). Gold and the globe colors appear only in illustrations.
 
-These now live in `src/theme/theme.css` (M2). That file is the source of truth; refine values there.
+- Display: Gloock. Body: Nunito Sans. No handwriting fonts.
+- Motion: at most one slow ambient animation per screen (falling snow); off when the device asks for reduced motion.
 
-| Token | Value | Use |
-|---|---|---|
-| `--paper` | `#FBF5EA` | Page background |
-| `--ink` | `#2B1D1A` | Main text |
-| `--ink-muted` | `#5E4E48` | Secondary text |
-| `--plaid-red` | `#A82A30` | Primary accent, main buttons |
-| `--pine` | `#2F5D46` | Claimed / done states |
-| `--night` | `#1D3461` | Home sky, home buttons |
-| `--night-deep` | `#0B1530` | Top of the sky |
-| `--snow` | `#EEF3F8` | Home ground |
-| `--gold` | `#E9B949` | Small highlights only |
-| `--tag` | `#F3E3C6` | Gift tags |
-| `--letter-ink` | `#1F3B6E` | Handwritten letter text |
+## Known gaps
 
-Fonts (Google Fonts):
-- Display: Caprasimo (lists) and Gloock (home). Choose one in M3.
-- Body: Nunito Sans.
-- Handwriting accents only: Caveat. Never for anything April has to read to get a task done.
-
-Motion:
-- At most one or two ambient animations per screen, slow (the sleigh takes about 48 seconds to cross).
-- Turn all ambient motion off when the device asks for reduced motion.
+- List rows should get more compact and structured; borrow from professional sites (see BACKLOG).
+- Personal globes (pets, interests) need to come from the database.
+- The home page's night sky and sleigh from M1 aren't built yet.
