@@ -1,6 +1,7 @@
 // Made-up sample data so the prototype has something to click through.
 // It's deliberately generic: real family details belong in the database, not
 // in this public code. "Reset sample data" in the prototype bar restores it.
+// The Santa's list calls are Brady's to make here (in the database from M4).
 
 import type { AppData, Gift, WishItem } from './types'
 
@@ -20,29 +21,29 @@ export function sampleData(): AppData {
   nextOrder = 0
   return {
     people: [
-      { id: 'brady', name: 'Brady', santasList: { status: 'naughty', setBy: 'allie' } },
-      { id: 'april', name: 'April', santasList: { status: 'nice', setBy: 'kevin' } },
-      { id: 'allie', name: 'Allie', santasList: { status: 'nice', setBy: 'brady' } },
-      { id: 'kevin', name: 'Kevin', santasList: { status: 'fence', setBy: 'april' } },
+      { id: 'brady', name: 'Brady', santasList: 'naughty' },
+      { id: 'april', name: 'April', santasList: 'nice' },
+      { id: 'allie', name: 'Allie', santasList: 'nice' },
+      { id: 'kevin', name: 'Kevin', santasList: 'fence' },
     ],
     wishes: [
-      wish({ id: 'w-allie-1', ownerId: 'allie', kind: 'specific', title: 'Weighted blanket', price: '$90', notes: '15 lb, queen size', topPick: true, createdAt: day('10-02') }),
-      wish({ id: 'w-allie-2', ownerId: 'allie', kind: 'specific', title: 'Gooseneck pour-over kettle', price: '$55', notes: 'Matte black', createdAt: day('10-02') }),
-      wish({ id: 'w-allie-3', ownerId: 'allie', kind: 'maybe', title: 'Houseplants that are hard to kill', price: 'Under $40', notes: 'Low light. Heavy pots.', createdAt: day('10-05') }),
-      wish({ id: 'w-allie-4', ownerId: 'allie', kind: 'specific', title: 'Wool beanie', price: 'About $25', notes: 'Any color but orange', createdAt: day('10-05') }),
-      wish({ id: 'w-allie-5', ownerId: 'allie', kind: 'specific', title: 'Platform clogs', price: '$120', notes: 'Size 8, the green ones', createdAt: day('10-23') }),
-      wish({ id: 'w-allie-6', ownerId: 'allie', kind: 'specific', title: 'Waterproof field notebooks, 3-pack', price: '$22', notes: 'Any color', createdAt: day('10-23') }),
+      wish({ id: 'w-allie-1', ownerId: 'allie', kind: 'specific', title: 'Weighted blanket', notes: '15 lb, queen size', topPick: true, createdAt: day('10-02') }),
+      wish({ id: 'w-allie-2', ownerId: 'allie', kind: 'specific', title: 'Gooseneck pour-over kettle', notes: 'Matte black', createdAt: day('10-02') }),
+      wish({ id: 'w-allie-3', ownerId: 'allie', kind: 'maybe', title: 'Houseplants that are hard to kill', notes: 'Low light. Heavy pots.', createdAt: day('10-05') }),
+      wish({ id: 'w-allie-4', ownerId: 'allie', kind: 'specific', title: 'Wool beanie', notes: 'Any color but orange', createdAt: day('10-05') }),
+      wish({ id: 'w-allie-5', ownerId: 'allie', kind: 'specific', title: 'Platform clogs', notes: 'Size 8, the green ones', createdAt: day('10-23') }),
+      wish({ id: 'w-allie-6', ownerId: 'allie', kind: 'specific', title: 'Waterproof field notebooks, 3-pack', notes: 'Any color', createdAt: day('10-23') }),
 
       wish({ id: 'w-april-1', ownerId: 'april', kind: 'maybe', title: 'Anything Christmas-y for the house', notes: 'Ornaments, candles, a new tree skirt', topPick: true, createdAt: day('10-10') }),
-      wish({ id: 'w-april-2', ownerId: 'april', kind: 'specific', title: 'Cozy slippers', price: '$40', notes: 'Size 8', createdAt: day('10-12') }),
+      wish({ id: 'w-april-2', ownerId: 'april', kind: 'specific', title: 'Cozy slippers', notes: 'Size 8', createdAt: day('10-12') }),
 
-      wish({ id: 'w-kevin-1', ownerId: 'kevin', kind: 'specific', title: 'Wireless earbuds', price: '$129', topPick: true, createdAt: day('10-08') }),
-      wish({ id: 'w-kevin-2', ownerId: 'kevin', kind: 'specific', title: 'Zip hoodie', price: '$60', notes: 'Large, navy', createdAt: day('10-08') }),
+      wish({ id: 'w-kevin-1', ownerId: 'kevin', kind: 'specific', title: 'Wireless earbuds', topPick: true, createdAt: day('10-08') }),
+      wish({ id: 'w-kevin-2', ownerId: 'kevin', kind: 'specific', title: 'Zip hoodie', notes: 'Large, navy', createdAt: day('10-08') }),
       wish({ id: 'w-kevin-3', ownerId: 'kevin', kind: 'maybe', title: 'Anything for game day', notes: 'Large in shirts', createdAt: day('10-15') }),
 
-      wish({ id: 'w-brady-1', ownerId: 'brady', kind: 'specific', title: 'Mechanical keyboard', price: '$150', notes: 'Tactile switches', topPick: true, createdAt: day('10-01') }),
-      wish({ id: 'w-brady-2', ownerId: 'brady', kind: 'specific', title: 'Cast iron skillet', price: '$45', notes: '12 inch', createdAt: day('10-01') }),
-      wish({ id: 'w-brady-3', ownerId: 'brady', kind: 'specific', title: 'Running socks', price: '$18', notes: 'Size L', createdAt: day('10-04') }),
+      wish({ id: 'w-brady-1', ownerId: 'brady', kind: 'specific', title: 'Mechanical keyboard', notes: 'Tactile switches', topPick: true, createdAt: day('10-01') }),
+      wish({ id: 'w-brady-2', ownerId: 'brady', kind: 'specific', title: 'Cast iron skillet', notes: '12 inch', createdAt: day('10-01') }),
+      wish({ id: 'w-brady-3', ownerId: 'brady', kind: 'specific', title: 'Running socks', notes: 'Size L', createdAt: day('10-04') }),
     ],
     gifts: [
       gift({ id: 'g-1', recipientId: 'allie', giverId: 'brady', title: 'Gooseneck pour-over kettle', wishItemId: 'w-allie-2', price: '$55', status: 'wrapped', createdAt: day('10-06') }),

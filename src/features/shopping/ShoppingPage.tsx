@@ -1,18 +1,15 @@
 import { useEffect, useState } from 'react'
-import { features } from '../../config/features'
 import {
   addGift,
   markIdeaGifted,
   markSeen,
-  setSantasList,
   usePeople,
   useShopping,
   useViewer,
   type Gift,
-  type SantasListStatus,
   type WishItem,
 } from '../../data'
-import { plural, santasListLabels, shortDate, wishDetails } from '../../shared/format'
+import { plural, shortDate, wishDetails } from '../../shared/format'
 import { LockIcon, StarIcon } from '../../shared/icons'
 import { SnowGlobe } from '../../shared/SnowGlobe'
 import { StatusMark } from '../../shared/StatusMark'
@@ -89,32 +86,6 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
           {person.name} can't see this page
         </p>
 
-        {features.santasList && (
-          <div className={styles.santa}>
-            <label htmlFor="santas-list" className={styles.santaLabel}>
-              Santa's list
-            </label>
-            <select
-              id="santas-list"
-              className={styles.santaSelect}
-              value={person.santasList?.status ?? ''}
-              onChange={(e) => setSantasList(person.id, e.target.value as SantasListStatus)}
-            >
-              {!person.santasList && (
-                <option value="" disabled>
-                  Pick one
-                </option>
-              )}
-              {Object.entries(santasListLabels).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-            {person.santasList && <span className={styles.santaBy}>Set by {nameOf(person.santasList.setBy)}</span>}
-          </div>
-        )}
-
         <IdeasPanel
           person={person}
           ideas={ideas}
@@ -178,6 +149,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                             <li key={gift.id} className={styles.underHintGift}>
                               <span className={styles.underHintTitle}>
                                 {gift.title} {gift.price && <span className={styles.price}>{gift.price}</span>}
+                                {gift.notes && <span className={styles.giftNote}>{gift.notes}</span>}
                               </span>
                               <GiftOwner gift={gift} nameOf={nameOf} onChange={() => editGift(gift)} />
                             </li>
@@ -210,7 +182,12 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                 const gift = giftsByWish.get(wish.id)![0]
                 return (
                   <li key={wish.id} className={list.row}>
-                    <WishSummary wish={wish} />
+                    <div className={list.rowMain}>
+                      <WishSummary wish={wish} bare />
+                      {(gift.price || gift.notes) && (
+                        <p className={styles.giftNote}>{[gift.price && `Paid ${gift.price}`, gift.notes].filter(Boolean).join(' · ')}</p>
+                      )}
+                    </div>
                     <GiftOwner gift={gift} nameOf={nameOf} onChange={() => editGift(gift, true)} />
                   </li>
                 )
@@ -259,7 +236,7 @@ function WishSummary({ wish, isNew = false, bare = false }: { wish: WishItem; is
   const content = (
     <>
       <div className={list.titleLine}>
-        {wish.kind === 'maybe' && <span className={list.maybeTag}>Maybe</span>}
+        {wish.kind === 'maybe' && <span className={list.ideaTag}>Idea</span>}
         {wish.link ? (
           <a href={wish.link} target="_blank" rel="noreferrer" className={list.title}>
             {wish.title}

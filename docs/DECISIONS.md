@@ -36,8 +36,12 @@ Newest at the bottom. Each entry: what we decided, and why.
 
 **2026-10-25: Stockings are a place, not a section of their own.** Every gift goes "under the tree" or in the "stocking". No Santa pile: which gifts say "From: Santa" is decided at wrapping time.
 
-**2026-10-25: Naughty/Nice is decoration, set by someone else.** "Nice, says Brady". The joke only works if someone else decides. Not a nudge to make a list: everyone's an adult.
+**2026-10-25: Naughty/Nice is decoration that Brady sets.** Nobody changes it on the site. In the prototype it lives in the sample data; from M4 Brady edits it in the database. Not a nudge to make a list: everyone's an adult.
 
 **2026-10-25: Personal details stay out of code.** Pets and inside jokes go in the database. Prototype globes are a generic tree scene; personal scenes come later.
 
 **2026-10-25: Prototype "Viewing as" switch.** Until sign-in exists (M4), a bar at the top lets Brady act as anyone. The data layer already hands each person only what they're allowed to see, matching the M5 rules.
+
+**2026-10-25: No prices from the person adding, no manual ranking.** Typing prices onto your own list felt tacky. Shoppers enter what they paid when they claim something; pulling prices from links is in the backlog. Order is just favorites (stars) first, then newest last; no arrows or dragging.
+
+**2026-10-25: Wishes of the "Maybe an idea…" kind are tagged "Idea" in lists.**

@@ -7,8 +7,8 @@ export type SantasListStatus = 'nice' | 'fence' | 'naughty'
 export interface Person {
   id: PersonId
   name: string
-  // A family joke: someone else decides which list you're on.
-  santasList?: { status: SantasListStatus; setBy: PersonId }
+  // A family joke. Brady sets it in the data; nobody changes it on the site.
+  santasList?: SantasListStatus
 }
 
 // 'specific' is the "Gimme, gimme, gimme" kind: one exact thing, claimed once.
@@ -21,7 +21,7 @@ export interface WishItem {
   kind: WishKind
   title: string
   link?: string
-  // Free text, so "$120", "about $25" and "under $40" all work.
+  // Never typed by the owner. Reserved for prices pulled from links later.
   price?: string
   notes?: string
   topPick: boolean

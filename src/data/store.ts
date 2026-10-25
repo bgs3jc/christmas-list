@@ -4,7 +4,8 @@
 import { sampleData } from './seed'
 import type { AppData, PersonId } from './types'
 
-const DATA_KEY = 'family-list-prototype-v1'
+// Bump the number when the saved shape changes, so old browser data is replaced.
+const DATA_KEY = 'family-list-prototype-v2'
 // Who you're "signed in" as. Kept per tab, so two tabs can be two people.
 const VIEWER_KEY = 'family-list-viewer'
 const DEFAULT_VIEWER: PersonId = 'brady'

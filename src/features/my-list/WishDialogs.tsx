@@ -28,7 +28,6 @@ export function GimmeDialog({ item, onClose }: WishDialogProps) {
   const [name, setName] = useState(item?.title ?? '')
   const [nameEdited, setNameEdited] = useState(Boolean(item))
   const [notes, setNotes] = useState(item?.notes ?? '')
-  const [price, setPrice] = useState(item?.price ?? '')
   const [topPick, setTopPick] = useState(item?.topPick ?? false)
 
   const pasted = item ? [] : parsePaste(linkText)
@@ -45,7 +44,6 @@ export function GimmeDialog({ item, onClose }: WishDialogProps) {
         title: name.trim(),
         link: blankToUndefined(linkText),
         notes: blankToUndefined(notes),
-        price: blankToUndefined(price),
         topPick,
       })
     } else if (several) {
@@ -57,7 +55,6 @@ export function GimmeDialog({ item, onClose }: WishDialogProps) {
           title: (first.link ? shownName : first.title).trim() || first.title,
           link: first.link,
           notes: blankToUndefined(notes) ?? first.notes,
-          price: blankToUndefined(price) ?? first.price,
           topPick,
         },
       ])
@@ -137,10 +134,7 @@ export function GimmeDialog({ item, onClose }: WishDialogProps) {
             multiline
             placeholder={first?.notes}
           />
-          <div className={styles.fieldRow}>
-            <TextField label="Price" value={price} onChange={setPrice} narrow placeholder={first?.price} />
-            <Checkbox label="One of my top picks" checked={topPick} onChange={setTopPick} />
-          </div>
+          <Checkbox label="One of my top picks" checked={topPick} onChange={setTopPick} />
         </>
       )}
     </Dialog>
@@ -151,11 +145,10 @@ export function GimmeDialog({ item, onClose }: WishDialogProps) {
 export function MaybeDialog({ item, onClose }: WishDialogProps) {
   const [title, setTitle] = useState(item?.title ?? '')
   const [notes, setNotes] = useState(item?.notes ?? '')
-  const [price, setPrice] = useState(item?.price ?? '')
 
   function save() {
     if (!title.trim()) return
-    const fields = { title: title.trim(), notes: blankToUndefined(notes), price: blankToUndefined(price) }
+    const fields = { title: title.trim(), notes: blankToUndefined(notes) }
     if (item) updateWish(item.id, fields)
     else addWishes([{ kind: 'maybe', topPick: false, ...fields }])
     onClose()
@@ -197,7 +190,6 @@ export function MaybeDialog({ item, onClose }: WishDialogProps) {
         rows={3}
         help="Sizes, favorites, what you already have."
       />
-      <TextField label="About how much?" value={price} onChange={setPrice} narrow placeholder="Any amount" />
     </Dialog>
   )
 }

@@ -7,11 +7,9 @@ export interface PastedWish {
   title: string
   link?: string
   notes?: string
-  price?: string
 }
 
 const LINK = /https?:\/\/\S+/i
-const PRICE = /\$\s?\d[\d,]*(\.\d{2})?/
 // Commas, dashes and spaces left over at either end after the link is removed.
 const EDGE_PUNCTUATION = /^[\s,;:\-–—]+|[\s,;:\-–—]+$/g
 
@@ -27,9 +25,7 @@ function parseLine(line: string): PastedWish {
   const link = line.match(LINK)?.[0]
   const rest = (link ? line.replace(link, '') : line).replace(EDGE_PUNCTUATION, '')
   if (!link) return { title: capitalize(rest) }
-  const price = rest.match(PRICE)?.[0]
-  const notes = (price ? rest.replace(price, '') : rest).replace(EDGE_PUNCTUATION, '')
-  return { title: nameFromLink(link), link, notes: notes || undefined, price }
+  return { title: nameFromLink(link), link, notes: rest || undefined }
 }
 
 const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)

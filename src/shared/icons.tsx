@@ -17,14 +17,6 @@ export function LockIcon() {
   )
 }
 
-export function ArrowIcon({ direction }: { direction: 'up' | 'down' }) {
-  return (
-    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d={direction === 'up' ? 'M8 13V3M3.5 7.5L8 3l4.5 4.5' : 'M8 3v10M3.5 8.5L8 13l4.5-4.5'} />
-    </svg>
-  )
-}
-
 const STAR = 'M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2L2.9 9.4l6.3-.9z'
 
 // Gold when filled; a faint outline when not.

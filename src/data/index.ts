@@ -7,7 +7,7 @@
 
 import { useMemo, useSyncExternalStore } from 'react'
 import { commit, getSnapshot, resetData, setViewerId, subscribe } from './store'
-import type { AppData, Gift, GiftStatus, Idea, Person, PersonId, SantasListStatus, WishItem } from './types'
+import type { AppData, Gift, GiftStatus, Idea, Person, PersonId, WishItem } from './types'
 
 export type * from './types'
 
@@ -19,7 +19,8 @@ function viewerOf(data: AppData, viewerId: PersonId): Person {
   return data.people.find((p) => p.id === viewerId) ?? data.people[0]
 }
 
-const byOrder = (a: WishItem, b: WishItem) => a.order - b.order
+// Top picks first, then in the order they were added.
+const byPriority = (a: WishItem, b: WishItem) => Number(b.topPick) - Number(a.topPick) || a.order - b.order
 
 // ---- Reads ----
 
@@ -36,7 +37,7 @@ export function useMyList(): { me: Person; wishes: WishItem[] } {
   const { data, viewerId } = useSnapshot()
   return useMemo(() => {
     const me = viewerOf(data, viewerId)
-    return { me, wishes: data.wishes.filter((w) => w.ownerId === me.id).sort(byOrder) }
+    return { me, wishes: data.wishes.filter((w) => w.ownerId === me.id).sort(byPriority) }
   }, [data, viewerId])
 }
 
@@ -56,7 +57,7 @@ export function useShopping(recipientId: PersonId): ShoppingView | null {
     if (!person || person.id === viewerId) return null
     return {
       person,
-      wishes: data.wishes.filter((w) => w.ownerId === recipientId).sort(byOrder),
+      wishes: data.wishes.filter((w) => w.ownerId === recipientId).sort(byPriority),
       gifts: data.gifts.filter((g) => g.recipientId === recipientId),
       ideas: data.ideas.filter((i) => i.aboutId === recipientId),
       lastSeen: data.lastSeen[`${viewerId}:${recipientId}`],
@@ -95,7 +96,7 @@ const now = () => new Date().toISOString()
 const newId = () => crypto.randomUUID()
 const currentViewer = () => getSnapshot().viewerId
 
-export type WishDraft = Pick<WishItem, 'kind' | 'title' | 'link' | 'price' | 'notes' | 'topPick'>
+export type WishDraft = Pick<WishItem, 'kind' | 'title' | 'link' | 'notes' | 'topPick'>
 
 export function addWishes(drafts: WishDraft[]) {
   const ownerId = currentViewer()
@@ -126,24 +127,6 @@ export function toggleTopPick(id: string) {
 export function removeWish(id: string) {
   const ownerId = currentViewer()
   commit((data) => ({ ...data, wishes: data.wishes.filter((w) => !(w.id === id && w.ownerId === ownerId)) }))
-}
-
-// Swap a wish with its neighbor above (-1) or below (+1).
-export function moveWish(id: string, direction: -1 | 1) {
-  const ownerId = currentViewer()
-  commit((data) => {
-    const mine = data.wishes.filter((w) => w.ownerId === ownerId).sort(byOrder)
-    const index = mine.findIndex((w) => w.id === id)
-    const other = mine[index + direction]
-    if (index < 0 || !other) return data
-    const current = mine[index]
-    return {
-      ...data,
-      wishes: data.wishes.map((w) =>
-        w.id === current.id ? { ...w, order: other.order } : w.id === other.id ? { ...w, order: current.order } : w,
-      ),
-    }
-  })
 }
 
 export type GiftDraft = Pick<Gift, 'recipientId' | 'giverId' | 'title' | 'wishItemId' | 'price' | 'notes' | 'status' | 'place'>
@@ -190,15 +173,6 @@ export function markIdeaGifted(id: string) {
   commit((data) => ({
     ...data,
     ideas: data.ideas.map((i) => (i.id === id && i.aboutId !== viewerId ? { ...i, madeIntoGift: true } : i)),
-  }))
-}
-
-export function setSantasList(personId: PersonId, status: SantasListStatus) {
-  const setBy = currentViewer()
-  if (personId === setBy) return
-  commit((data) => ({
-    ...data,
-    people: data.people.map((p) => (p.id === personId ? { ...p, santasList: { status, setBy } } : p)),
   }))
 }
 

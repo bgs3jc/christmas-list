@@ -41,34 +41,6 @@
   font-weight: 800;
 }
 
-.santa {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-1) var(--space-3);
-  margin-top: var(--space-3);
-}
-
-.santaLabel {
-  font-size: var(--text-sm);
-  font-weight: 800;
-}
-
-.santaSelect {
-  min-height: 40px;
-  padding: 0 var(--space-2);
-  border: 1.5px solid var(--line-strong);
-  border-radius: var(--radius-md);
-  background: var(--white);
-  font-weight: 700;
-}
-
-.santaBy {
-  width: 100%;
-  font-size: var(--text-sm);
-  color: var(--ink-muted);
-}
-
 .ideas {
   margin-top: var(--space-8);
 }
@@ -193,6 +165,15 @@
 
 .underHintTitle {
   font-weight: 700;
+}
+
+/* "Notes for the family" on a gift. */
+.giftNote {
+  display: block;
+  margin-top: 2px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-muted);
 }
 
 .addGift {
