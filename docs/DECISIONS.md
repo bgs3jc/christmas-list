@@ -21,3 +21,7 @@ Newest at the bottom. Each entry: what we decided, and why.
 **2026-10-25: Design direction (provisional).** Snow globes for the home screen; a "Christmas morning" look for list and shopping pages. Chosen over a movie-theatre concept and round-one generic styles because it's built from the family's own traditions. Not locked: fonts, colors and layouts get refined in M3. See `DESIGN.md`.
 
 **2026-10-25: Not building "tag says / really from".** Deciding which gifts say "From: Santa" happens late, at wrapping time, so tracking it weeks ahead isn't practical. The "guess what's in the box" bubble was dropped too: random, no value.
+
+**2026-10-25: Styles: one theme file plus a CSS file per component.** Tokens are CSS variables in `src/theme/theme.css`. Each component has its own `.module.css` file, so styles can't leak between features. No styling library: plain CSS is easiest for Brady to read.
+
+**2026-10-25: Deploy only from a passing build.** GitHub Actions builds (including the TypeScript check) on every push to `main`; the deploy job runs only if the build succeeds.

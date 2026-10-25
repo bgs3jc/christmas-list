@@ -6,10 +6,10 @@ Update this at the end of every session. Keep it short.
 
 ## Where things stand
 
-- Repo set up with context files (`CLAUDE.md`, `docs/`) and the ui-ux-pro-max design skill.
-- No app code yet.
 - **M1 done (provisional):** snow-globe home plus "Christmas morning" list pages. Starting tokens and known gaps are in `docs/DESIGN.md`; mockups and private family notes are on the canvas linked there.
-- **Next milestone:** M2 App scaffold + deploy. Turn the starting tokens into the theme file.
+- **M2 nearly done:** the Vite + React + TypeScript app is built and shows a themed "coming soon" gift tag (behind the `comingSoon` flag). Tokens live in `src/theme/theme.css`. The deploy workflow builds fine but can't publish until Brady turns on Pages (below).
+- **Blocking M2:** Brady sets repo Settings > Pages > Source to "GitHub Actions", then re-runs the Deploy workflow (Actions tab). Site URL: https://bgs3jc.github.io/christmas-list/
+- **Next milestone:** M3 Clickable prototype. Redesign the shopping page first.
 - **Lesson from M1:** round one was generic because it skipped family input and the design skill. `CLAUDE.md` now sets the bar.
 
 ## Milestones to v1
@@ -30,3 +30,4 @@ One chat each. M1–M3 are firm; the order and scope after that can change as we
 - Is April's @me.com address tied to a Google account? (Doesn't block anything; email-link sign-in works either way.)
 - App name: undecided.
 - Shopping page layout is hard to follow; redesign it before building it in M3.
+- Page links in M3: GitHub Pages can't route paths like `/list/allie`, so use `#/list/allie` style links (simplest) unless there's a reason not to.
