@@ -20,7 +20,7 @@ The canvas also holds a private note with the family details that inspired the d
 
 ## Starting tokens
 
-These go into the theme file as CSS variables in M2, then get refined.
+These now live in `src/theme/theme.css` (M2). That file is the source of truth; refine values there.
 
 | Token | Value | Use |
 |---|---|---|
