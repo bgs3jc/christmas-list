@@ -1,0 +1,59 @@
+/*
+  The one theme file. Every color, font, size and motion setting lives here as
+  a CSS variable. Components use var(--name) and never raw values, so changing
+  the look means editing this file only.
+
+  Starting values come from docs/DESIGN.md (M1, provisional). Refine them here.
+*/
+
+:root {
+  /* Colors: Christmas morning (lists and shopping) */
+  --paper: #fbf5ea;
+  --ink: #2b1d1a;
+  --ink-muted: #5e4e48;
+  --plaid-red: #a82a30;
+  --pine: #2f5d46;
+  --gold: #e9b949;
+  --tag: #f3e3c6;
+  --letter-ink: #1f3b6e;
+
+  /* Colors: snow globe night (home) */
+  --night: #1d3461;
+  --night-deep: #0b1530;
+  --snow: #eef3f8;
+
+  /* Fonts. Two display fonts until M3 picks one. */
+  --font-display-list: 'Caprasimo', Georgia, serif;
+  --font-display-home: 'Gloock', Georgia, serif;
+  --font-body: 'Nunito Sans', system-ui, sans-serif;
+  /* Handwriting: accents only, never text someone needs to read to get a task done. */
+  --font-hand: 'Caveat', cursive;
+
+  /* Type sizes */
+  --text-sm: 0.875rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.375rem;
+  --text-xl: 2rem;
+  --text-hero: clamp(2.5rem, 6vw, 4rem);
+
+  /* Spacing, on a 4px grid */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* Shapes */
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --shadow-paper: 0 1px 2px rgb(43 29 26 / 0.08), 0 6px 18px rgb(43 29 26 / 0.1);
+
+  /* Motion. Ambient animations are slow; the sleigh takes about 48s to cross. */
+  --ease-gentle: cubic-bezier(0.45, 0, 0.55, 1);
+  --duration-quick: 150ms;
+  --duration-ambient: 6s;
+  --duration-sleigh: 48s;
+}
