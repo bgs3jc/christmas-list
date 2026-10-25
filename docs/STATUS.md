@@ -7,8 +7,7 @@ Update this at the end of every session. Keep it short.
 ## Where things stand
 
 - **M1 done (provisional):** snow-globe home plus "Christmas morning" list pages. Starting tokens and known gaps are in `docs/DESIGN.md`; mockups and private family notes are on the canvas linked there.
-- **M2 nearly done:** the Vite + React + TypeScript app is built and shows a themed "coming soon" gift tag (behind the `comingSoon` flag). Tokens live in `src/theme/theme.css`. The deploy workflow builds fine but can't publish until Brady turns on Pages (below).
-- **Blocking M2:** Brady sets repo Settings > Pages > Source to "GitHub Actions", then re-runs the Deploy workflow (Actions tab). Site URL: https://bgs3jc.github.io/christmas-list/
+- **M2 done:** live at https://bgs3jc.github.io/christmas-list/. The Vite + React + TypeScript app shows a themed "coming soon" gift tag (behind the `comingSoon` flag). Tokens live in `src/theme/theme.css`. Every push to `main` builds and deploys; a failed build doesn't deploy.
 - **Next milestone:** M3 Clickable prototype. Redesign the shopping page first.
 - **Lesson from M1:** round one was generic because it skipped family input and the design skill. `CLAUDE.md` now sets the bar.
 
