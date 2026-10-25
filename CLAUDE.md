@@ -34,7 +34,7 @@ If a request or idea breaks a principle, say so plainly before building. Don't b
 
 ## Privacy
 
-This repo is **public**. Never commit email addresses, Firebase admin credentials, or any family data. The Firebase web config (apiKey etc.) is designed to be public and is fine to commit; security comes from Firestore rules and the sign-in allowlist.
+This repo is **public**. Never commit email addresses, Firebase admin credentials, or any family data. The Firebase web config (apiKey etc.) is designed to be public and is fine to commit; security comes from Firestore rules and the sign-in allowlist. Personal flavor (pet names, inside jokes, photos) belongs in the database, not in code, because the code is public.
 
 ## Workflow
 
@@ -52,7 +52,8 @@ This repo is **public**. Never commit email addresses, Firebase admin credential
 **Collaboration.**
 - Brainstorming is welcome anytime. Test each idea against the product principles, say so if it's weak, and park it in `BACKLOG.md` unless it changes the current work.
 - Recommend; don't survey. Settle one decision at a time.
-- Show design options as private claude.ai Artifact mockups (no family data) before writing app code.
+- Show design options as private claude.ai Artifact mockups before writing app code. Mockups are private, so first names and pets are fine; never emails or addresses.
+- **The design bar is high.** Brady expects creative, illustrated, personal design built from this family (traditions, favorite movies, pets, running jokes), not generic web UI. Before mocking anything: ask for personal inspiration, run the ui-ux-pro-max search, and offer options that differ in concept, not just palette. Brady's wild ideas are a signal of the ambition he wants, not specs.
 - Use subagents rarely, only for independent side work (research, parallel design drafts), and tell Brady when you do.
 - Brady is learning: explain in depth when asked, otherwise keep it brief.
 - Keep this file short. It's a map, not a manual.
