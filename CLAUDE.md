@@ -6,7 +6,7 @@ Context for any Claude session working in this repo. Read this first, then `docs
 
 A private Christmas gift tool for one family: Brady, April (mom), Allie (sister) and Kevin (Allie's husband). More people can be added later. Brady is the product owner: an IT person, not a developer, building this with Claude to learn and to delight the family. Brady makes product and design decisions; Claude recommends, builds and pushes back.
 
-Full product definition: `docs/PRODUCT.md`. Decisions already made: `docs/DECISIONS.md`. Ideas not yet built: `docs/BACKLOG.md`.
+Full product definition: `docs/PRODUCT.md`. Decisions already made: `docs/DECISIONS.md`. Ideas not yet built: `docs/BACKLOG.md`. Design direction and tokens: `docs/DESIGN.md`.
 
 ## Product principles (apply to every feature)
 
