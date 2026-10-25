@@ -8,13 +8,20 @@ Update this at the end of every session. Keep it short.
 
 - Repo set up with context files (`CLAUDE.md`, `docs/`) and the ui-ux-pro-max design skill.
 - No app code yet.
+- **Current milestone:** M1 Design direction (not started).
 
-## Next
+## Milestones to v1
 
-1. Design direction: Claude mocks up 2–3 distinct festive styles; Brady picks one.
-2. App scaffold (Vite + React + TypeScript) with GitHub Pages deploy.
-3. Clickable prototype on browser storage.
-4. Brady sets up Firebase (Claude provides steps); connect it, add sign-in and security rules.
+One chat each. M1–M3 are firm; the order and scope after that can change as we learn. Target: in the family's hands by early December.
+
+| # | Milestone | Done when |
+|---|-----------|-----------|
+| M1 | Design direction | Brady picks one of 2–3 mockup styles; theme tokens recorded |
+| M2 | App scaffold + deploy | Empty themed app is live on GitHub Pages via GitHub Actions |
+| M3 | Clickable prototype | Wish lists, gifts, claims and ideas work on browser storage; Brady has clicked through it |
+| M4 | Firebase + sign-in | Brady has set up Firebase; Google + email-link sign-in work; data in Firestore |
+| M5 | Surprise protection | Security rules hide recipients' gifts; verified by testing as each person |
+| M6 | Family launch | April, Allie and Kevin signed in on their devices; feedback captured in BACKLOG |
 
 ## Open questions
 
