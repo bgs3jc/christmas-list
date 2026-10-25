@@ -1,0 +1,76 @@
+.page {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-8) var(--space-16);
+}
+
+.hero {
+  text-align: center;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  line-height: 1.1;
+}
+
+.subtitle {
+  margin-top: var(--space-3);
+  font-size: var(--text-lg);
+  color: var(--ink-muted);
+}
+
+.people {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-10) var(--space-12);
+  margin: var(--space-12) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.personLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: transform var(--duration-quick) var(--ease-gentle);
+}
+
+.personLink:hover {
+  color: var(--ink);
+  transform: translateY(-3px);
+}
+
+.personName {
+  margin-top: var(--space-2);
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  line-height: 1.1;
+}
+
+.personLink:hover .personName {
+  text-decoration: underline;
+  text-decoration-color: var(--plaid-red);
+  text-underline-offset: 4px;
+}
+
+.personDetails {
+  color: var(--ink-muted);
+}
+
+.own {
+  margin-top: var(--space-12);
+  text-align: center;
+  font-weight: 800;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: var(--space-8) var(--space-4) var(--space-12);
+  }
+}

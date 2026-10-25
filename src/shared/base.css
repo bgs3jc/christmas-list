@@ -31,6 +31,33 @@ p {
   margin: 0;
 }
 
+a {
+  color: var(--ink);
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--plaid-red);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--night);
+  outline-offset: 2px;
+}
+
 /* Turn off ambient motion when the device asks for less. */
 @media (prefers-reduced-motion: reduce) {
   *,
