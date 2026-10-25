@@ -15,3 +15,5 @@ Newest at the bottom. Each entry: what we decided, and why.
 **2026-10-25: Feature test.** Every feature must beat a Google Sheet and add something Giftster doesn't. See principles in `CLAUDE.md`.
 
 **2026-10-25: Public repo.** Required for free GitHub Pages. No emails or family data in the repo.
+
+**2026-10-25: Push straight to `main`, no pull requests.** Brady doesn't review code line by line, so merging was a rubber stamp. The real check is trying the live site. Git history keeps every change reversible. Revisit at family launch.

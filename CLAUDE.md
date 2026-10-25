@@ -44,8 +44,10 @@ This repo is **public**. Never commit email addresses, Firebase admin credential
 - **End:** when Brady says "wrap up" (or work reaches a natural stop), update `docs/STATUS.md` (what changed, what's next, open questions), log new decisions in `docs/DECISIONS.md` and parked ideas in `docs/BACKLOG.md`, then commit and push. Nothing important should live only in a chat.
 
 **Git.**
-- Code changes: work on a branch, push, and Brady merges via pull request. Merging is Brady's review gate and, once the site exists, what deploys it. Explain each pull request in plain English.
-- Keep commits small, with plain-English messages.
+- Commit and push straight to `main`; Brady doesn't review code, so a pull request is just an extra click. Brady's review is trying the live site.
+- Before pushing app code, make sure it builds and works (run it, take screenshots). Once deploys exist, a failed build must not deploy.
+- Keep commits small, with plain-English messages. Summarize what changed in chat.
+- Revisit at M6 (family launch): once the family relies on the site, risky changes may need a preview first.
 
 **Collaboration.**
 - Brainstorming is welcome anytime. Test each idea against the product principles, say so if it's weak, and park it in `BACKLOG.md` unless it changes the current work.
