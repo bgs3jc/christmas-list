@@ -8,13 +8,13 @@ Update this at the end of every session. Keep it short.
 
 - **M1 and M2 done.** Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`.
 - **M3 in progress: first clickable prototype is live.** It runs on browser storage with made-up sample data. A "Viewing as" bar at the top stands in for sign-in until M4.
-  - **My list:** Brady's sketch. Two big buttons: "Gimme, gimme, gimme" (something specific; paste one link or a whole list) and "Maybe an idea…" (a store, brand or kind of thing). Reorder with arrows, star top picks, edit or remove. No claims are shown.
+  - **My list:** Brady's sketch. Two big buttons: "Gimme, gimme, gimme" (something specific; paste one link or a whole list) and "Maybe an idea…" (a store, brand or kind of thing). Star favorites (they go to the top), edit or remove. No prices from the owner. No claims are shown.
   - **Shopping for [person]:** one list in their order (favorites first), then "Surprises & stockings", then "Overheard". Quiet one-line rows: status, name, who. Click a row for notes, link, price paid and shipping. "I'll get it" on open rows; ideas can hold several gifts.
   - **Shipping:** a gift can be "Shipping to April's" with a tracking number that links to the carrier, then marked "Arrived".
   - **Home:** night sky with Santa's sleigh, a big "Add to my list" button, and a snow globe per person (names only, nothing to compare).
   - **Naughty/Nice tag:** set by Brady in the data, shown on your own list.
   - Two browser tabs as two people stay in sync, a preview of M4's live updates.
-- **Design direction changed** to "quiet paper, one snow globe" (see `DESIGN.md`, `DECISIONS.md`). Mockups are on the canvas linked in `DESIGN.md`, rounds 4 and 5.
+- **Design direction changed** to "quiet paper, one snow globe" (see `DESIGN.md`, `DECISIONS.md`). Mockups are on the canvas linked in `DESIGN.md`, rounds 4 to 6 (shopping v3 is the one built).
 
 ## Next steps
 
