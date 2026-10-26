@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { features } from '../../config/features'
 import { useMyList, type WishItem, type WishKind } from '../../data'
 import { santasListLabels } from '../../shared/format'
-import { MaybePresentIcon, PresentIcon } from '../../shared/icons'
+import { LightbulbIcon, PresentIcon } from '../../shared/icons'
 import { SnowGlobe } from '../../shared/SnowGlobe'
 import { EmptyRow, ListSection, Rows } from '../../shared/ui/List'
 import { GimmeDialog, MaybeDialog } from './WishDialogs'
@@ -39,9 +39,9 @@ export function MyListPage() {
           </span>
         </button>
         <button type="button" className={styles.bigButton} onClick={() => setDialog({ kind: 'maybe' })}>
-          <MaybePresentIcon />
+          <LightbulbIcon />
           <span className={styles.bigText}>
-            <span className={styles.bigTitle}>Maybe an idea…</span>
+            <span className={styles.bigTitle}>An idea…</span>
             <span className={styles.bigHint}>A store, brand or kind of thing. They pick.</span>
           </span>
         </button>

@@ -45,15 +45,19 @@ export function PresentIcon() {
   )
 }
 
-// A dotted outline with a question mark, for "Maybe an idea…".
-export function MaybePresentIcon() {
+// A lit lightbulb, for "An idea…".
+export function LightbulbIcon() {
   return (
-    <svg width="56" height="56" viewBox="0 0 52 52" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 3">
-      <rect x="8" y="21" width="36" height="25" rx="3" />
-      <rect x="5" y="14" width="42" height="9" rx="2" />
-      <text x="26" y="41" textAnchor="middle" stroke="none" fontFamily="Gloock, Georgia, serif" fontSize="18" style={{ fill: 'var(--plaid-red)' }}>
-        ?
-      </text>
+    <svg width="56" height="56" viewBox="0 0 52 52" aria-hidden="true">
+      <path d="M26 2v5M9 10l3.5 3.5M43 10l-3.5 3.5M3 26h5M44 26h5" strokeWidth="2.5" strokeLinecap="round" style={{ stroke: 'var(--gold-deep)' }} />
+      <path
+        d="M26 11c-8 0-14 6-14 13.5 0 5 2.6 8.4 5.4 11 1.6 1.5 2.6 3.4 2.6 5.5h12c0-2.1 1-4 2.6-5.5 2.8-2.6 5.4-6 5.4-11C40 17 34 11 26 11z"
+        strokeWidth="2.5"
+        strokeLinejoin="round"
+        style={{ fill: 'var(--gold)', stroke: 'var(--ink)' }}
+      />
+      <path d="M21 46h10M22.5 50h7" strokeWidth="2.5" strokeLinecap="round" style={{ stroke: 'var(--ink)' }} />
+      <path d="M22 30l4 4 4-4M26 34v7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" style={{ stroke: 'var(--gold-deep)' }} />
     </svg>
   )
 }

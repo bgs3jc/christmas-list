@@ -57,3 +57,5 @@ Newest at the bottom. Each entry: what we decided, and why.
 **2026-10-26: Shipping on gifts.** Brady ships from DC to Richmond. A gift can ship to someone else's house (never the recipient's) with a tracking number that links to UPS, USPS or FedEx by its format, then be marked arrived. Live tracking needs a paid service: backlog.
 
 **2026-10-26: Home is the night sky.** The M1 sky and sleigh, with "Add to my list" as the first thing you see and globes with names only below.
+
+**2026-10-26: "An idea…" with a lightbulb.** Replaces "Maybe an idea…" and the dotted present, which read as a riddle. The lightbulb is a common symbol, but here clarity wins.

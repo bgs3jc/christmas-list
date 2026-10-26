@@ -141,7 +141,7 @@ export function GimmeDialog({ item, onClose }: WishDialogProps) {
   )
 }
 
-// "Maybe an idea…": a store, brand or kind of thing. The giver picks.
+// "An idea…": a store, brand or kind of thing. The giver picks.
 export function MaybeDialog({ item, onClose }: WishDialogProps) {
   const [title, setTitle] = useState(item?.title ?? '')
   const [notes, setNotes] = useState(item?.notes ?? '')
@@ -156,7 +156,7 @@ export function MaybeDialog({ item, onClose }: WishDialogProps) {
 
   return (
     <Dialog
-      title={item ? 'Change this' : 'Maybe an idea…'}
+      title={item ? 'Change this' : 'An idea…'}
       onClose={onClose}
       onSubmit={save}
       footer={
