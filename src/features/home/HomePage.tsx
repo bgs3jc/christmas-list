@@ -1,6 +1,5 @@
 import { useOtherPeople, useViewer } from '../../data'
 import { plural } from '../../shared/format'
-import { PresentIcon } from '../../shared/icons'
 import { links, type Route } from '../../shared/router'
 import { SiteHeader } from '../../shared/SiteHeader'
 import { SnowGlobe } from '../../shared/SnowGlobe'
@@ -29,7 +28,6 @@ export function HomePage({ route }: { route: Route }) {
           <p className={styles.subtitle}>Hi {viewer.name}. Santa's making his list.</p>
           <div className={styles.heroActions}>
             <a href={links.myList} className={styles.addButton}>
-              <PresentIcon size={22} light />
               Add to my list
             </a>
             <a href={links.myList} className={styles.seeButton}>
