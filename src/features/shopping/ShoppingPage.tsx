@@ -1,35 +1,25 @@
-import { useEffect, useState } from 'react'
-import {
-  addGift,
-  markIdeaGifted,
-  markSeen,
-  usePeople,
-  useShopping,
-  useViewer,
-  type Gift,
-  type WishItem,
-} from '../../data'
-import { plural, shortDate, wishDetails } from '../../shared/format'
-import { LockIcon, StarIcon } from '../../shared/icons'
+import { useState } from 'react'
+import { addGift, markIdeaGifted, usePeople, useShopping, useViewer, type Gift, type GiftStatus, type WishItem } from '../../data'
+import { storeFromLink, trackingLink } from '../../shared/format'
+import { LockIcon, StarIcon, TruckIcon } from '../../shared/icons'
 import { SnowGlobe } from '../../shared/SnowGlobe'
-import { StatusMark } from '../../shared/StatusMark'
+import { StatusPill } from '../../shared/StatusPill'
 import { Button } from '../../shared/ui/Button'
-import list from '../../shared/ui/List.module.css'
+import { Details, EmptyRow, ListSection, Row, Rows, TitleNote } from '../../shared/ui/List'
 import { GiftDialog, type GiftDialogSetup } from './GiftDialog'
-import { IdeasPanel } from './IdeasPanel'
+import { Overheard } from './Overheard'
 import styles from './Shopping.module.css'
+
+const progress: Record<GiftStatus, number> = { planned: 0, bought: 1, wrapped: 2 }
+
+// For a row with several gifts, show the one furthest behind.
+const leastAlong = (gifts: Gift[]) => gifts.reduce((a, b) => (progress[b.status] < progress[a.status] ? b : a)).status
 
 export function ShoppingPage({ recipientId }: { recipientId: string }) {
   const view = useShopping(recipientId)
   const viewer = useViewer()
   const people = usePeople()
-  // Remember when you last looked before this visit counts as looking.
-  const [since] = useState(() => view?.lastSeen)
   const [dialog, setDialog] = useState<GiftDialogSetup | null>(null)
-
-  useEffect(() => {
-    markSeen(recipientId)
-  }, [recipientId])
 
   if (!view) {
     return (
@@ -40,273 +30,208 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   }
 
   const { person, wishes, gifts, ideas } = view
+  const others = people.filter((p) => p.id !== person.id)
   const nameOf = (id: string) => (id === viewer.id ? 'You' : (people.find((p) => p.id === id)?.name ?? 'Someone'))
-  const givers = people.filter((p) => p.id !== person.id)
+  const houseOf = (id: string) => (id === viewer.id ? 'your place' : `${nameOf(id)}'s`)
 
   const giftsByWish = new Map<string, Gift[]>()
   for (const gift of gifts) {
     if (gift.wishItemId) giftsByWish.set(gift.wishItemId, [...(giftsByWish.get(gift.wishItemId) ?? []), gift])
   }
   const wishIds = new Set(wishes.map((w) => w.id))
-  const specific = wishes.filter((w) => w.kind === 'specific')
-  const open = specific.filter((w) => !giftsByWish.has(w.id))
-  const taken = specific.filter((w) => giftsByWish.has(w.id))
-  const hints = wishes.filter((w) => w.kind === 'maybe')
   // Surprises, plus anything whose list item was since removed.
-  const offList = gifts.filter((g) => !g.wishItemId || !wishIds.has(g.wishItemId))
-  const isNew = (w: WishItem) => Boolean(since && w.createdAt > since)
+  const surprises = gifts.filter((g) => !g.wishItemId || !wishIds.has(g.wishItemId))
 
   function claim(wish: WishItem) {
-    addGift({
-      recipientId: person.id,
-      giverId: viewer.id,
-      title: wish.title,
-      wishItemId: wish.id,
-      price: wish.price,
-      status: 'planned',
-      place: 'tree',
-    })
+    addGift({ recipientId: person.id, giverId: viewer.id, title: wish.title, wishItemId: wish.id, status: 'planned', place: 'tree' })
   }
 
   const editGift = (gift: Gift, fromList = false) => setDialog({ heading: 'Change this gift', gift, fromList })
 
-  const counts = (['wrapped', 'bought', 'planned'] as const)
-    .map((status) => [status, gifts.filter((g) => g.status === status).length] as const)
-    .filter(([, n]) => n > 0)
-    .map(([status, n]) => `${n} ${status}`)
+  // Who's getting it, with a truck while it's on its way somewhere.
+  const giver = (gift: Gift) => (
+    <>
+      {gift.shipTo && !gift.arrived && (
+        <span className={styles.truck} role="img" aria-label={`Shipping to ${houseOf(gift.shipTo)}`}>
+          <TruckIcon />
+        </span>
+      )}
+      {nameOf(gift.giverId)}
+    </>
+  )
+
+  const shippingText = (gift: Gift) => {
+    if (!gift.shipTo) return undefined
+    if (gift.arrived) return `Arrived at ${houseOf(gift.shipTo)}`
+    const track = gift.tracking && trackingLink(gift.tracking)
+    return (
+      <>
+        Shipping to {houseOf(gift.shipTo)}
+        {track && (
+          <>
+            {' · '}
+            <a href={track.url} target="_blank" rel="noreferrer">
+              Track{track.carrier && ` (${track.carrier})`}
+            </a>
+          </>
+        )}
+      </>
+    )
+  }
+
+  const giftDetails = (gift: Gift) => [
+    { label: 'Paid', value: gift.price },
+    { label: 'Shipping', value: shippingText(gift) },
+    { label: 'Family notes', value: gift.notes },
+  ]
+
+  const wishDetails = (wish: WishItem) => [
+    { label: `${person.name}'s note`, value: wish.notes },
+    {
+      label: 'Link',
+      value: wish.link && (
+        <a href={wish.link} target="_blank" rel="noreferrer">
+          {storeFromLink(wish.link) ?? 'Open link'}
+        </a>
+      ),
+    },
+  ]
+
+  const wishTitle = (wish: WishItem) => (
+    <>
+      {wish.title}
+      {wish.kind === 'maybe' && <TitleNote>idea</TitleNote>}
+      {wish.topPick && (
+        <span className={styles.favorite} role="img" aria-label="Favorite">
+          <StarIcon filled size={13} />
+        </span>
+      )}
+    </>
+  )
 
   return (
     <main className={styles.page}>
-      <aside className={styles.aside}>
-        <SnowGlobe gifts={gifts.map((g) => g.status)} label={`${person.name}'s snow globe, with ${plural(gifts.length, 'gift')} at the bottom`} />
-        <h1 className={styles.name}>{person.name}</h1>
-        <p className={styles.counts}>{gifts.length ? `${plural(gifts.length, 'gift')} so far: ${counts.join(', ')}.` : 'No gifts planned yet.'}</p>
-        <p className={styles.private}>
-          <LockIcon />
-          {person.name} can't see this page
-        </p>
-
-        <IdeasPanel
-          person={person}
-          ideas={ideas}
-          nameOf={nameOf}
-          onMakeGift={(idea) =>
-            setDialog({ heading: `Add a gift for ${person.name}`, title: idea.text, onSaved: () => markIdeaGifted(idea.id) })
-          }
-        />
-      </aside>
-
-      <div className={styles.main}>
-        {since && <SinceLine since={since} personName={person.name} newCount={wishes.filter(isNew).length} changes={gifts.filter((g) => g.updatedAt > since && g.updatedBy !== viewer.id)} nameOf={nameOf} />}
-
-        <section aria-labelledby="open-heading" className={list.section}>
-          <div className={list.sectionHead}>
-            <h2 id="open-heading" className={list.sectionTitle}>
-              Still open
-            </h2>
-            <span className={list.sectionCount}>{plural(open.length, 'thing')} from {person.name}'s list</span>
-          </div>
-          {open.length === 0 ? (
-            <p className={list.empty}>Everything specific on {person.name}'s list is spoken for.</p>
-          ) : (
-            <ul className={list.rows}>
-              {open.map((wish) => (
-                <li key={wish.id} className={list.row}>
-                  <WishSummary wish={wish} isNew={isNew(wish)} />
-                  <div className={list.actions}>
-                    <Button onClick={() => claim(wish)}>I'll get it</Button>
-                    <Button
-                      variant="quiet"
-                      onClick={() => setDialog({ heading: 'Someone else is getting it', title: wish.title, wishItemId: wish.id, price: wish.price, fromList: true })}
-                    >
-                      Someone else
-                    </Button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-
-        {hints.length > 0 && (
-          <section aria-labelledby="hints-heading" className={list.section}>
-            <div className={list.sectionHead}>
-              <h2 id="hints-heading" className={list.sectionTitle}>
-                {person.name}'s hints
-              </h2>
-              <span className={list.sectionCount}>A store, brand or kind of thing. Several gifts can go under each.</span>
-            </div>
-            <ul className={list.rows}>
-              {hints.map((wish) => {
-                const under = giftsByWish.get(wish.id) ?? []
-                return (
-                  <li key={wish.id} className={`${list.row} ${styles.hintRow}`}>
-                    <div className={list.rowMain}>
-                      <WishSummary wish={wish} isNew={isNew(wish)} bare />
-                      {under.length > 0 && (
-                        <ul className={styles.underHint}>
-                          {under.map((gift) => (
-                            <li key={gift.id} className={styles.underHintGift}>
-                              <span className={styles.underHintTitle}>
-                                {gift.title} {gift.price && <span className={styles.price}>{gift.price}</span>}
-                                {gift.notes && <span className={styles.giftNote}>{gift.notes}</span>}
-                              </span>
-                              <GiftOwner gift={gift} nameOf={nameOf} onChange={() => editGift(gift)} />
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                    <div className={list.actions}>
-                      <Button onClick={() => setDialog({ heading: `A gift for "${wish.title}"`, wishItemId: wish.id })}>Add a gift for this</Button>
-                    </div>
-                  </li>
-                )
-              })}
-            </ul>
-          </section>
-        )}
-
-        <section aria-labelledby="taken-heading" className={list.section}>
-          <div className={list.sectionHead}>
-            <h2 id="taken-heading" className={list.sectionTitle}>
-              Taken care of
-            </h2>
-            <span className={list.sectionCount}>{plural(taken.length, 'thing')} from {person.name}'s list</span>
-          </div>
-          {taken.length === 0 ? (
-            <p className={list.empty}>Nobody has claimed anything yet.</p>
-          ) : (
-            <ul className={list.rows}>
-              {taken.map((wish) => {
-                const gift = giftsByWish.get(wish.id)![0]
-                return (
-                  <li key={wish.id} className={list.row}>
-                    <div className={list.rowMain}>
-                      <WishSummary wish={wish} bare />
-                      {(gift.price || gift.notes) && (
-                        <p className={styles.giftNote}>{[gift.price && `Paid ${gift.price}`, gift.notes].filter(Boolean).join(' · ')}</p>
-                      )}
-                    </div>
-                    <GiftOwner gift={gift} nameOf={nameOf} onChange={() => editGift(gift, true)} />
-                  </li>
-                )
-              })}
-            </ul>
-          )}
-        </section>
-
-        <section aria-labelledby="off-heading" className={list.section}>
-          <div className={list.sectionHead}>
-            <h2 id="off-heading" className={list.sectionTitle}>
-              Not on {person.name}'s list
-            </h2>
-            <span className={list.sectionCount}>Surprises and stocking stuffers</span>
-          </div>
-          {offList.length > 0 && (
-            <ul className={list.rows}>
-              {offList.map((gift) => (
-                <li key={gift.id} className={list.row}>
-                  <div className={list.rowMain}>
-                    <span className={list.title}>{gift.title}</span>
-                    <p className={list.details}>
-                      {[gift.price, gift.place === 'stocking' ? 'Stocking' : 'Under the tree', gift.notes].filter(Boolean).join(' · ')}
-                    </p>
-                  </div>
-                  <GiftOwner gift={gift} nameOf={nameOf} onChange={() => editGift(gift)} />
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className={styles.addGift}>
-            <Button variant="main" onClick={() => setDialog({ heading: `Add a gift for ${person.name}` })}>
-              Add a gift for {person.name}
-            </Button>
-          </div>
-        </section>
+      <div className={styles.header}>
+        <SnowGlobe size={88} gifts={gifts.map((g) => g.status)} label={`${person.name}'s snow globe, with gifts piling up`} />
+        <div>
+          <h1 className={styles.name}>Shopping for {person.name}</h1>
+          <p className={styles.private}>
+            <LockIcon />
+            {person.name} can't see this page
+          </p>
+        </div>
       </div>
 
-      {dialog && <GiftDialog setup={dialog} recipient={person} givers={givers} viewerId={viewer.id} onClose={() => setDialog(null)} />}
-    </main>
-  )
-}
-
-function WishSummary({ wish, isNew = false, bare = false }: { wish: WishItem; isNew?: boolean; bare?: boolean }) {
-  const details = wishDetails(wish)
-  const content = (
-    <>
-      <div className={list.titleLine}>
-        {wish.kind === 'maybe' && <span className={list.ideaTag}>Idea</span>}
-        {wish.link ? (
-          <a href={wish.link} target="_blank" rel="noreferrer" className={list.title}>
-            {wish.title}
-          </a>
+      <ListSection title={`${person.name}'s list`}>
+        {wishes.length === 0 ? (
+          <EmptyRow>{person.name} hasn't added anything yet.</EmptyRow>
         ) : (
-          <span className={list.title}>{wish.title}</span>
+          <Rows>
+            {wishes.map((wish) => {
+              const under = giftsByWish.get(wish.id) ?? []
+
+              if (wish.kind === 'maybe') {
+                const addUnder = () => setDialog({ heading: `A gift for "${wish.title}"`, wishItemId: wish.id })
+                return (
+                  <Row
+                    key={wish.id}
+                    status={<StatusPill status={under.length ? leastAlong(under) : 'open'} />}
+                    title={wishTitle(wish)}
+                    fullTitle={wish.title}
+                    aside={under.length ? [...new Set(under.map((g) => nameOf(g.giverId)))].join(', ') : <Button onClick={addUnder}>Add a gift</Button>}
+                    details={
+                      <Details items={wishDetails(wish)} actions={<Button onClick={addUnder}>Add a gift for this</Button>}>
+                        {under.length > 0 && (
+                          <ul className={styles.underIdea}>
+                            {under.map((gift) => (
+                              <li key={gift.id} className={styles.underIdeaGift}>
+                                <StatusPill status={gift.status} />
+                                <span className={styles.underIdeaTitle}>{gift.title}</span>
+                                <span className={styles.underIdeaWho}>{giver(gift)}</span>
+                                <Button variant="quiet" onClick={() => editGift(gift)} aria-label={`Change ${gift.title}`}>
+                                  Change
+                                </Button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </Details>
+                    }
+                  />
+                )
+              }
+
+              const gift = under[0]
+              return (
+                <Row
+                  key={wish.id}
+                  status={<StatusPill status={gift ? gift.status : 'open'} />}
+                  title={wishTitle(wish)}
+                  fullTitle={wish.title}
+                  aside={gift ? giver(gift) : <Button onClick={() => claim(wish)}>I'll get it</Button>}
+                  details={
+                    <Details
+                      items={gift ? [...wishDetails(wish), ...giftDetails(gift)] : wishDetails(wish)}
+                      actions={
+                        gift ? (
+                          <Button onClick={() => editGift(gift, true)}>Change</Button>
+                        ) : (
+                          <Button
+                            variant="quiet"
+                            onClick={() => setDialog({ heading: 'Someone else is getting it', title: wish.title, wishItemId: wish.id, fromList: true })}
+                          >
+                            Put someone else down for this
+                          </Button>
+                        )
+                      }
+                    />
+                  }
+                />
+              )
+            })}
+          </Rows>
         )}
-        {wish.topPick && (
-          <span className={list.topPick}>
-            <StarIcon filled size={16} />
-            Top pick
-          </span>
+      </ListSection>
+
+      <ListSection
+        title="Surprises & stockings"
+        action={
+          <Button variant="main" onClick={() => setDialog({ heading: `Add a gift for ${person.name}` })}>
+            Add a gift
+          </Button>
+        }
+      >
+        {surprises.length === 0 ? (
+          <EmptyRow>Nothing yet. Gifts that aren't on {person.name}'s list go here.</EmptyRow>
+        ) : (
+          <Rows>
+            {surprises.map((gift) => (
+              <Row
+                key={gift.id}
+                status={<StatusPill status={gift.status} />}
+                title={
+                  <>
+                    {gift.title}
+                    {gift.place === 'stocking' && <TitleNote>stocking</TitleNote>}
+                  </>
+                }
+                fullTitle={gift.title}
+                aside={giver(gift)}
+                details={<Details items={giftDetails(gift)} actions={<Button onClick={() => editGift(gift)}>Change</Button>} />}
+              />
+            ))}
+          </Rows>
         )}
-        {isNew && <span className={list.newMark}>New</span>}
-      </div>
-      {details && <p className={list.details}>{details}</p>}
-    </>
-  )
-  return bare ? content : <div className={list.rowMain}>{content}</div>
-}
+      </ListSection>
 
-function GiftOwner({ gift, nameOf, onChange }: { gift: Gift; nameOf: (id: string) => string; onChange: () => void }) {
-  return (
-    <div className={list.actions}>
-      <span className={styles.giver}>{nameOf(gift.giverId)}</span>
-      <StatusMark status={gift.status} />
-      <Button variant="quiet" onClick={onChange} aria-label={`Change ${gift.title}`}>
-        Change
-      </Button>
-    </div>
-  )
-}
+      <Overheard
+        person={person}
+        ideas={ideas}
+        nameOf={nameOf}
+        onMakeGift={(idea) => setDialog({ heading: `Add a gift for ${person.name}`, title: idea.text, onSaved: () => markIdeaGifted(idea.id) })}
+      />
 
-interface SinceLineProps {
-  since: string
-  personName: string
-  newCount: number
-  changes: Gift[]
-  nameOf: (id: string) => string
-}
-
-// What happened since you last looked: new wishes, and gifts others planned or bought.
-function SinceLine({ since, personName, newCount, changes, nameOf }: SinceLineProps) {
-  const parts: string[] = []
-  if (newCount) parts.push(`${personName} added ${plural(newCount, 'thing')}`)
-  for (const gift of changes.slice(0, 3)) {
-    const who = nameOf(gift.updatedBy)
-    if (gift.updatedBy !== gift.giverId) {
-      const giver = nameOf(gift.giverId)
-      parts.push(`${who} put ${giver === 'You' ? 'you' : giver} down for ${gift.title}`)
-    } else if (gift.status === 'planned') {
-      parts.push(`${who} is getting ${gift.title}`)
-    } else {
-      parts.push(`${who} ${gift.status} ${gift.title}`)
-    }
-  }
-  if (changes.length > 3) parts.push(`${changes.length - 3} more changes`)
-
-  return (
-    <p className={styles.since}>
-      {parts.length ? (
-        <>
-          <span className={list.newMark}>New</span>
-          <span>
-            Since you last looked on {shortDate(since)}: {parts.join(' · ')}.
-          </span>
-        </>
-      ) : (
-        <span className={styles.sinceQuiet}>Nothing new since you last looked on {shortDate(since)}.</span>
-      )}
-    </p>
+      {dialog && <GiftDialog setup={dialog} recipient={person} others={others} viewerId={viewer.id} onClose={() => setDialog(null)} />}
+    </main>
   )
 }

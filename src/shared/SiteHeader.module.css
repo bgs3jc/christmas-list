@@ -43,6 +43,32 @@
   box-shadow: inset 0 -2px 0 var(--plaid-red);
 }
 
+/* On the home page's night sky */
+.night {
+  position: relative;
+}
+
+.night .inner {
+  border-bottom-color: transparent;
+}
+
+.night .wordmark,
+.night .link[aria-current='page'] {
+  color: var(--starlight);
+}
+
+.night .link {
+  color: var(--sky-text-muted);
+}
+
+.night .link[aria-current='page'] {
+  box-shadow: inset 0 -2px 0 var(--gold);
+}
+
+.night a:hover {
+  color: var(--starlight);
+}
+
 @media (max-width: 640px) {
   .header {
     padding: var(--space-4) var(--space-4) 0;

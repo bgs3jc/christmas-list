@@ -1,183 +1,110 @@
 .page {
-  max-width: var(--page-width);
+  max-width: 920px;
   margin: 0 auto;
-  padding: var(--space-10) var(--space-8) var(--space-16);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: var(--space-12) var(--space-16);
+  padding: var(--space-8) var(--space-8) var(--space-16);
 }
 
-/* Left column: who, their globe, and ideas about them */
-
-.aside {
-  flex: 1 1 260px;
-  max-width: 320px;
-  min-width: 0;
+.header {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+  align-items: center;
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
 }
 
 .name {
-  margin-top: var(--space-2);
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
+  font-size: 2.5rem;
   line-height: 1.05;
-}
-
-.counts {
-  font-size: 1.0625rem;
-  color: var(--ink-muted);
 }
 
 .private {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  margin-top: var(--space-1);
+  margin-top: var(--space-2);
   color: var(--pine);
   font-size: var(--text-sm);
-  font-weight: 800;
-}
-
-.ideas {
-  margin-top: var(--space-8);
-}
-
-.ideasTitle {
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--ink);
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-}
-
-.ideasEmpty {
-  padding: var(--space-3) 0;
-  color: var(--ink-muted);
-}
-
-.ideaList {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.idea {
-  padding: var(--space-3) 0 var(--space-1);
-  border-bottom: 1px solid var(--line);
-}
-
-.ideaText {
   font-weight: 700;
 }
 
-.ideaMeta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0 var(--space-3);
-  font-size: var(--text-sm);
-  color: var(--ink-muted);
+.favorite {
+  display: inline-flex;
+  margin-left: var(--space-2);
+  vertical-align: -1px;
 }
 
-.ideaMeta button {
-  font-size: var(--text-sm);
+.truck {
+  display: inline-flex;
+  color: var(--shipping);
+}
+
+/* Gifts under an idea, inside the opened row */
+
+.underIdea {
+  margin: var(--space-3) 0 0;
+  padding: 0 0 0 var(--space-3);
+  border-left: 2px solid var(--line);
+  list-style: none;
+}
+
+.underIdeaGift {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0 var(--space-3);
+  min-height: 40px;
+}
+
+.underIdeaTitle {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.underIdeaWho {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+/* Overheard */
+
+.ideaText {
+  font-weight: 400;
 }
 
 .ideaDone {
   color: var(--pine);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .ideaForm {
-  margin-top: var(--space-4);
-}
-
-.ideaLabel {
-  display: block;
-  margin-bottom: var(--space-2);
-  font-size: var(--text-button);
-  font-weight: 800;
-}
-
-.ideaInputRow {
   display: flex;
   gap: var(--space-2);
+  margin-top: var(--space-3);
 }
 
 .ideaInput {
   flex: 1;
   min-width: 0;
-  min-height: 44px;
+  min-height: 40px;
   padding: 0 var(--space-3);
-  border: 1.5px solid var(--line-strong);
+  border: 1.5px solid var(--line);
   border-radius: var(--radius-md);
-  background: var(--white);
+  background: var(--sheet);
 }
 
-/* Right column: the list */
-
-.main {
-  flex: 999 1 560px;
-  min-width: 0;
-}
-
-.since {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-1) var(--space-3);
-  margin-bottom: var(--space-10);
-}
-
-.sinceQuiet {
-  color: var(--ink-muted);
-}
-
-.giver {
-  font-weight: 700;
-}
-
-.price {
-  font-weight: 400;
-  color: var(--ink-muted);
-}
-
-.hintRow {
-  align-items: start;
-}
-
-.underHint {
-  margin: var(--space-3) 0 0;
-  padding: 0 0 0 var(--space-4);
-  border-left: 2px solid var(--line);
-  list-style: none;
-}
-
-.underHintGift {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0 var(--space-4);
-}
-
-.underHintTitle {
-  font-weight: 700;
-}
-
-/* "Notes for the family" on a gift. */
-.giftNote {
-  display: block;
-  margin-top: 2px;
-  font-weight: 400;
-  font-style: italic;
-  color: var(--ink-muted);
-}
-
-.addGift {
-  margin-top: var(--space-5);
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 /* Pop-up details */
@@ -185,6 +112,15 @@
 .dialogItem {
   font-size: var(--text-lg);
   font-weight: 800;
+}
+
+.shippingBox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--shipping-soft);
 }
 
 .removeButton {
@@ -197,7 +133,12 @@
     padding: var(--space-6) var(--space-4) var(--space-12);
   }
 
-  .aside {
-    max-width: none;
+  .name {
+    font-size: 2rem;
+  }
+
+  .underIdeaGift {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: var(--space-1) 0;
   }
 }

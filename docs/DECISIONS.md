@@ -45,3 +45,15 @@ Newest at the bottom. Each entry: what we decided, and why.
 **2026-10-25: No prices from the person adding, no manual ranking.** Typing prices onto your own list felt tacky. Shoppers enter what they paid when they claim something; pulling prices from links is in the backlog. Order is just favorites (stars) first, then newest last; no arrows or dragging.
 
 **2026-10-25: Wishes of the "Maybe an idea…" kind are tagged "Idea" in lists.**
+
+**2026-10-26: Quiet rows, details on click.** Two busier list designs were rejected ("I'd rather just have a spreadsheet"). Every row is one line: status pill, name, who. Color only means status. Notes, links, price paid and shipping show when a row is opened. Modeled on how well-made list apps work.
+
+**2026-10-26: One list per person, in their order.** No split into "needs someone" and "covered", and ideas sit in the same list. Each row shows its own state.
+
+**2026-10-26: No "new" markers or counts.** Lists get filled in mostly at once, and claims show live, so "new since you looked" and gift counts were noise. Counts also invited comparing people. The gift pile in the snow globe stays on shopping pages only.
+
+**2026-10-26: Status colors.** Open grey (dashed circle), Planned amber (empty circle), Bought green (full circle), Wrapped red (present). Shape and word always go with the color.
+
+**2026-10-26: Shipping on gifts.** Brady ships from DC to Richmond. A gift can ship to someone else's house (never the recipient's) with a tracking number that links to UPS, USPS or FedEx by its format, then be marked arrived. Live tracking needs a paid service: backlog.
+
+**2026-10-26: Home is the night sky.** The M1 sky and sleigh, with "Add to my list" as the first thing you see and globes with names only below.

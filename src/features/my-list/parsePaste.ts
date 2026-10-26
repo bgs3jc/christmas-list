@@ -28,10 +28,12 @@ function parseLine(line: string): PastedWish {
   return { title: nameFromLink(link), link, notes: rest || undefined }
 }
 
+const MAX_NAME_WORDS = 6
+
 const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
 
 // Most shops put the product name in the link: ".../rite-in-the-rain-notebook/123".
-// Take the longest wordy, hyphenated piece and tidy it up.
+// Take the longest wordy, hyphenated piece, tidy it up and keep it short.
 export function nameFromLink(link: string): string {
   const store = storeFromLink(link) ?? 'a link'
   let path = ''
@@ -49,6 +51,9 @@ export function nameFromLink(link: string): string {
     best
       .replace(/\.(html?|aspx?|php)$/i, '')
       .replace(/[-_+]+/g, ' ')
-      .trim(),
+      .trim()
+      .split(/\s+/)
+      .slice(0, MAX_NAME_WORDS)
+      .join(' '),
   )
 }

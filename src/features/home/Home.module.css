@@ -1,31 +1,187 @@
-.page {
-  max-width: var(--page-width);
-  margin: 0 auto;
-  padding: var(--space-12) var(--space-8) var(--space-16);
+/* The night sky band at the top */
+
+.night {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(var(--night-deep), var(--night) 78%, var(--night-low));
+  color: var(--starlight);
+}
+
+.sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.stars {
+  fill: var(--starlight);
+}
+
+.moon {
+  fill: var(--moon);
+}
+
+.sleigh {
+  fill: var(--sleigh);
+  color: var(--sleigh);
+  animation: fly 48s linear infinite;
+}
+
+@keyframes fly {
+  from {
+    transform: translateX(-380px);
+  }
+  to {
+    transform: translateX(1500px);
+  }
+}
+
+/* With less motion, the sleigh simply waits mid-sky. */
+@media (prefers-reduced-motion: reduce) {
+  .sleigh {
+    animation: none;
+    transform: translateX(860px);
+  }
+}
+
+.runner {
+  fill: none;
+  stroke: var(--sleigh);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+}
+
+.santaFace {
+  fill: var(--starlight);
+}
+
+.santaRed {
+  fill: var(--sleigh-red);
+}
+
+.sack {
+  fill: var(--sleigh-gold);
+}
+
+.reins {
+  stroke: var(--sleigh);
+  stroke-width: 1;
+  opacity: 0.7;
+}
+
+.nose {
+  fill: var(--rudolph);
+}
+
+.noseGlow {
+  fill: var(--rudolph);
+  opacity: 0.25;
+}
+
+.hillBack {
+  fill: var(--hill);
+}
+
+.hillFront {
+  fill: var(--snow);
 }
 
 .hero {
+  position: relative;
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 150px var(--space-8) 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
   text-align: center;
 }
 
 .title {
   font-family: var(--font-display);
   font-size: var(--text-hero);
-  line-height: 1.1;
+  line-height: 1.05;
 }
 
 .subtitle {
-  margin-top: var(--space-3);
+  font-size: 1.1875rem;
+  color: var(--sky-text-soft);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.addButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 52px;
+  padding: 0 var(--space-6);
+  border-radius: 10px;
+  background: var(--plaid-red);
+  color: var(--sheet);
   font-size: var(--text-lg);
-  color: var(--ink-muted);
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 3px 0 var(--plaid-red-shadow);
+}
+
+.addButton:hover {
+  background: var(--plaid-red-deep);
+  color: var(--sheet);
+}
+
+.seeButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 var(--space-5);
+  border: 1.5px solid var(--sky-text-muted);
+  border-radius: 10px;
+  color: var(--starlight);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.seeButton:hover {
+  background: rgb(243 238 223 / 0.1);
+  color: var(--starlight);
+}
+
+/* The snowy part below */
+
+.snow {
+  min-height: 60vh;
+  background: var(--snow);
+}
+
+.page {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: var(--space-2) var(--space-8) var(--space-16);
+}
+
+.shoppingFor {
+  margin-bottom: var(--space-6);
+  font-family: var(--font-display);
+  font-size: 1.875rem;
+  text-align: center;
 }
 
 .people {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--space-10) var(--space-12);
-  margin: var(--space-12) 0 0;
+  gap: var(--space-8) var(--space-16);
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -34,9 +190,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-3);
-  border-radius: var(--radius-lg);
+  gap: var(--space-2);
   text-decoration: none;
   transition: transform var(--duration-quick) var(--ease-gentle);
 }
@@ -47,7 +201,6 @@
 }
 
 .personName {
-  margin-top: var(--space-2);
   font-family: var(--font-display);
   font-size: 1.75rem;
   line-height: 1.1;
@@ -59,18 +212,12 @@
   text-underline-offset: 4px;
 }
 
-.personDetails {
-  color: var(--ink-muted);
-}
-
-.own {
-  margin-top: var(--space-12);
-  text-align: center;
-  font-weight: 800;
-}
-
 @media (max-width: 640px) {
+  .hero {
+    padding: 96px var(--space-4) 120px;
+  }
+
   .page {
-    padding: var(--space-8) var(--space-4) var(--space-12);
+    padding: var(--space-2) var(--space-4) var(--space-12);
   }
 }

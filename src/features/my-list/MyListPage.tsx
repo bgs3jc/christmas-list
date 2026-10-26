@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { features } from '../../config/features'
 import { useMyList, type WishItem, type WishKind } from '../../data'
-import { plural, santasListLabels } from '../../shared/format'
+import { santasListLabels } from '../../shared/format'
 import { MaybePresentIcon, PresentIcon } from '../../shared/icons'
 import { SnowGlobe } from '../../shared/SnowGlobe'
-import list from '../../shared/ui/List.module.css'
+import { EmptyRow, ListSection, Rows } from '../../shared/ui/List'
 import { GimmeDialog, MaybeDialog } from './WishDialogs'
 import { WishRow } from './WishRow'
 import styles from './MyList.module.css'
@@ -47,23 +47,19 @@ export function MyListPage() {
         </button>
       </div>
 
-      <section aria-labelledby="my-list-heading" className={styles.listSection}>
-        <div className={list.sectionHead}>
-          <h2 id="my-list-heading" className={list.sectionTitle}>
-            Dear Santa
-          </h2>
-          {wishes.length > 0 && <span className={list.sectionCount}>{plural(wishes.length, 'thing')} · star your favorites and they go to the top</span>}
-        </div>
-        {wishes.length === 0 ? (
-          <p className={list.empty}>Nothing here yet. Start with one of the buttons above.</p>
-        ) : (
-          <ul className={list.rows}>
-            {wishes.map((item) => (
-              <WishRow key={item.id} item={item} onEdit={() => setDialog({ kind: item.kind, item })} />
-            ))}
-          </ul>
-        )}
-      </section>
+      <div className={styles.listSection}>
+        <ListSection title="Dear Santa">
+          {wishes.length === 0 ? (
+            <EmptyRow>Nothing here yet. Start with one of the buttons above. Star your favorites and they go to the top.</EmptyRow>
+          ) : (
+            <Rows>
+              {wishes.map((item) => (
+                <WishRow key={item.id} item={item} onEdit={() => setDialog({ kind: item.kind, item })} />
+              ))}
+            </Rows>
+          )}
+        </ListSection>
+      </div>
 
       {dialog?.kind === 'specific' && <GimmeDialog item={dialog.item} onClose={close} />}
       {dialog?.kind === 'maybe' && <MaybeDialog item={dialog.item} onClose={close} />}

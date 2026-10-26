@@ -1,7 +1,10 @@
-import { useHomeSummary, useViewer } from '../../data'
+import { useOtherPeople, useViewer } from '../../data'
 import { plural } from '../../shared/format'
-import { links } from '../../shared/router'
+import { PresentIcon } from '../../shared/icons'
+import { links, type Route } from '../../shared/router'
+import { SiteHeader } from '../../shared/SiteHeader'
 import { SnowGlobe } from '../../shared/SnowGlobe'
+import { NightSky } from './NightSky'
 import styles from './Home.module.css'
 
 function sleepsUntilChristmas(today: Date): number {
@@ -11,35 +14,46 @@ function sleepsUntilChristmas(today: Date): number {
   return Math.round((christmas.getTime() - start.getTime()) / 86_400_000)
 }
 
-export function HomePage() {
+export function HomePage({ route }: { route: Route }) {
   const viewer = useViewer()
-  const people = useHomeSummary()
+  const people = useOtherPeople()
   const sleeps = sleepsUntilChristmas(new Date())
 
   return (
-    <main className={styles.page}>
-      <div className={styles.hero}>
-        <h1 className={styles.title}>{sleeps === 0 ? "It's Christmas morning" : `${plural(sleeps, 'sleep')} until Christmas morning`}</h1>
-        <p className={styles.subtitle}>Hi {viewer.name}. Who are you shopping for?</p>
+    <>
+      <div className={styles.night}>
+        <NightSky />
+        <SiteHeader route={route} tone="night" />
+        <div className={styles.hero}>
+          <h1 className={styles.title}>{sleeps === 0 ? "It's Christmas morning" : `${plural(sleeps, 'sleep')} until Christmas morning`}</h1>
+          <p className={styles.subtitle}>Hi {viewer.name}. Santa's making his list.</p>
+          <div className={styles.heroActions}>
+            <a href={links.myList} className={styles.addButton}>
+              <PresentIcon size={22} light />
+              Add to my list
+            </a>
+            <a href={links.myList} className={styles.seeButton}>
+              See my list
+            </a>
+          </div>
+        </div>
       </div>
 
-      <ul className={styles.people}>
-        {people.map(({ person, openCount, giftStatuses }) => (
-          <li key={person.id} className={styles.person}>
-            <a href={links.shop(person.id)} className={styles.personLink}>
-              <SnowGlobe size={180} gifts={giftStatuses} />
-              <span className={styles.personName}>{person.name}</span>
-              <span className={styles.personDetails}>
-                {openCount ? `${openCount} still open` : 'All spoken for'} · {plural(giftStatuses.length, 'gift')}
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-
-      <p className={styles.own}>
-        <a href={links.myList}>Add to your own list</a>
-      </p>
-    </main>
+      <main className={styles.snow}>
+        <div className={styles.page}>
+          <h2 className={styles.shoppingFor}>Who are you shopping for?</h2>
+          <ul className={styles.people}>
+            {people.map((person) => (
+              <li key={person.id}>
+                <a href={links.shop(person.id)} className={styles.personLink}>
+                  <SnowGlobe size={170} />
+                  <span className={styles.personName}>{person.name}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </main>
+    </>
   )
 }

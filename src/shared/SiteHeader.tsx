@@ -2,7 +2,7 @@ import { usePeople, useViewer } from '../data'
 import { links, type Route } from './router'
 import styles from './SiteHeader.module.css'
 
-export function SiteHeader({ route }: { route: Route }) {
+export function SiteHeader({ route, tone = 'paper' }: { route: Route; tone?: 'paper' | 'night' }) {
   const viewer = useViewer()
   const others = usePeople().filter((p) => p.id !== viewer.id)
 
@@ -17,7 +17,7 @@ export function SiteHeader({ route }: { route: Route }) {
   ]
 
   return (
-    <header className={styles.header}>
+    <header className={tone === 'night' ? `${styles.header} ${styles.night}` : styles.header}>
       <div className={styles.inner}>
         <a href={links.home} className={styles.wordmark}>
           The Family List

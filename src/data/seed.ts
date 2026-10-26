@@ -46,9 +46,9 @@ export function sampleData(): AppData {
       wish({ id: 'w-brady-3', ownerId: 'brady', kind: 'specific', title: 'Running socks', notes: 'Size L', createdAt: day('10-04') }),
     ],
     gifts: [
-      gift({ id: 'g-1', recipientId: 'allie', giverId: 'brady', title: 'Gooseneck pour-over kettle', wishItemId: 'w-allie-2', price: '$55', status: 'wrapped', createdAt: day('10-06') }),
+      gift({ id: 'g-1', recipientId: 'allie', giverId: 'brady', title: 'Gooseneck pour-over kettle', wishItemId: 'w-allie-2', price: '$55', status: 'wrapped', shipTo: 'april', arrived: true, createdAt: day('10-06') }),
       gift({ id: 'g-2', recipientId: 'allie', giverId: 'april', title: 'Wool beanie', wishItemId: 'w-allie-4', status: 'planned', createdAt: day('10-09'), updatedBy: 'brady' }),
-      gift({ id: 'g-3', recipientId: 'allie', giverId: 'brady', title: 'Snake plant in a ceramic pot', wishItemId: 'w-allie-3', price: '$34', status: 'bought', createdAt: day('10-11') }),
+      gift({ id: 'g-3', recipientId: 'allie', giverId: 'brady', title: 'Snake plant in a ceramic pot', wishItemId: 'w-allie-3', price: '$34', status: 'bought', shipTo: 'april', tracking: '1Z999AA10123456784', createdAt: day('10-11') }),
       gift({ id: 'g-4', recipientId: 'allie', giverId: 'kevin', title: 'Heated throw blanket', price: '$65', status: 'bought', createdAt: day('10-14'), updatedAt: day('10-22') }),
       gift({ id: 'g-5', recipientId: 'allie', giverId: 'april', title: 'Lip balm trio', price: '$14', status: 'bought', place: 'stocking', createdAt: day('10-16') }),
       gift({ id: 'g-6', recipientId: 'april', giverId: 'allie', title: 'Cozy slippers', wishItemId: 'w-april-2', price: '$40', status: 'bought', createdAt: day('10-18') }),
@@ -59,6 +59,5 @@ export function sampleData(): AppData {
       { id: 'i-2', aboutId: 'allie', authorId: 'brady', text: 'Wants to try the new bakery downtown', createdAt: day('10-03') },
       { id: 'i-3', aboutId: 'april', authorId: 'allie', text: 'Her reading lamp keeps flickering', createdAt: day('10-12') },
     ],
-    lastSeen: { 'brady:allie': day('10-21') },
   }
 }

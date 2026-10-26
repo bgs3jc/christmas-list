@@ -45,6 +45,10 @@ export interface Gift {
   notes?: string
   status: GiftStatus
   place: GiftPlace
+  // Shipping to someone else's house (never the recipient's).
+  shipTo?: PersonId
+  tracking?: string
+  arrived?: boolean
   createdAt: string
   updatedAt: string
   updatedBy: PersonId
@@ -65,6 +69,4 @@ export interface AppData {
   wishes: WishItem[]
   gifts: Gift[]
   ideas: Idea[]
-  // When each person last opened each shopping page, keyed "viewer:recipient".
-  lastSeen: Record<string, string>
 }

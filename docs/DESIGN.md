@@ -8,7 +8,8 @@ Round-one plaid "Christmas morning" pages were busy. The direction now:
 
 - **Calm by default.** Cream paper, ink text. Lists are separated by lines and space, not boxes or tinted panels. Hierarchy comes from type size and weight, not color.
 - **One main action per screen** in plaid red; everything else is an outlined or underlined button. Extra options open on click ("Someone else", "Change").
-- **One festive moment per page: the person's snow globe.** For shoppers, gifts pile up at the bottom of the globe (ribbon = wrapped, plain box = bought, dotted = planned). On your own page it just snows.
+- **One festive moment per page.** Home: the night sky with Santa's sleigh. Shopping pages: the person's snow globe, with gifts piling up at the bottom (ribbon = wrapped, plain box = bought, dotted = planned). Your own page: your globe just snows.
+- **Quiet rows.** One line each: status pill, name, who. Details open on click. Status colors: open grey, planned amber, bought green, wrapped red; each with its own shape and word. Nothing else in a row gets color except a navy truck while something ships.
 - **The fun is in small touches:** the gift pile, the wording ("Gimme, gimme, gimme"), the Naughty/Nice tag. No stamps, plaid strips, emoji or handwriting fonts.
 - **Quiet nods** to the family's favorite Christmas movies remain welcome, small enough that only the family notices.
 
@@ -23,6 +24,4 @@ Mockups (private canvas, Brady's account): https://claude.ai/artifact/BkG8hdVD8i
 
 ## Known gaps
 
-- List rows should get more compact and structured; borrow from professional sites (see BACKLOG).
 - Personal globes (pets, interests) need to come from the database.
-- The home page's night sky and sleigh from M1 aren't built yet.

@@ -2,25 +2,24 @@
 
 Update this at the end of every session. Keep it short.
 
-**Last updated:** 2026-10-25
+**Last updated:** 2026-10-26
 
 ## Where things stand
 
 - **M1 and M2 done.** Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`.
 - **M3 in progress: first clickable prototype is live.** It runs on browser storage with made-up sample data. A "Viewing as" bar at the top stands in for sign-in until M4.
   - **My list:** Brady's sketch. Two big buttons: "Gimme, gimme, gimme" (something specific; paste one link or a whole list) and "Maybe an idea…" (a store, brand or kind of thing). Reorder with arrows, star top picks, edit or remove. No claims are shown.
-  - **Shopping for [person]:** what's new since you last looked, still open, their hints (several gifts can go under each), taken care of, not on their list (tree or stocking), and Overheard ideas. "I'll get it", "Someone else", and a change dialog for who, how far along and price.
-  - **Home:** sleeps until Christmas, plus a snow globe per person with their gift pile.
-  - **Naughty/Nice tag:** set by someone else, shown on your own list.
+  - **Shopping for [person]:** one list in their order (favorites first), then "Surprises & stockings", then "Overheard". Quiet one-line rows: status, name, who. Click a row for notes, link, price paid and shipping. "I'll get it" on open rows; ideas can hold several gifts.
+  - **Shipping:** a gift can be "Shipping to April's" with a tracking number that links to the carrier, then marked "Arrived".
+  - **Home:** night sky with Santa's sleigh, a big "Add to my list" button, and a snow globe per person (names only, nothing to compare).
+  - **Naughty/Nice tag:** set by Brady in the data, shown on your own list.
   - Two browser tabs as two people stay in sync, a preview of M4's live updates.
 - **Design direction changed** to "quiet paper, one snow globe" (see `DESIGN.md`, `DECISIONS.md`). Mockups are on the canvas linked in `DESIGN.md`, rounds 4 and 5.
 
 ## Next steps
 
-1. Brady clicks through the prototype as each person and notes what's off.
-2. Redesign the list rows: gather two or three professional sites that show lists cleanly and borrow from them. Rows live in one style file (`src/shared/ui/List.module.css`), so this is a contained change.
-3. Brady sketches the shopping page the way he sketched "My list", if the current one doesn't feel right.
-4. Tidy wording and form fields from his notes, then call M3 done and start M4 (Firebase + sign-in).
+1. Brady clicks through the quiet-rows version as each person and notes what's off. Rows are one shared component (`src/shared/ui/List.tsx` and `List.module.css`), so changes stay contained.
+2. Tidy wording and form fields from his notes, then call M3 done and start M4 (Firebase + sign-in).
 
 ## Milestones to v1
 

@@ -7,7 +7,7 @@
 
 import { useMemo, useSyncExternalStore } from 'react'
 import { commit, getSnapshot, resetData, setViewerId, subscribe } from './store'
-import type { AppData, Gift, GiftStatus, Idea, Person, PersonId, WishItem } from './types'
+import type { AppData, Gift, Idea, Person, PersonId, WishItem } from './types'
 
 export type * from './types'
 
@@ -46,7 +46,6 @@ export interface ShoppingView {
   wishes: WishItem[]
   gifts: Gift[]
   ideas: Idea[]
-  lastSeen?: string
 }
 
 // Everything about one person, for everyone except that person.
@@ -60,34 +59,14 @@ export function useShopping(recipientId: PersonId): ShoppingView | null {
       wishes: data.wishes.filter((w) => w.ownerId === recipientId).sort(byPriority),
       gifts: data.gifts.filter((g) => g.recipientId === recipientId),
       ideas: data.ideas.filter((i) => i.aboutId === recipientId),
-      lastSeen: data.lastSeen[`${viewerId}:${recipientId}`],
     }
   }, [data, viewerId, recipientId])
 }
 
-export interface PersonSummary {
-  person: Person
-  openCount: number
-  giftStatuses: GiftStatus[]
-}
-
-// One line per other person, for the home page.
-export function useHomeSummary(): PersonSummary[] {
+// Everyone except you, for the home page.
+export function useOtherPeople(): Person[] {
   const { data, viewerId } = useSnapshot()
-  return useMemo(
-    () =>
-      data.people
-        .filter((p) => p.id !== viewerId)
-        .map((person) => {
-          const gifts = data.gifts.filter((g) => g.recipientId === person.id)
-          const claimed = new Set(gifts.map((g) => g.wishItemId))
-          const openCount = data.wishes.filter(
-            (w) => w.ownerId === person.id && w.kind === 'specific' && !claimed.has(w.id),
-          ).length
-          return { person, openCount, giftStatuses: gifts.map((g) => g.status) }
-        }),
-    [data, viewerId],
-  )
+  return useMemo(() => data.people.filter((p) => p.id !== viewerId), [data, viewerId])
 }
 
 // ---- Writes ----
@@ -129,7 +108,10 @@ export function removeWish(id: string) {
   commit((data) => ({ ...data, wishes: data.wishes.filter((w) => !(w.id === id && w.ownerId === ownerId)) }))
 }
 
-export type GiftDraft = Pick<Gift, 'recipientId' | 'giverId' | 'title' | 'wishItemId' | 'price' | 'notes' | 'status' | 'place'>
+export type GiftDraft = Pick<
+  Gift,
+  'recipientId' | 'giverId' | 'title' | 'wishItemId' | 'price' | 'notes' | 'status' | 'place' | 'shipTo' | 'tracking' | 'arrived'
+>
 
 export function addGift(draft: GiftDraft) {
   const viewerId = currentViewer()
@@ -174,11 +156,6 @@ export function markIdeaGifted(id: string) {
     ...data,
     ideas: data.ideas.map((i) => (i.id === id && i.aboutId !== viewerId ? { ...i, madeIntoGift: true } : i)),
   }))
-}
-
-export function markSeen(recipientId: PersonId) {
-  const viewerId = currentViewer()
-  commit((data) => ({ ...data, lastSeen: { ...data.lastSeen, [`${viewerId}:${recipientId}`]: now() } }))
 }
 
 // Prototype only.

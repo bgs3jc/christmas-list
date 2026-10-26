@@ -17,6 +17,8 @@
   --ink-faint: #8a7a68;
   --line: #e6daca;
   --line-strong: #cdbfa8;
+  --line-row: #ece3d4;
+  --row-hover: #f6efe2;
   --scrim: rgb(43 29 26 / 0.45);
 
   /* Accents: red for the one main action and "new", pine for done and private */
@@ -25,6 +27,20 @@
   --pine: #2f5d46;
   --gold: #e9b949;
   --gold-deep: #9c6b22;
+
+  /* Status: color only ever means status. Each pill also has its own shape and word. */
+  --status-open: #5e4e48;
+  --status-open-soft: #efe9df;
+  --status-planned: #7a5418;
+  --status-planned-soft: #f6ebd5;
+  --status-bought: #2f5d46;
+  --status-bought-soft: #e3ece5;
+  --status-wrapped: #a82a30;
+  --status-wrapped-soft: #f6e3e2;
+  /* Shipping */
+  --shipping: #1d3461;
+  --shipping-soft: #eef1f6;
+  --shipping-line: #b8c3d6;
 
   /* Gift boxes */
   --kraft: #c9a57a;
@@ -36,10 +52,21 @@
   --globe-base: #7a4a2b;
   --globe-base-dark: #5c361e;
 
-  /* Night sky, kept for the home screen later */
+  /* Night sky on the home page */
   --night: #1d3461;
   --night-deep: #0b1530;
+  --night-low: #2a4878;
+  --starlight: #f3eedf;
+  --sky-text-soft: #d6ddea;
+  --sky-text-muted: #c9d2e2;
+  --moon: #f6e7b8;
+  --sleigh: #e9dcb8;
+  --sleigh-red: #c8432a;
+  --sleigh-gold: #b9a57a;
+  --rudolph: #ff5a4a;
+  --hill: #dce6f0;
   --snow: #eef3f8;
+  --plaid-red-shadow: #5e1418;
 
   /* Fonts: one display face, one body face */
   --font-display: 'Gloock', Georgia, serif;

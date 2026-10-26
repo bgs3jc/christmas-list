@@ -1,0 +1,30 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: var(--text-xs);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.open {
+  background: var(--status-open-soft);
+  color: var(--status-open);
+}
+
+.planned {
+  background: var(--status-planned-soft);
+  color: var(--status-planned);
+}
+
+.bought {
+  background: var(--status-bought-soft);
+  color: var(--status-bought);
+}
+
+.wrapped {
+  background: var(--status-wrapped-soft);
+  color: var(--status-wrapped);
+}

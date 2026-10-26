@@ -33,14 +33,16 @@ export function StarIcon({ filled, size = 20 }: { filled: boolean; size?: number
   )
 }
 
-// A wrapped present, for "Gimme, gimme, gimme".
-export function PresentIcon() {
+// A wrapped present, for "Gimme, gimme, gimme". The light version sits on red buttons.
+export function PresentIcon({ size = 56, light = false }: { size?: number; light?: boolean }) {
+  const box = light ? 'var(--sheet)' : 'var(--plaid-red)'
+  const ribbon = light ? 'var(--plaid-red)' : 'var(--gold)'
   return (
-    <svg width="56" height="56" viewBox="0 0 52 52" aria-hidden="true">
-      <rect x="8" y="21" width="36" height="25" rx="3" style={{ fill: 'var(--plaid-red)' }} />
-      <rect x="5" y="14" width="42" height="9" rx="2" style={{ fill: 'var(--plaid-red)' }} />
-      <path d="M26 14v32" strokeWidth="5" style={{ stroke: 'var(--gold)' }} />
-      <path d="M26 14c-3-9-14-9-12-2 1 3 8 2 12 2zM26 14c3-9 14-9 12-2-1 3-8 2-12 2z" style={{ fill: 'var(--gold)' }} />
+    <svg width={size} height={size} viewBox="0 0 52 52" aria-hidden="true">
+      <rect x="8" y="21" width="36" height="25" rx="3" style={{ fill: box }} />
+      <rect x="5" y="14" width="42" height="9" rx="2" style={{ fill: box }} />
+      <path d="M26 14v32" strokeWidth="5" style={{ stroke: ribbon }} />
+      {!light && <path d="M26 14c-3-9-14-9-12-2 1 3 8 2 12 2zM26 14c3-9 14-9 12-2-1 3-8 2-12 2z" style={{ fill: ribbon }} />}
     </svg>
   )
 }
@@ -54,6 +56,17 @@ export function MaybePresentIcon() {
       <text x="26" y="41" textAnchor="middle" stroke="none" fontFamily="Gloock, Georgia, serif" fontSize="18" style={{ fill: 'var(--plaid-red)' }}>
         ?
       </text>
+    </svg>
+  )
+}
+
+// A delivery truck, for gifts on their way somewhere.
+export function TruckIcon() {
+  return (
+    <svg width="16" height="14" viewBox="0 0 24 20" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
+      <path d="M1 3h13v11H1zM14 7h5l4 4v3h-9z" />
+      <circle cx="5" cy="16" r="2.2" style={{ fill: 'var(--paper)' }} />
+      <circle cx="18" cy="16" r="2.2" style={{ fill: 'var(--paper)' }} />
     </svg>
   )
 }

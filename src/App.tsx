@@ -24,13 +24,14 @@ export function App() {
     // Your own shopping page is just your list: nothing about your gifts.
     page = <MyListPage key={viewer.id} />
   } else {
-    page = <HomePage />
+    // Home draws its own header, inside the night sky.
+    page = <HomePage route={route} />
   }
 
   return (
     <>
       {features.viewAsSwitch && <ViewAsBar />}
-      <SiteHeader route={route} />
+      {route.name !== 'home' && <SiteHeader route={route} />}
       {page}
     </>
   )
