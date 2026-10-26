@@ -60,7 +60,7 @@ This repo is **public**. Never commit email addresses, Firebase admin credential
 
 ## Skills
 
-- **ui-ux-pro-max** (`.claude/skills/ui-ux-pro-max/`): searchable design reference (styles, palettes, fonts, UX rules). Run from the repo root:
+- **ui-ux-pro-max** (`.claude/skills/ui-ux-pro-max/`): searchable design reference (styles, palettes, fonts, UX rules). Load it with the Skill tool before any design work (don't just run the search script), then search from the repo root:
   `python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<query>" --domain <domain>`
   Treat results as reference, not authority. Its defaults lean toward generic SaaS/landing-page patterns; the design direction Brady chooses wins.
 - **writing-quality** (built into Claude Code here): use it for user-facing app copy to avoid AI-sounding text.
