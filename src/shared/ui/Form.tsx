@@ -22,7 +22,8 @@ export function TextField({ label, value, onChange, help, placeholder, multiline
     value,
     placeholder,
     required,
-    autoFocus,
+    // Read by Dialog, which focuses this field once the pop-up has opened.
+    'data-autofocus': autoFocus || undefined,
     'aria-describedby': help ? helpId : undefined,
     className: styles.input,
   }

@@ -18,7 +18,11 @@ export function Dialog({ title, onClose, onSubmit, children, footer }: DialogPro
 
   useEffect(() => {
     const dialog = ref.current
-    if (dialog && !dialog.open) dialog.showModal()
+    if (!dialog || dialog.open) return
+    dialog.showModal()
+    // Opening moves the cursor to the first button (the X). Put it in the
+    // field that asked for it instead, so typing goes straight in.
+    dialog.querySelector<HTMLElement>('[data-autofocus]')?.focus()
   }, [])
 
   function handleSubmit(event: FormEvent) {

@@ -1,6 +1,6 @@
 // Small text helpers used by more than one feature.
 
-import type { GiftStatus, SantasListStatus, WishItem } from '../data'
+import type { GiftStatus, SantasListStatus } from '../data'
 
 // "rei.com" from "https://www.rei.com/product/...".
 export function storeFromLink(link?: string): string | undefined {
@@ -10,11 +10,6 @@ export function storeFromLink(link?: string): string | undefined {
   } catch {
     return undefined
   }
-}
-
-// The grey line under a wish: price, store and notes.
-export function wishDetails(wish: WishItem): string {
-  return [wish.price, storeFromLink(wish.link), wish.notes].filter(Boolean).join(' · ')
 }
 
 export const statusLabels: Record<GiftStatus | 'open', string> = {
