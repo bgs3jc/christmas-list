@@ -30,9 +30,6 @@ export function HomePage({ route }: { route: Route }) {
             <a href={links.myList} className={styles.addButton}>
               Add to my list
             </a>
-            <a href={links.myList} className={styles.seeButton}>
-              See my list
-            </a>
           </div>
         </div>
       </div>

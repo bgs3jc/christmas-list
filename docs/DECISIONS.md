@@ -59,3 +59,5 @@ Newest at the bottom. Each entry: what we decided, and why.
 **2026-10-26: Home is the night sky.** The M1 sky and sleigh, with "Add to my list" as the first thing you see and globes with names only below.
 
 **2026-10-26: "An idea…" with a lightbulb.** Replaces "Maybe an idea…" and the dotted present, which read as a riddle. The lightbulb is a common symbol, but here clarity wins.
+
+**2026-10-28: One button on Home: "Add to my list".** "See my list" went to the same page, and two buttons that do the same thing confuse more than they help. "My list" is still in the top bar.

@@ -138,24 +138,6 @@
   color: var(--sheet);
 }
 
-.seeButton {
-  display: inline-flex;
-  align-items: center;
-  min-height: 52px;
-  padding: 0 var(--space-5);
-  border: 1.5px solid var(--sky-text-muted);
-  border-radius: 10px;
-  color: var(--starlight);
-  font-size: 1.0625rem;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.seeButton:hover {
-  background: rgb(243 238 223 / 0.1);
-  color: var(--starlight);
-}
-
 /* The snowy part below */
 
 .snow {
