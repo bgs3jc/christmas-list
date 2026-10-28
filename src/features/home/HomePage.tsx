@@ -6,8 +6,10 @@ import { SiteHeader } from '../../shared/SiteHeader'
 import { SnowGlobe } from '../../shared/SnowGlobe'
 import housePrintSmall from './house-print-768.webp'
 import housePrintLarge from './house-print-1536.webp'
+import housePrintSharp from './house-print-3072.webp'
 import housePrintTallSmall from './house-print-tall-543.webp'
 import housePrintTallLarge from './house-print-tall-1086.webp'
+import housePrintTallSharp from './house-print-tall-1629.webp'
 import { NightSky } from './NightSky'
 import styles from './Home.module.css'
 
@@ -47,11 +49,11 @@ export function HomePage({ route }: { route: Route }) {
           </div>
           {/* Phones get a tall version of the same print, which fits a narrow screen. */}
           <picture>
-            <source media="(max-width: 640px)" srcSet={`${housePrintTallSmall} 543w, ${housePrintTallLarge} 1086w`} sizes="100vw" />
+            <source media="(max-width: 640px)" srcSet={`${housePrintTallSmall} 543w, ${housePrintTallLarge} 1086w, ${housePrintTallSharp} 1629w`} sizes="100vw" />
             <img
               className={styles.printImage}
               src={housePrintLarge}
-              srcSet={`${housePrintSmall} 768w, ${housePrintLarge} 1536w`}
+              srcSet={`${housePrintSmall} 768w, ${housePrintLarge} 1536w, ${housePrintSharp} 3072w`}
               sizes="100vw"
               width={1536}
               height={1024}
