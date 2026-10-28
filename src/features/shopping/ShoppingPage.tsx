@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { addGift, markIdeaGifted, usePeople, useShopping, useViewer, type Gift, type GiftStatus, type WishItem } from '../../data'
-import { storeFromLink, trackingLink } from '../../shared/format'
-import { LockIcon, StarIcon, TruckIcon } from '../../shared/icons'
+import { addGift, markIdeaGifted, useHomes, usePeople, useShopping, useViewer, type Gift, type GiftStatus, type WishItem } from '../../data'
+import { storeFromLink } from '../../shared/format'
+import { LockIcon, StarIcon } from '../../shared/icons'
 import { SnowGlobe } from '../../shared/SnowGlobe'
 import { StatusPill } from '../../shared/StatusPill'
 import { Button } from '../../shared/ui/Button'
@@ -19,6 +19,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   const view = useShopping(recipientId)
   const viewer = useViewer()
   const people = usePeople()
+  const homes = useHomes()
   const [dialog, setDialog] = useState<GiftDialogSetup | null>(null)
 
   if (!view) {
@@ -32,7 +33,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   const { person, wishes, gifts, ideas } = view
   const others = people.filter((p) => p.id !== person.id)
   const nameOf = (id: string) => (id === viewer.id ? 'You' : (people.find((p) => p.id === id)?.name ?? 'Someone'))
-  const houseOf = (id: string) => (id === viewer.id ? 'your place' : `${nameOf(id)}'s`)
+  const houseOf = (id: string) => (id === viewer.homeId ? 'your place' : (homes.find((h) => h.id === id)?.name ?? 'somewhere'))
 
   const giftsByWish = new Map<string, Gift[]>()
   for (const gift of gifts) {
@@ -48,53 +49,24 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
 
   const editGift = (gift: Gift, fromList = false) => setDialog({ heading: 'Change this gift', gift, fromList })
 
-  // Who's getting it, with a truck while it's on its way somewhere.
-  const giver = (gift: Gift) => (
-    <>
-      {gift.shipTo && !gift.arrived && (
-        <span className={styles.truck} role="img" aria-label={`Shipping to ${houseOf(gift.shipTo)}`}>
-          <TruckIcon />
-        </span>
-      )}
-      {nameOf(gift.giverId)}
-    </>
-  )
-
-  const shippingText = (gift: Gift) => {
-    if (!gift.shipTo) return undefined
-    if (gift.arrived) return `Arrived at ${houseOf(gift.shipTo)}`
-    const track = gift.tracking && trackingLink(gift.tracking)
-    return (
-      <>
-        Shipping to {houseOf(gift.shipTo)}
-        {track && (
-          <>
-            {' · '}
-            <a href={track.url} target="_blank" rel="noreferrer">
-              Track{track.carrier && ` (${track.carrier})`}
-            </a>
-          </>
-        )}
-      </>
+  const linkTo = (link?: string) =>
+    link && (
+      <a href={link} target="_blank" rel="noreferrer">
+        {storeFromLink(link) ?? 'Open link'}
+      </a>
     )
-  }
+
+  // Shipping shows right after the name, so nobody has to open the row to see it.
+  const shipNote = (gift: Gift) => gift.shipTo && <TitleNote>to {houseOf(gift.shipTo)}</TitleNote>
 
   const giftDetails = (gift: Gift) => [
-    { label: 'Paid', value: gift.price },
-    { label: 'Shipping', value: shippingText(gift) },
+    { label: 'Link', value: linkTo(gift.link) },
     { label: 'Family notes', value: gift.notes },
   ]
 
   const wishDetails = (wish: WishItem) => [
     { label: `${person.name}'s note`, value: wish.notes },
-    {
-      label: 'Link',
-      value: wish.link && (
-        <a href={wish.link} target="_blank" rel="noreferrer">
-          {storeFromLink(wish.link) ?? 'Open link'}
-        </a>
-      ),
-    },
+    { label: 'Link', value: linkTo(wish.link) },
   ]
 
   const wishTitle = (wish: WishItem) => (
@@ -102,7 +74,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
       {wish.title}
       {wish.kind === 'maybe' && <TitleNote>idea</TitleNote>}
       {wish.topPick && (
-        <span className={styles.favorite} role="img" aria-label="Favorite">
+        <span className={styles.favorite} role="img" aria-label="Gold star">
           <StarIcon filled size={13} />
         </span>
       )}
@@ -146,8 +118,20 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                             {under.map((gift) => (
                               <li key={gift.id} className={styles.underIdeaGift}>
                                 <StatusPill status={gift.status} />
-                                <span className={styles.underIdeaTitle}>{gift.title}</span>
-                                <span className={styles.underIdeaWho}>{giver(gift)}</span>
+                                <span className={styles.underIdeaText}>
+                                  <span className={styles.underIdeaTitle} title={gift.title}>
+                                    {gift.title}
+                                    {shipNote(gift)}
+                                  </span>
+                                  {(gift.notes || gift.link) && (
+                                    <span className={styles.underIdeaNotes}>
+                                      {gift.notes}
+                                      {gift.notes && gift.link && ' · '}
+                                      {linkTo(gift.link)}
+                                    </span>
+                                  )}
+                                </span>
+                                <span className={styles.underIdeaWho}>{nameOf(gift.giverId)}</span>
                                 <Button variant="quiet" onClick={() => editGift(gift)} aria-label={`Change ${gift.title}`}>
                                   Change
                                 </Button>
@@ -166,9 +150,14 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                 <Row
                   key={wish.id}
                   status={<StatusPill status={gift ? gift.status : 'open'} />}
-                  title={wishTitle(wish)}
+                  title={
+                    <>
+                      {wishTitle(wish)}
+                      {gift && shipNote(gift)}
+                    </>
+                  }
                   fullTitle={wish.title}
-                  aside={gift ? giver(gift) : <Button onClick={() => claim(wish)}>I'll get it</Button>}
+                  aside={gift ? nameOf(gift.giverId) : <Button onClick={() => claim(wish)}>I'll get it</Button>}
                   details={
                     <Details
                       items={gift ? [...wishDetails(wish), ...giftDetails(gift)] : wishDetails(wish)}
@@ -213,10 +202,11 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                   <>
                     {gift.title}
                     {gift.place === 'stocking' && <TitleNote>stocking</TitleNote>}
+                    {shipNote(gift)}
                   </>
                 }
                 fullTitle={gift.title}
-                aside={giver(gift)}
+                aside={nameOf(gift.giverId)}
                 details={<Details items={giftDetails(gift)} actions={<Button onClick={() => editGift(gift)}>Change</Button>} />}
               />
             ))}
@@ -231,7 +221,14 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
         onMakeGift={(idea) => setDialog({ heading: `Add a gift for ${person.name}`, title: idea.text, onSaved: () => markIdeaGifted(idea.id) })}
       />
 
-      {dialog && <GiftDialog setup={dialog} recipient={person} others={others} viewerId={viewer.id} onClose={() => setDialog(null)} />}
+      {dialog && <GiftDialog
+          setup={dialog}
+          recipient={person}
+          others={others}
+          homes={homes.filter((h) => h.id !== person.homeId)}
+          viewer={viewer}
+          onClose={() => setDialog(null)}
+        />}
     </main>
   )
 }

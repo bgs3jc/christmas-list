@@ -7,7 +7,7 @@
 
 import { useMemo, useSyncExternalStore } from 'react'
 import { commit, getSnapshot, resetData, setViewerId, subscribe } from './store'
-import type { AppData, Gift, Idea, Person, PersonId, WishItem } from './types'
+import type { AppData, Gift, Home, Idea, Person, PersonId, WishItem } from './types'
 
 export type * from './types'
 
@@ -63,6 +63,27 @@ export function useShopping(recipientId: PersonId): ShoppingView | null {
   }, [data, viewerId, recipientId])
 }
 
+export function useHomes(): Home[] {
+  return useSnapshot().data.homes
+}
+
+// Everything you're allowed to see about everyone else, for the spreadsheet download.
+export function useEveryoneElse(): ShoppingView[] {
+  const { data, viewerId } = useSnapshot()
+  return useMemo(
+    () =>
+      data.people
+        .filter((p) => p.id !== viewerId)
+        .map((person) => ({
+          person,
+          wishes: data.wishes.filter((w) => w.ownerId === person.id).sort(byPriority),
+          gifts: data.gifts.filter((g) => g.recipientId === person.id),
+          ideas: data.ideas.filter((i) => i.aboutId === person.id),
+        })),
+    [data, viewerId],
+  )
+}
+
 // Everyone except you, for the home page.
 export function useOtherPeople(): Person[] {
   const { data, viewerId } = useSnapshot()
@@ -110,7 +131,7 @@ export function removeWish(id: string) {
 
 export type GiftDraft = Pick<
   Gift,
-  'recipientId' | 'giverId' | 'title' | 'wishItemId' | 'price' | 'notes' | 'status' | 'place' | 'shipTo' | 'tracking' | 'arrived'
+  'recipientId' | 'giverId' | 'title' | 'wishItemId' | 'link' | 'notes' | 'status' | 'place' | 'shipTo'
 >
 
 export function addGift(draft: GiftDraft) {

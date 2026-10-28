@@ -21,10 +21,15 @@ export function sampleData(): AppData {
   nextOrder = 0
   return {
     people: [
-      { id: 'brady', name: 'Brady', santasList: 'naughty' },
-      { id: 'april', name: 'April', santasList: 'nice' },
-      { id: 'allie', name: 'Allie', santasList: 'nice' },
-      { id: 'kevin', name: 'Kevin', santasList: 'fence' },
+      { id: 'brady', name: 'Brady', homeId: 'brady', santasList: 'naughty' },
+      { id: 'april', name: 'April', homeId: 'april', santasList: 'nice' },
+      { id: 'allie', name: 'Allie', homeId: 'allie', santasList: 'nice' },
+      { id: 'kevin', name: 'Kevin', homeId: 'allie', santasList: 'fence' },
+    ],
+    homes: [
+      { id: 'brady', name: "Brady's" },
+      { id: 'april', name: "April's" },
+      { id: 'allie', name: "Allie's" },
     ],
     wishes: [
       wish({ id: 'w-allie-1', ownerId: 'allie', kind: 'specific', title: 'Weighted blanket', notes: '15 lb, queen size', topPick: true, createdAt: day('10-02') }),
@@ -46,13 +51,13 @@ export function sampleData(): AppData {
       wish({ id: 'w-brady-3', ownerId: 'brady', kind: 'specific', title: 'Running socks', notes: 'Size L', createdAt: day('10-04') }),
     ],
     gifts: [
-      gift({ id: 'g-1', recipientId: 'allie', giverId: 'brady', title: 'Gooseneck pour-over kettle', wishItemId: 'w-allie-2', price: '$55', status: 'wrapped', shipTo: 'april', arrived: true, createdAt: day('10-06') }),
+      gift({ id: 'g-1', recipientId: 'allie', giverId: 'brady', title: 'Gooseneck pour-over kettle', wishItemId: 'w-allie-2', status: 'wrapped', shipTo: 'april', createdAt: day('10-06') }),
       gift({ id: 'g-2', recipientId: 'allie', giverId: 'april', title: 'Wool beanie', wishItemId: 'w-allie-4', status: 'planned', createdAt: day('10-09'), updatedBy: 'brady' }),
-      gift({ id: 'g-3', recipientId: 'allie', giverId: 'brady', title: 'Snake plant in a ceramic pot', wishItemId: 'w-allie-3', price: '$34', status: 'bought', shipTo: 'april', tracking: '1Z999AA10123456784', createdAt: day('10-11') }),
-      gift({ id: 'g-4', recipientId: 'allie', giverId: 'kevin', title: 'Heated throw blanket', price: '$65', status: 'bought', createdAt: day('10-14'), updatedAt: day('10-22') }),
-      gift({ id: 'g-5', recipientId: 'allie', giverId: 'april', title: 'Lip balm trio', price: '$14', status: 'bought', place: 'stocking', createdAt: day('10-16') }),
-      gift({ id: 'g-6', recipientId: 'april', giverId: 'allie', title: 'Cozy slippers', wishItemId: 'w-april-2', price: '$40', status: 'bought', createdAt: day('10-18') }),
-      gift({ id: 'g-7', recipientId: 'kevin', giverId: 'brady', title: 'Zip hoodie', wishItemId: 'w-kevin-2', price: '$60', status: 'planned', createdAt: day('10-20') }),
+      gift({ id: 'g-3', recipientId: 'allie', giverId: 'brady', title: 'Snake plant in a ceramic pot', wishItemId: 'w-allie-3', status: 'bought', shipTo: 'april', createdAt: day('10-11') }),
+      gift({ id: 'g-4', recipientId: 'allie', giverId: 'kevin', title: 'Heated throw blanket', status: 'bought', createdAt: day('10-14'), updatedAt: day('10-22') }),
+      gift({ id: 'g-5', recipientId: 'allie', giverId: 'april', title: 'Lip balm trio', status: 'bought', place: 'stocking', createdAt: day('10-16') }),
+      gift({ id: 'g-6', recipientId: 'april', giverId: 'allie', title: 'Cozy slippers', wishItemId: 'w-april-2', status: 'bought', createdAt: day('10-18') }),
+      gift({ id: 'g-7', recipientId: 'kevin', giverId: 'brady', title: 'Zip hoodie', wishItemId: 'w-kevin-2', status: 'planned', createdAt: day('10-20') }),
     ],
     ideas: [
       { id: 'i-1', aboutId: 'allie', authorId: 'kevin', text: 'Said her favorite mug finally chipped', createdAt: day('10-19') },

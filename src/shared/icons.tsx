@@ -63,12 +63,3 @@ export function LightbulbIcon() {
 }
 
 // A delivery truck, for gifts on their way somewhere.
-export function TruckIcon() {
-  return (
-    <svg width="16" height="14" viewBox="0 0 24 20" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
-      <path d="M1 3h13v11H1zM14 7h5l4 4v3h-9z" />
-      <circle cx="5" cy="16" r="2.2" style={{ fill: 'var(--paper)' }} />
-      <circle cx="18" cy="16" r="2.2" style={{ fill: 'var(--paper)' }} />
-    </svg>
-  )
-}

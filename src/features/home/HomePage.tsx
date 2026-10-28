@@ -1,4 +1,5 @@
 import { features } from '../../config/features'
+import { DownloadLink } from '../export'
 import { useOtherPeople, useViewer } from '../../data'
 import { plural } from '../../shared/format'
 import { links, type Route } from '../../shared/router'
@@ -45,7 +46,7 @@ export function HomePage({ route }: { route: Route }) {
         // screens, in its open top-right corner on wide ones.
         <div className={styles.print}>
           <div className={styles.printTop}>
-            <SiteHeader route={route} tone="night" />
+            <SiteHeader route={route} tone="night" wide />
             {hero}
           </div>
           <div className={styles.scene}>
@@ -86,6 +87,11 @@ export function HomePage({ route }: { route: Route }) {
               </li>
             ))}
           </ul>
+          {features.spreadsheetDownload && (
+            <p className={styles.download}>
+              <DownloadLink />
+            </p>
+          )}
         </div>
       </main>
     </>

@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { addWishes, removeWish, updateWish, type WishItem } from '../../data'
 import { storeFromLink } from '../../shared/format'
+import { StarIcon } from '../../shared/icons'
 import { Button } from '../../shared/ui/Button'
 import { Dialog } from '../../shared/ui/Dialog'
-import { Checkbox, TextField } from '../../shared/ui/Form'
+import { TextField } from '../../shared/ui/Form'
 import { parsePaste } from './parsePaste'
 import styles from './MyList.module.css'
 
@@ -128,13 +129,13 @@ export function GimmeDialog({ item, onClose }: WishDialogProps) {
             />
           )}
           <TextField
-            label="Size, color, anything they should know"
+            label="Size, color, anything Santa should know"
             value={notes}
             onChange={setNotes}
             multiline
             placeholder={first?.notes}
           />
-          <Checkbox label="One of my top picks" checked={topPick} onChange={setTopPick} />
+          <GoldStar on={topPick} onChange={setTopPick} />
         </>
       )}
     </Dialog>
@@ -176,14 +177,14 @@ export function MaybeDialog({ item, onClose }: WishDialogProps) {
       }
     >
       <TextField
-        label="What kind of thing?"
+        label="What should Santa look for?"
         value={title}
         onChange={setTitle}
         autoFocus
-        help="A store, a brand, a hobby, a kind of thing."
+        help="A store, a brand or a hobby. Santa picks the gift."
       />
       <TextField
-        label="Help them choose"
+        label="Help Santa choose"
         value={notes}
         onChange={setNotes}
         multiline
@@ -191,5 +192,15 @@ export function MaybeDialog({ item, onClose }: WishDialogProps) {
         help="Sizes, favorites, what you already have."
       />
     </Dialog>
+  )
+}
+
+// Favorites get a gold star and go to the top of the list.
+function GoldStar({ on, onChange }: { on: boolean; onChange: (on: boolean) => void }) {
+  return (
+    <button type="button" className={styles.goldStar} aria-pressed={on} onClick={() => onChange(!on)}>
+      <StarIcon filled={on} />
+      {on ? 'Gold star' : 'Give it a gold star'}
+    </button>
   )
 }

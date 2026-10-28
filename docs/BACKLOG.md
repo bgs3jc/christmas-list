@@ -2,7 +2,7 @@
 
 Ideas parked until v1 works. Each one must pass the feature test in `CLAUDE.md`. Add new ideas at the bottom with a one-line why.
 
-- **Santa's balance:** shows whether spending and gift counts are even across recipients, so no pile looks smaller on Christmas morning.
+- **Santa's balance:** shows whether gift counts are even across recipients, so no pile looks smaller on Christmas morning. (Spending can't be compared: prices are no longer entered.)
 - **Reveal day:** after Christmas, unlock the hidden view so everyone sees who got what.
 - **Link auto-fill:** paste a product link and pull in title, image and price. Feasible free via a Cloudflare Worker reading the page's product tags; Amazon often blocks it.
 - **Import Brady's spreadsheet:** one-time import from CSV.
@@ -10,4 +10,3 @@ Ideas parked until v1 works. Each one must pass the feature test in `CLAUDE.md`.
 - **Side-eye notes:** shoppers can leave a hidden, teasing note on someone's wish list item. Fun, but felt forced in the mockup; revisit only with a better form.
 - **Personal snow globes:** each person's scene (pets, interests) drawn from the database, since the code is public. The globe already has a `scene` slot; scenes can be made like the house print (ChatGPT, then the flat-ink pass).
 - **Prices for shoppers:** the owner doesn't type prices. Pull them from links (with link auto-fill), so shoppers see a price before clicking through.
-- **Live shipping status:** tracking that updates itself ("Out for delivery") instead of being marked by hand. Needs a tracking service with an API key, likely paid.

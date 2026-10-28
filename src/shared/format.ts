@@ -25,22 +25,38 @@ export const santasListLabels: Record<SantasListStatus, string> = {
   naughty: 'Naughty',
 }
 
-export function shortDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-}
-
 export function plural(count: number, one: string, many = `${one}s`): string {
   return `${count} ${count === 1 ? one : many}`
 }
 
-// A tracking number becomes a link to the carrier's page, based on its shape.
-// Amazon's own numbers can't be tracked publicly, so those go to your orders.
-export function trackingLink(number: string): { carrier: string; url: string } {
-  const n = number.replace(/\s+/g, '').toUpperCase()
-  const q = encodeURIComponent(n)
-  if (/^1Z[0-9A-Z]{16}$/.test(n)) return { carrier: 'UPS', url: `https://www.ups.com/track?tracknum=${q}` }
-  if (/^TBA\d+$/.test(n)) return { carrier: 'Amazon', url: 'https://www.amazon.com/gp/css/order-history' }
-  if (/^9[1-5]\d{18,24}$/.test(n)) return { carrier: 'USPS', url: `https://tools.usps.com/go/TrackConfirmAction?tLabels=${q}` }
-  if (/^(\d{12}|\d{15})$/.test(n)) return { carrier: 'FedEx', url: `https://www.fedex.com/fedextrack/?trknbr=${q}` }
-  return { carrier: '', url: `https://www.google.com/search?q=${q}` }
+export const isLink = (text: string) => /^https?:\/\/\S+$/i.test(text.trim())
+
+const MAX_NAME_WORDS = 6
+
+export const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
+
+// Most shops put the product name in the link: ".../rite-in-the-rain-notebook/123".
+// Take the longest wordy, hyphenated piece, tidy it up and keep it short.
+export function nameFromLink(link: string): string {
+  const store = storeFromLink(link) ?? 'a link'
+  let path = ''
+  try {
+    path = decodeURIComponent(new URL(link).pathname)
+  } catch {
+    return `Something from ${store}`
+  }
+  const best = path
+    .split('/')
+    .filter((part) => /[a-z]{3,}/i.test(part) && /[-_+]/.test(part))
+    .sort((a, b) => b.length - a.length)[0]
+  if (!best) return `Something from ${store}`
+  return capitalize(
+    best
+      .replace(/\.(html?|aspx?|php)$/i, '')
+      .replace(/[-_+]+/g, ' ')
+      .trim()
+      .split(/\s+/)
+      .slice(0, MAX_NAME_WORDS)
+      .join(' '),
+  )
 }

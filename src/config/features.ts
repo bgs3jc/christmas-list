@@ -10,6 +10,8 @@ export const features = {
   // Home shows the screen-print picture of the house instead of the night sky
   // with the sleigh. Off brings the night sky back.
   housePrint: true,
+  // A link on Home to download everything you can see as a spreadsheet.
+  spreadsheetDownload: true,
 } as const
 
 export type FeatureName = keyof typeof features

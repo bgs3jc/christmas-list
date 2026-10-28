@@ -160,6 +160,14 @@
   object-position: top;
 }
 
+/* On a laptop the picture stops short of the window's bottom, so the snow
+   globes below peek in and it's clear there's more. Only sidewalk is cut. */
+@media (min-width: 641px) {
+  .printImage {
+    max-height: max(calc(100vh - 230px), 44vw);
+  }
+}
+
 /* Wide screens: the headline moves into the open sky at the picture's top
    right, so the whole house shows without scrolling. */
 @media (min-width: 1200px) {
@@ -173,12 +181,15 @@
     z-index: 1;
   }
 
-  /* Measured from the picture, which is as wide as the screen: its open sky
-     starts right of the oak and runs down to the roof. */
+  /* The headline's right edge lines up with the menu's, at the same gutter
+     (see SiteHeader's wide version). Both are measured from the window
+     width, so they stay lined up at any zoom. The text sizes with the
+     window too, so it always ends up in the open sky right of the oak. */
   .print .hero {
+    width: max-content;
     max-width: none;
-    margin: 0;
-    padding: 0 3vw 0 62vw;
+    margin: 0 0 0 auto;
+    padding: 0 3vw 0 0;
     align-items: flex-start;
     gap: var(--space-2);
     text-align: left;
@@ -212,16 +223,23 @@
 
 .printSleigh {
   position: absolute;
-  top: 34%;
+  /* In window widths, like the picture, so trimming its bottom doesn't move it */
+  top: 17.7vw;
   left: 0;
   width: 15vw;
+  overflow: visible;
   fill: var(--print-ink);
   color: var(--print-ink);
   animation: sleigh-cross 45s linear infinite;
 }
 
-.printNose {
+.printNose,
+.printHat {
   fill: var(--print-nose);
+}
+
+.printTrim {
+  fill: var(--print-cream);
 }
 
 /* In from behind the oak, rising gently, out past the chimney */
@@ -255,7 +273,6 @@
 /* The snowy part below */
 
 .snow {
-  min-height: 60vh;
   background: var(--snow);
 }
 
@@ -296,13 +313,23 @@
   transform: translateY(-3px);
 }
 
+.download {
+  margin-top: var(--space-10);
+  text-align: center;
+}
+
 .personName {
   font-family: var(--font-display);
   font-size: 1.75rem;
   line-height: 1.1;
 }
 
-.personLink:hover .personName {
+.personLink:hover .download {
+  margin-top: var(--space-10);
+  text-align: center;
+}
+
+.personName {
   text-decoration: underline;
   text-decoration-color: var(--plaid-red);
   text-underline-offset: 4px;
@@ -327,7 +354,7 @@
   }
 
   .printSleigh {
-    top: 40%;
+    top: 47.9vw;
     width: 30vw;
     animation-name: sleigh-cross-tall;
   }

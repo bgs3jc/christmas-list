@@ -38,9 +38,6 @@
   --status-wrapped: #a82a30;
   --status-wrapped-soft: #f6e3e2;
   /* Shipping */
-  --shipping: #1d3461;
-  --shipping-soft: #eef1f6;
-  --shipping-line: #b8c3d6;
 
   /* Gift boxes */
   --kraft: #c9a57a;
@@ -81,6 +78,7 @@
   --print-sky: #0039c4;
   --print-ink: #1e1448;
   --print-nose: #ff513d;
+  --print-cream: #fee5d5;
 
   /* Fonts: one display face, one body face */
   --font-display: 'Gloock', Georgia, serif;

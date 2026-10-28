@@ -69,6 +69,13 @@
   color: var(--starlight);
 }
 
+@media (min-width: 1200px) {
+  .wide {
+    max-width: none;
+    padding-inline: 3vw;
+  }
+}
+
 @media (max-width: 640px) {
   .header {
     padding: var(--space-4) var(--space-4) 0;

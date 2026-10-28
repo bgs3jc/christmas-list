@@ -1,12 +1,21 @@
 // The shapes of everything the app stores. Firebase (M4) stores the same shapes.
 
 export type PersonId = string
+export type HomeId = string
+
+// A house gifts can ship to. People who live together share one.
+export interface Home {
+  id: HomeId
+  // How it's said: "Allie's"
+  name: string
+}
 
 export type SantasListStatus = 'nice' | 'fence' | 'naughty'
 
 export interface Person {
   id: PersonId
   name: string
+  homeId: HomeId
   // A family joke. Brady sets it in the data; nobody changes it on the site.
   santasList?: SantasListStatus
 }
@@ -41,14 +50,12 @@ export interface Gift {
   title: string
   // Set when the gift comes from the recipient's list. Empty for surprises.
   wishItemId?: string
-  price?: string
+  link?: string
   notes?: string
   status: GiftStatus
   place: GiftPlace
   // Shipping to someone else's house (never the recipient's).
-  shipTo?: PersonId
-  tracking?: string
-  arrived?: boolean
+  shipTo?: HomeId
   createdAt: string
   updatedAt: string
   updatedBy: PersonId
@@ -66,6 +73,7 @@ export interface Idea {
 
 export interface AppData {
   people: Person[]
+  homes: Home[]
   wishes: WishItem[]
   gifts: Gift[]
   ideas: Idea[]

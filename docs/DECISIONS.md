@@ -69,3 +69,12 @@ Newest at the bottom. Each entry: what we decided, and why.
 **2026-10-28: Snow globes in the print's inks.** The globes now hold the same dusk as the house print: flat sky bands, a dark tree with snow on its tiers, a hard highlight on the glass, a two-tone base. The gift pile keeps its meaning. A `scene` slot lets a personal scene replace the tree later (from the database). Brady kept the sleigh dark: subtle but obvious enough.
 
 **2026-10-28: Wide house print redone at 16:9 with the whole oak in frame.** The first wide version's branches ran off the top and had to be trimmed, which left stubby tips. ChatGPT pulled the view back so the crown ends in clear sky; same 16 inks, tracing and sky mask as before. The headline sits right of the tree, and the shopping globes now peek in on a laptop's first screen.
+
+**2026-10-28: Less bookkeeping, from Brady's click-through.** The site shouldn't ask people to keep records up to date.
+- **No prices.** Typing what you paid felt tacky. Gone from the pop-up and the rows.
+- **No tracking numbers or "Arrived".** Nobody would come back days later to add them. Shipping is now one choice made once, "Shipping somewhere?", and shows right after the gift's name ("Wool beanie · to April's") instead of a truck icon next to the giver, which read as "shipping to that person".
+- **Houses, not people.** Allie and Kevin share "Allie's". A gift never ships to the recipient's house, so Kevin can't ship Allie's gift home.
+- **Gifts can have a link.** Paste a link where the name goes and it's named from the link, like the wish list. Notes and links show under gifts without opening anything.
+- **Overheard is one line per note:** what was heard, who heard it, and "Make it a gift". No dropdown arrow and no date. Overheard is notes, not plans: nobody's getting those things yet. Surprises are gifts someone is getting.
+- **Download everything as a spreadsheet,** on Home, behind the `spreadsheetDownload` flag. Everything you're allowed to see, nothing about you.
+- **Gold star** replaces "One of my top picks". Pop-up wording talks to Santa ("anything Santa should know", "Help Santa choose"); "a kind of thing" is gone.

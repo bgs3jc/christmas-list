@@ -1,8 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { addIdea, type Idea, type Person } from '../../data'
-import { shortDate } from '../../shared/format'
 import { Button } from '../../shared/ui/Button'
-import { Details, EmptyRow, ListSection, Row, Rows } from '../../shared/ui/List'
+import { EmptyRow, ListSection, Row, Rows, TitleNote } from '../../shared/ui/List'
 import styles from './Shopping.module.css'
 
 interface OverheardProps {
@@ -13,6 +12,7 @@ interface OverheardProps {
 }
 
 // Things noticed about someone through the year, to turn into gifts later.
+// Notes, not gifts: nobody is getting them yet. One line each, nothing to open.
 export function Overheard({ person, ideas, nameOf, onMakeGift }: OverheardProps) {
   const [text, setText] = useState('')
 
@@ -32,14 +32,21 @@ export function Overheard({ person, ideas, nameOf, onMakeGift }: OverheardProps)
           {ideas.map((idea) => (
             <Row
               key={idea.id}
-              title={<span className={styles.ideaText}>{idea.text}</span>}
+              title={
+                <>
+                  <span className={styles.ideaText}>{idea.text}</span>
+                  <TitleNote>{nameOf(idea.authorId)}</TitleNote>
+                </>
+              }
               fullTitle={idea.text}
-              aside={idea.madeIntoGift ? <span className={styles.ideaDone}>Now a gift</span> : nameOf(idea.authorId)}
-              details={
-                <Details
-                  items={[{ label: 'Noted', value: `${nameOf(idea.authorId)}, ${shortDate(idea.createdAt)}` }]}
-                  actions={!idea.madeIntoGift && <Button onClick={() => onMakeGift(idea)}>Make it a gift</Button>}
-                />
+              aside={
+                idea.madeIntoGift ? (
+                  <span className={styles.ideaDone}>Now a gift</span>
+                ) : (
+                  <Button variant="quiet" onClick={() => onMakeGift(idea)}>
+                    Make it a gift
+                  </Button>
+                )
               }
             />
           ))}

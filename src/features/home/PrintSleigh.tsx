@@ -19,7 +19,11 @@ export function PrintSleigh() {
         <path d="M0 40 q10 14 34 12 h44 q10 0 14-10" stroke="currentColor" strokeWidth="2.4" fill="none" />
         <path d="M14 22 h58 l-6 20 h-46 z" />
         <circle cx="40" cy="10" r="7" />
-        <path d="M30 22 q10-14 22 0 z M33 6 q7-9 14 0 z M60 18 q8-12 14 2 z" />
+        <path d="M30 22 q10-14 22 0 z M60 18 q8-12 14 2 z" />
+        {/* Santa's hat, its tip trailing back in the wind */}
+        <path d="M33 6 L48 6 Q47 -3 40 -4 Q32 -4 27 2 L30 3.5 Z" className={styles.printHat} />
+        <rect x="32" y="4.5" width="17" height="3.4" className={styles.printTrim} />
+        <circle cx="27" cy="2.4" r="2.6" className={styles.printTrim} />
         <path d="M92 30 L330 20" stroke="currentColor" strokeWidth="1" />
         {[
           [110, 12], [160, 8], [210, 10], [260, 6], [310, 2],

@@ -28,7 +28,7 @@ export function WishRow({ item, onEdit }: WishRowProps) {
           <button
             type="button"
             className={styles.iconButton}
-            aria-label={`Favorite: ${item.title}`}
+            aria-label={`Gold star: ${item.title}`}
             aria-pressed={item.topPick}
             onClick={() => toggleTopPick(item.id)}
           >

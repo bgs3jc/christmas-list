@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { addGift, removeGift, updateGift, type Gift, type GiftPlace, type GiftStatus, type Person } from '../../data'
-import { trackingLink } from '../../shared/format'
+import { addGift, removeGift, updateGift, type Gift, type GiftPlace, type GiftStatus, type Home, type Person } from '../../data'
+import { isLink, nameFromLink } from '../../shared/format'
 import { Button } from '../../shared/ui/Button'
 import { Dialog } from '../../shared/ui/Dialog'
-import { Checkbox, Choice, TextField } from '../../shared/ui/Form'
+import { Choice, TextField } from '../../shared/ui/Form'
 import styles from './Shopping.module.css'
 
 export interface GiftDialogSetup {
@@ -21,9 +21,11 @@ export interface GiftDialogSetup {
 interface GiftDialogProps {
   setup: GiftDialogSetup
   recipient: Person
-  // Everyone but the recipient: they can give, and gifts can ship to their houses.
+  // Everyone but the recipient: they can give.
   others: Person[]
-  viewerId: string
+  // Houses a gift can ship to: never the recipient's.
+  homes: Home[]
+  viewer: Person
   onClose: () => void
 }
 
@@ -40,38 +42,42 @@ const placeOptions: { value: GiftPlace; label: string }[] = [
 
 const NOT_SHIPPING = 'none'
 
-export function GiftDialog({ setup, recipient, others, viewerId, onClose }: GiftDialogProps) {
+export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }: GiftDialogProps) {
   const { gift } = setup
   const [title, setTitle] = useState(gift?.title ?? setup.title ?? '')
-  const [giverId, setGiverId] = useState(gift?.giverId ?? viewerId)
+  const [link, setLink] = useState(gift?.link ?? '')
+  const [giverId, setGiverId] = useState(gift?.giverId ?? viewer.id)
   const [status, setStatus] = useState<GiftStatus>(gift?.status ?? 'planned')
   const [place, setPlace] = useState<GiftPlace>(gift?.place ?? 'tree')
-  const [price, setPrice] = useState(gift?.price ?? '')
   const [notes, setNotes] = useState(gift?.notes ?? '')
   const [shipTo, setShipTo] = useState(gift?.shipTo ?? NOT_SHIPPING)
-  const [tracking, setTracking] = useState(gift?.tracking ?? '')
-  const [arrived, setArrived] = useState(gift?.arrived ?? false)
 
-  const nameFor = (p: Person) => (p.id === viewerId ? 'Me' : p.name)
+  const nameFor = (p: Person) => (p.id === viewer.id ? 'Me' : p.name)
   const shipOptions = [
     { value: NOT_SHIPPING, label: 'Not shipping' },
-    ...others.map((p) => ({ value: p.id, label: p.id === viewerId ? 'To mine' : `To ${p.name}'s` })),
+    ...homes.map((h) => ({ value: h.id, label: h.id === viewer.homeId ? 'To my place' : `To ${h.name}` })),
   ]
-  const shipping = shipTo !== NOT_SHIPPING
-  const carrier = tracking.trim() ? trackingLink(tracking).carrier : ''
+
+  // Pasting a link where the name goes keeps the link and names it from the link.
+  function changeTitle(value: string) {
+    if (isLink(value)) {
+      setLink(value.trim())
+      setTitle(nameFromLink(value.trim()))
+    } else {
+      setTitle(value)
+    }
+  }
 
   function save() {
     if (!title.trim()) return
     const fields = {
       title: title.trim(),
+      link: link.trim() || undefined,
       giverId,
       status,
       place: setup.fromList ? 'tree' : place,
-      price: price.trim() || undefined,
       notes: notes.trim() || undefined,
-      shipTo: shipping ? shipTo : undefined,
-      tracking: shipping ? tracking.trim() || undefined : undefined,
-      arrived: shipping ? arrived : undefined,
+      shipTo: shipTo === NOT_SHIPPING ? undefined : shipTo,
     } as const
     if (gift) updateGift(gift.id, fields)
     else addGift({ ...fields, recipientId: recipient.id, wishItemId: setup.wishItemId })
@@ -110,28 +116,19 @@ export function GiftDialog({ setup, recipient, others, viewerId, onClose }: Gift
       {setup.fromList ? (
         <p className={styles.dialogItem}>{title}</p>
       ) : (
-        <TextField label="What is it?" value={title} onChange={setTitle} autoFocus={!gift && !title} />
+        <TextField
+          label="What is it?"
+          value={title}
+          onChange={changeTitle}
+          autoFocus={!gift && !title}
+          help="Type a name, or paste a link and it gets named for you."
+        />
       )}
+      {!setup.fromList && <TextField label="Link" value={link} onChange={setLink} placeholder="https://…" />}
       <Choice legend="Who's getting it?" options={others.map((p) => ({ value: p.id, label: nameFor(p) }))} value={giverId} onChange={setGiverId} />
       <Choice legend="How far along?" options={statusOptions} value={status} onChange={setStatus} />
       {!setup.fromList && <Choice legend="Where does it go?" options={placeOptions} value={place} onChange={setPlace} />}
-
-      <div className={styles.shippingBox}>
-        <Choice legend="Shipping" options={shipOptions} value={shipTo} onChange={setShipTo} />
-        {shipping && (
-          <>
-            <TextField
-              label="Tracking number"
-              value={tracking}
-              onChange={setTracking}
-              help={carrier ? `Looks like ${carrier}. It becomes a Track link on the list.` : 'Optional. It becomes a Track link on the list.'}
-            />
-            <Checkbox label="It arrived" checked={arrived} onChange={setArrived} />
-          </>
-        )}
-      </div>
-
-      <TextField label="Price paid" value={price} onChange={setPrice} narrow />
+      <Choice legend="Shipping somewhere?" options={shipOptions} value={shipTo} onChange={setShipTo} />
       <TextField label="Notes for the family" value={notes} onChange={setNotes} multiline help={`${recipient.name} never sees this.`} />
     </Dialog>
   )

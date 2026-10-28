@@ -42,7 +42,7 @@ export function MyListPage() {
           <LightbulbIcon />
           <span className={styles.bigText}>
             <span className={styles.bigTitle}>An idea…</span>
-            <span className={styles.bigHint}>A store, brand or kind of thing. They pick.</span>
+            <span className={styles.bigHint}>A store, a brand or a hobby. Santa picks.</span>
           </span>
         </button>
       </div>
@@ -50,7 +50,7 @@ export function MyListPage() {
       <div className={styles.listSection}>
         <ListSection title="Dear Santa">
           {wishes.length === 0 ? (
-            <EmptyRow>Nothing here yet. Start with one of the buttons above. Star your favorites and they go to the top.</EmptyRow>
+            <EmptyRow>Nothing here yet. Start with one of the buttons above. Give your favorites a gold star and they go to the top.</EmptyRow>
           ) : (
             <Rows>
               {wishes.map((item) => (

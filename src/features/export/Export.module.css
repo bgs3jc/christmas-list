@@ -1,0 +1,13 @@
+.download {
+  padding: var(--space-2) 0;
+  border: none;
+  background: none;
+  color: var(--ink-muted);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.download:hover {
+  color: var(--ink);
+}
