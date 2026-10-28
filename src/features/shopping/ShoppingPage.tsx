@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { addGift, markIdeaGifted, useHomes, usePeople, useShopping, useViewer, type Gift, type GiftStatus, type WishItem } from '../../data'
+import { addGift, markIdeaGifted, updateGift, useHomes, usePeople, useShopping, useViewer, type Gift, type WishItem } from '../../data'
 import { storeFromLink } from '../../shared/format'
 import { LockIcon, StarIcon } from '../../shared/icons'
 import { SnowGlobe } from '../../shared/SnowGlobe'
@@ -10,10 +10,8 @@ import { GiftDialog, type GiftDialogSetup } from './GiftDialog'
 import { Overheard } from './Overheard'
 import styles from './Shopping.module.css'
 
-const progress: Record<GiftStatus, number> = { planned: 0, bought: 1, wrapped: 2 }
-
-// For a row with several gifts, show the one furthest behind.
-const leastAlong = (gifts: Gift[]) => gifts.reduce((a, b) => (progress[b.status] < progress[a.status] ? b : a)).status
+// An idea with several gifts under it counts as bought once they all are.
+const allBought = (gifts: Gift[]) => gifts.every((g) => g.bought)
 
 export function ShoppingPage({ recipientId }: { recipientId: string }) {
   const view = useShopping(recipientId)
@@ -44,10 +42,18 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   const surprises = gifts.filter((g) => !g.wishItemId || !wishIds.has(g.wishItemId))
 
   function claim(wish: WishItem) {
-    addGift({ recipientId: person.id, giverId: viewer.id, title: wish.title, wishItemId: wish.id, status: 'planned', place: 'tree' })
+    addGift({ recipientId: person.id, giverId: viewer.id, title: wish.title, wishItemId: wish.id, bought: false, place: 'tree' })
   }
 
   const editGift = (gift: Gift, fromList = false) => setDialog({ heading: 'Change this gift', gift, fromList })
+
+  // Bought or not. On your own gifts it's a one-tap switch.
+  const pill = (gift: Gift) => (
+    <StatusPill
+      status={gift.bought ? 'bought' : 'notBought'}
+      onToggle={gift.giverId === viewer.id ? () => updateGift(gift.id, { bought: !gift.bought }) : undefined}
+    />
+  )
 
   const linkTo = (link?: string) =>
     link && (
@@ -84,7 +90,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   return (
     <main className={styles.page}>
       <div className={styles.header}>
-        <SnowGlobe size={88} gifts={gifts.map((g) => g.status)} label={`${person.name}'s snow globe, with gifts piling up`} />
+        <SnowGlobe size={88} gifts={gifts.map((g) => g.bought)} label={`${person.name}'s snow globe, with gifts piling up`} />
         <div>
           <h1 className={styles.name}>Shopping for {person.name}</h1>
           <p className={styles.private}>
@@ -107,7 +113,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                 return (
                   <Row
                     key={wish.id}
-                    status={<StatusPill status={under.length ? leastAlong(under) : 'open'} />}
+                    status={<StatusPill status={!under.length ? 'open' : allBought(under) ? 'bought' : 'notBought'} />}
                     title={wishTitle(wish)}
                     fullTitle={wish.title}
                     aside={under.length ? [...new Set(under.map((g) => nameOf(g.giverId)))].join(', ') : <Button onClick={addUnder}>Add a gift</Button>}
@@ -117,7 +123,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                           <ul className={styles.underIdea}>
                             {under.map((gift) => (
                               <li key={gift.id} className={styles.underIdeaGift}>
-                                <StatusPill status={gift.status} />
+                                {pill(gift)}
                                 <span className={styles.underIdeaText}>
                                   <span className={styles.underIdeaTitle} title={gift.title}>
                                     {gift.title}
@@ -149,7 +155,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
               return (
                 <Row
                   key={wish.id}
-                  status={<StatusPill status={gift ? gift.status : 'open'} />}
+                  status={gift ? pill(gift) : <StatusPill status="open" />}
                   title={
                     <>
                       {wishTitle(wish)}
@@ -197,7 +203,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
             {surprises.map((gift) => (
               <Row
                 key={gift.id}
-                status={<StatusPill status={gift.status} />}
+                status={pill(gift)}
                 title={
                   <>
                     {gift.title}

@@ -13,7 +13,7 @@
 
 .name {
   font-family: var(--font-display);
-  font-size: 2.5rem;
+  font-size: var(--text-3xl);
   line-height: 1.05;
 }
 
@@ -24,7 +24,7 @@
   margin-top: var(--space-2);
   color: var(--pine);
   font-size: var(--text-sm);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .favorite {
@@ -68,7 +68,7 @@
 .underIdeaTitle {
   min-width: 0;
   overflow: hidden;
-  font-weight: 700;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -78,7 +78,6 @@
   align-items: center;
   gap: var(--space-2);
   color: var(--ink-muted);
-  font-weight: 600;
 }
 
 /* Overheard */
@@ -121,7 +120,7 @@
 
 .dialogItem {
   font-size: var(--text-lg);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .removeButton {
@@ -135,7 +134,7 @@
   }
 
   .name {
-    font-size: 2rem;
+    font-size: var(--text-2xl);
   }
 
   .underIdeaGift {

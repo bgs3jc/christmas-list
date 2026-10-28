@@ -1,6 +1,6 @@
 // Small text helpers used by more than one feature.
 
-import type { GiftStatus, SantasListStatus } from '../data'
+import type { SantasListStatus } from '../data'
 
 // "rei.com" from "https://www.rei.com/product/...".
 export function storeFromLink(link?: string): string | undefined {
@@ -12,11 +12,12 @@ export function storeFromLink(link?: string): string | undefined {
   }
 }
 
-export const statusLabels: Record<GiftStatus | 'open', string> = {
+export type RowStatus = 'open' | 'notBought' | 'bought'
+
+export const statusLabels: Record<RowStatus, string> = {
   open: 'Open',
-  planned: 'Planned',
+  notBought: 'Not bought',
   bought: 'Bought',
-  wrapped: 'Wrapped',
 }
 
 export const santasListLabels: Record<SantasListStatus, string> = {

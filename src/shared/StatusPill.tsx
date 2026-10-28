@@ -1,33 +1,50 @@
-import type { GiftStatus } from '../data'
-import { statusLabels } from './format'
+import { statusLabels, type RowStatus } from './format'
 import styles from './StatusPill.module.css'
 
-export type RowStatus = GiftStatus | 'open'
+export type { RowStatus }
 
-// A small pill: dashed circle = open, empty circle = planned, full circle =
-// bought, present = wrapped. Shape and word always travel with the color.
-export function StatusPill({ status }: { status: RowStatus }) {
-  return (
-    <span className={`${styles.pill} ${styles[status]}`}>
-      {status === 'wrapped' ? (
-        <svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
-          <rect x="2" y="6" width="12" height="8" rx="1" />
-          <path d="M1.5 4h13v2h-13zM8 4v10" />
-        </svg>
-      ) : (
-        <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
-          <circle
-            cx="5"
-            cy="5"
-            r="4"
-            stroke="currentColor"
-            strokeWidth={status === 'planned' ? 1.6 : 1.4}
-            strokeDasharray={status === 'open' ? '2 1.6' : undefined}
-            fill={status === 'bought' ? 'currentColor' : 'none'}
-          />
-        </svg>
-      )}
+interface StatusPillProps {
+  status: RowStatus
+  // Given only on gifts you're getting: the pill becomes a one-tap switch
+  // between "Not bought" and "Bought".
+  onToggle?: () => void
+}
+
+// A small pill: dashed circle = open, empty circle = not bought, full circle =
+// bought. Shape and word always travel with the color.
+export function StatusPill({ status, onToggle }: StatusPillProps) {
+  const content = (
+    <>
+      <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+        <circle
+          cx="5"
+          cy="5"
+          r="4"
+          stroke="currentColor"
+          strokeWidth={status === 'notBought' ? 1.6 : 1.4}
+          strokeDasharray={status === 'open' ? '2 1.6' : undefined}
+          fill={status === 'bought' ? 'currentColor' : 'none'}
+        />
+      </svg>
       {statusLabels[status]}
-    </span>
+    </>
+  )
+
+  if (!onToggle) return <span className={`${styles.pill} ${styles[status]}`}>{content}</span>
+
+  return (
+    <button
+      type="button"
+      className={`${styles.pill} ${styles[status]} ${styles.toggle}`}
+      aria-pressed={status === 'bought'}
+      title={status === 'bought' ? 'Mark as not bought' : 'Mark as bought'}
+      onClick={(event) => {
+        // The row opens on click; the switch shouldn't.
+        event.stopPropagation()
+        onToggle()
+      }}
+    >
+      {content}
+    </button>
   )
 }

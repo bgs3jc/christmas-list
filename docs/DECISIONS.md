@@ -78,3 +78,7 @@ Newest at the bottom. Each entry: what we decided, and why.
 - **Overheard is one line per note:** what was heard, who heard it, and "Make it a gift". No dropdown arrow and no date. Overheard is notes, not plans: nobody's getting those things yet. Surprises are gifts someone is getting.
 - **Download everything as a spreadsheet,** on Home, behind the `spreadsheetDownload` flag. Everything you're allowed to see, nothing about you.
 - **Gold star** replaces "One of my top picks". Pop-up wording talks to Santa ("anything Santa should know", "Help Santa choose"); "a kind of thing" is gone.
+
+**2026-10-28: A gift is bought or not.** "Planned" and "Wrapped" weren't real states: someone's getting it (their name says so), and it's bought or it isn't. Rows show Open, Not bought or Bought; on your own gifts the pill is a one-tap switch, so there's nothing to open. Replaces the 2026-10-26 four-status decision.
+
+**2026-10-28: Type pass.** Fifteen text sizes became one scale of seven, and bold stopped being the default: row names are semibold, who's getting it and hints are regular, only buttons and pills are bold. Headings wrap evenly. Guided by the ui-ux-pro-max rules (consistent scale, weight follows hierarchy).

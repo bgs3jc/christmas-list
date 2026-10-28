@@ -22,7 +22,7 @@
 
 .subtitle {
   margin-top: var(--space-2);
-  font-size: 1.0625rem;
+  font-size: var(--text-lg);
   color: var(--ink-muted);
 }
 
@@ -42,14 +42,14 @@
 }
 
 .santaLabel {
-  font-size: 0.75rem;
-  font-weight: 800;
+  font-size: var(--text-xs);
+  font-weight: 700;
   color: var(--ink-muted);
 }
 
 .santaStatus {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: var(--text-xl);
   line-height: 1.15;
   color: var(--pine);
 }
@@ -96,12 +96,12 @@
 
 .bigTitle {
   font-family: var(--font-display);
-  font-size: 1.875rem;
+  font-size: var(--text-2xl);
   line-height: 1.1;
 }
 
 .bigHint {
-  font-weight: 700;
+  font-weight: 400;
   color: var(--ink-muted);
 }
 
@@ -144,7 +144,7 @@
   border-radius: 999px;
   background: none;
   color: var(--ink-muted);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .goldStar[aria-pressed='true'] {
@@ -154,7 +154,7 @@
 }
 
 .foundTitle {
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .found {
@@ -171,7 +171,7 @@
 }
 
 .foundName {
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .foundDetails {

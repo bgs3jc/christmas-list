@@ -38,8 +38,6 @@ export interface WishItem {
   createdAt: string
 }
 
-export type GiftStatus = 'planned' | 'bought' | 'wrapped'
-
 // Under the tree, or in the stocking (opened separately).
 export type GiftPlace = 'tree' | 'stocking'
 
@@ -52,7 +50,8 @@ export interface Gift {
   wishItemId?: string
   link?: string
   notes?: string
-  status: GiftStatus
+  // Someone's getting it either way; this says whether it's been bought yet.
+  bought: boolean
   place: GiftPlace
   // Shipping to someone else's house (never the recipient's).
   shipTo?: HomeId

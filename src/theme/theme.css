@@ -31,15 +31,10 @@
   /* Status: color only ever means status. Each pill also has its own shape and word. */
   --status-open: #5e4e48;
   --status-open-soft: #efe9df;
-  --status-planned: #7a5418;
-  --status-planned-soft: #f6ebd5;
+  --status-not-bought: #7a5418;
+  --status-not-bought-soft: #f6ebd5;
   --status-bought: #2f5d46;
   --status-bought-soft: #e3ece5;
-  --status-wrapped: #a82a30;
-  --status-wrapped-soft: #f6e3e2;
-  /* Gift boxes */
-  --kraft: #c9a57a;
-  --kraft-deep: #8c6a43;
 
   /* Snow globe, in the house print's inks */
   --globe-sky: #0039c4;
@@ -82,14 +77,16 @@
   --font-display: 'Gloock', Georgia, serif;
   --font-body: 'Nunito Sans', system-ui, sans-serif;
 
-  /* Type sizes */
+  /* Type sizes: one scale for the whole site, 13 14 16 18 24 30 40 px.
+     Weights: 400 for secondary text, 600 for names and labels, 700 for
+     buttons and pills. Gloock (display) has one weight. */
   --text-xs: 0.8125rem;
   --text-sm: 0.875rem;
-  --text-button: 0.9375rem;
   --text-md: 1rem;
   --text-lg: 1.125rem;
-  --text-xl: 1.75rem;
-  --text-2xl: 3rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.875rem;
+  --text-3xl: 2.5rem;
   --text-hero: clamp(2.25rem, 5vw, 3.25rem);
 
   /* Spacing, on a 4px grid */

@@ -25,6 +25,8 @@ h2,
 h3 {
   margin: 0;
   font-weight: 400;
+  /* Even lines, so a heading never ends on one lonely word */
+  text-wrap: balance;
 }
 
 p {

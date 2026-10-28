@@ -88,17 +88,11 @@
   fill: var(--globe-band-orange);
 }
 
-.planned {
+.notBought {
   fill: var(--globe-snow);
   stroke: var(--globe-base-dark);
   stroke-width: 1.2;
   stroke-dasharray: 2 1.6;
-}
-
-.bought {
-  fill: var(--kraft);
-  stroke: var(--kraft-deep);
-  stroke-width: 1;
 }
 
 .wrappedRed {

@@ -131,7 +131,7 @@ export function removeWish(id: string) {
 
 export type GiftDraft = Pick<
   Gift,
-  'recipientId' | 'giverId' | 'title' | 'wishItemId' | 'link' | 'notes' | 'status' | 'place' | 'shipTo'
+  'recipientId' | 'giverId' | 'title' | 'wishItemId' | 'link' | 'notes' | 'bought' | 'place' | 'shipTo'
 >
 
 export function addGift(draft: GiftDraft) {

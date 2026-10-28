@@ -106,7 +106,7 @@
 }
 
 .subtitle {
-  font-size: 1.1875rem;
+  font-size: var(--text-lg);
   color: var(--sky-text-soft);
 }
 
@@ -128,7 +128,7 @@
   background: var(--plaid-red);
   color: var(--sheet);
   font-size: var(--text-lg);
-  font-weight: 800;
+  font-weight: 700;
   text-decoration: none;
   box-shadow: 0 3px 0 var(--plaid-red-shadow);
 }
@@ -285,7 +285,7 @@
 .shoppingFor {
   margin-bottom: var(--space-6);
   font-family: var(--font-display);
-  font-size: 1.875rem;
+  font-size: var(--text-2xl);
   text-align: center;
 }
 
@@ -320,7 +320,7 @@
 
 .personName {
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: var(--text-xl);
   line-height: 1.1;
 }
 
