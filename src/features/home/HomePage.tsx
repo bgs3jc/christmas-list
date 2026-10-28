@@ -11,6 +11,7 @@ import housePrintTallSmall from './house-print-tall-543.webp'
 import housePrintTallLarge from './house-print-tall-1086.webp'
 import housePrintTallSharp from './house-print-tall-1629.webp'
 import { NightSky } from './NightSky'
+import { PrintSleigh } from './PrintSleigh'
 import styles from './Home.module.css'
 
 function sleepsUntilChristmas(today: Date): number {
@@ -47,19 +48,22 @@ export function HomePage({ route }: { route: Route }) {
             <SiteHeader route={route} tone="night" />
             {hero}
           </div>
-          {/* Phones get a tall version of the same print, which fits a narrow screen. */}
-          <picture>
-            <source media="(max-width: 640px)" srcSet={`${housePrintTallSmall} 543w, ${housePrintTallLarge} 1086w, ${housePrintTallSharp} 1629w`} sizes="100vw" />
-            <img
-              className={styles.printImage}
-              src={housePrintLarge}
-              srcSet={`${housePrintSmall} 768w, ${housePrintLarge} 1536w, ${housePrintSharp} 3072w`}
-              sizes="100vw"
-              width={1536}
-              height={1024}
-              alt="A snowy brick house at dusk on Christmas Eve, with a wreath on the door and rocking chairs on the porch"
-            />
-          </picture>
+          <div className={styles.scene}>
+            {/* Phones get a tall version of the same print, which fits a narrow screen. */}
+            <picture>
+              <source media="(max-width: 640px)" srcSet={`${housePrintTallSmall} 543w, ${housePrintTallLarge} 1086w, ${housePrintTallSharp} 1629w`} sizes="100vw" />
+              <img
+                className={styles.printImage}
+                src={housePrintLarge}
+                srcSet={`${housePrintSmall} 768w, ${housePrintLarge} 1536w, ${housePrintSharp} 3072w`}
+                sizes="100vw"
+                width={1536}
+                height={1024}
+                alt="A snowy brick house at dusk on Christmas Eve, with a wreath on the door and rocking chairs on the porch"
+              />
+            </picture>
+            <PrintSleigh />
+          </div>
         </div>
       ) : (
         <div className={styles.night}>

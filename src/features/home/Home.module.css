@@ -162,7 +162,7 @@
 
 /* Wide screens: the headline moves into the open sky at the picture's top
    right, so the whole house shows without scrolling. */
-@media (min-width: 1100px) {
+@media (min-width: 1200px) {
   .print {
     position: relative;
   }
@@ -191,6 +191,64 @@
 
   .print .heroActions {
     margin-top: var(--space-2);
+  }
+}
+
+/* Santa crosses the print's sky. The layer is masked to the sky, so the
+   sleigh disappears behind the oak, the roof and the chimney. */
+
+.scene {
+  position: relative;
+}
+
+.flight {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask: url('./sky-mask.png') top center / 100% auto no-repeat;
+  mask: url('./sky-mask.png') top center / 100% auto no-repeat;
+}
+
+.printSleigh {
+  position: absolute;
+  top: 34%;
+  left: 0;
+  width: 15vw;
+  fill: var(--print-ink);
+  color: var(--print-ink);
+  animation: sleigh-cross 45s linear infinite;
+}
+
+.printNose {
+  fill: var(--print-nose);
+}
+
+/* In from behind the oak, rising gently, out past the chimney */
+@keyframes sleigh-cross {
+  from {
+    transform: translate(-18vw, 3vw);
+  }
+  to {
+    transform: translate(103vw, -2vw);
+  }
+}
+
+/* Phones: from high above the treetop, down toward the chimney */
+@keyframes sleigh-cross-tall {
+  from {
+    transform: translate(-32vw, -38vw) rotate(12deg);
+  }
+  to {
+    transform: translate(103vw, -5vw) rotate(12deg);
+  }
+}
+
+/* With less motion, the sleigh waits in the open sky over the roof. */
+@media (prefers-reduced-motion: reduce) {
+  .printSleigh {
+    animation: none;
+    transform: translate(50vw, -1.5vw);
   }
 }
 
@@ -263,7 +321,24 @@
     aspect-ratio: 1086 / 1300;
   }
 
+  .flight {
+    -webkit-mask-image: url('./sky-mask-tall.png');
+    mask-image: url('./sky-mask-tall.png');
+  }
+
+  .printSleigh {
+    top: 40%;
+    width: 30vw;
+    animation-name: sleigh-cross-tall;
+  }
+
   .page {
     padding: var(--space-2) var(--space-4) var(--space-12);
+  }
+}
+
+@media (max-width: 640px) and (prefers-reduced-motion: reduce) {
+  .printSleigh {
+    transform: translate(55vw, -17vw) rotate(12deg);
   }
 }

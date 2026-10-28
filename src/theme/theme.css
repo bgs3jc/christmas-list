@@ -71,6 +71,8 @@
   /* The house print on the home page: its sky ink, so the headline band
      above the picture runs straight into it */
   --print-sky: #0039c4;
+  --print-ink: #1e1448;
+  --print-nose: #ff513d;
 
   /* Fonts: one display face, one body face */
   --font-display: 'Gloock', Georgia, serif;
