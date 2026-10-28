@@ -24,6 +24,5 @@ Mockups (private canvas, Brady's account): https://claude.ai/artifact/BkG8hdVD8i
 
 ## Known gaps
 
-- The snow globes still use the older soft style; redraw them in the print's flat inks so Home matches.
 
-- Personal globes (pets, interests) need to come from the database.
+- Personal globes (pets, interests) need to come from the database. `SnowGlobe` takes a `scene` that replaces its tree; an image scene was tested and fits.

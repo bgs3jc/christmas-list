@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useId, type ReactNode } from 'react'
 import type { GiftStatus } from '../data'
 import styles from './SnowGlobe.module.css'
 
@@ -20,11 +20,14 @@ interface SnowGlobeProps {
   // Shoppers see the gifts piling up. Leave this out on someone's own page.
   gifts?: GiftStatus[]
   label?: string
+  // A personal scene (pets and so on) to show instead of the tree, drawn in
+  // the same 220 x 260 space. It will come from the database, never from this
+  // public code.
+  scene?: ReactNode
 }
 
-// The one festive moment on each page. Personal scenes (pets and so on) come
-// later from the database, not from this public code.
-export function SnowGlobe({ size = 220, gifts, label }: SnowGlobeProps) {
+// The one festive moment on each page, drawn in the house print's flat inks.
+export function SnowGlobe({ size = 220, gifts, label, scene }: SnowGlobeProps) {
   const clipId = `globe${useId().replace(/[^a-zA-Z0-9]/g, '')}`
   const pile = (gifts ?? []).slice(0, SLOTS.length)
 
@@ -41,12 +44,9 @@ export function SnowGlobe({ size = 220, gifts, label }: SnowGlobeProps) {
           <circle cx="110" cy="108" r="92" />
         </clipPath>
       </defs>
-      <circle cx="110" cy="108" r="92" className={styles.glass} />
+      <path d="M28 252 Q110 238 192 252 Q110 262 28 252 Z" className={styles.shadow} />
       <g clipPath={`url(#${clipId})`}>
-        <ellipse cx="110" cy="196" rx="120" ry="40" className={styles.ground} />
-        <path d="M110 64l22 34h-12l18 26h-14l16 26h-60l16-26h-14l18-26h-12z" className={styles.tree} />
-        <rect x="104" y="150" width="12" height="9" className={styles.trunk} />
-        <path d="M110 54l2.6 5.4 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z" className={styles.star} />
+        {scene ?? <DuskScene />}
         {pile.map((status, i) => (
           <Present key={i} status={status} index={i} {...SLOTS[i]} />
         ))}
@@ -59,11 +59,40 @@ export function SnowGlobe({ size = 220, gifts, label }: SnowGlobeProps) {
           <circle cx="168" cy="82" r="1.8" />
         </g>
       </g>
-      <path d="M52 52a80 80 0 0 1 60-30" className={styles.glare} />
+      <path d="M44 74 A72 72 0 0 1 98 28 L101 37 A63 63 0 0 0 54 78 Z" className={styles.glare} />
       <path d="M34 192h152l14 56H20z" className={styles.base} />
+      <path d="M118 192h68l14 56h-74z" className={styles.baseShade} />
       <path d="M34 192h152l3 10H31z" className={styles.baseTop} />
-      <rect x="70" y="214" width="80" height="20" rx="3" className={styles.plate} />
+      <rect x="70" y="214" width="80" height="20" className={styles.plate} />
+      <rect x="118" y="214" width="32" height="20" className={styles.plateShade} />
     </svg>
+  )
+}
+
+// The default scene: the print's dusk, a tree in the snow, its lights on.
+function DuskScene() {
+  return (
+    <>
+      <rect x="0" y="0" width="220" height="220" className={styles.sky} />
+      <path d="M0 116 L220 100 V124 L0 140 Z" className={styles.bandViolet} />
+      <path d="M0 140 L220 124 V142 L0 158 Z" className={styles.bandMagenta} />
+      <path d="M0 158 L220 142 V166 L0 174 Z" className={styles.bandOrange} />
+      <path d="M0 176 V160 q8-14 18-4 q6-12 16-2 q8-10 16 2 L60 164 L160 160 q8-14 18-2 q8-12 18 0 q8-8 24 2 V176 Z" className={styles.treeline} />
+      <path d="M0 170 Q110 152 220 170 V260 H0 Z" className={styles.ground} />
+      <path d="M14 186 Q80 172 132 180 T214 178 V190 Q146 198 84 192 T14 198 Z" className={styles.groundShade} />
+      <path d="M116 156 L168 166 L154 171 L112 163 Z" className={styles.groundShade} />
+      <path d="M110 58 L130 92 H90 Z M110 76 L136 116 H84 Z M110 96 L142 142 H78 Z" className={styles.tree} />
+      <rect x="105" y="142" width="10" height="14" className={styles.trunk} />
+      <path d="M90 92 Q100 86 110 90 T130 92 Q120 89 110 94 T90 92 Z M84 116 Q97 109 110 114 T136 116 Q123 112 110 118 T84 116 Z M78 142 Q94 134 110 139 T142 142 Q126 137 110 144 T78 142 Z" className={styles.treeSnow} />
+      <g className={styles.lights}>
+        <circle cx="102" cy="88" r="2.2" />
+        <circle cx="120" cy="104" r="2.2" />
+        <circle cx="96" cy="112" r="2.2" />
+        <circle cx="126" cy="132" r="2.2" />
+        <circle cx="104" cy="134" r="2.2" />
+      </g>
+      <path d="M110 44l2.6 5.4 5.9.8-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z" className={styles.star} />
+    </>
   )
 }
 

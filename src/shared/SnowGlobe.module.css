@@ -3,12 +3,36 @@
   flex: none;
 }
 
-.glass {
-  fill: var(--globe-glass);
+.shadow {
+  fill: var(--globe-shadow);
+}
+
+.sky {
+  fill: var(--globe-sky);
+}
+
+.bandViolet {
+  fill: var(--globe-band-violet);
+}
+
+.bandMagenta {
+  fill: var(--globe-band-magenta);
+}
+
+.bandOrange {
+  fill: var(--globe-band-orange);
+}
+
+.treeline {
+  fill: var(--globe-treeline);
 }
 
 .ground {
-  fill: var(--white);
+  fill: var(--globe-snow);
+}
+
+.groundShade {
+  fill: var(--globe-snow-shadow);
 }
 
 .tree {
@@ -16,15 +40,20 @@
 }
 
 .trunk {
-  fill: var(--globe-base);
+  fill: var(--globe-base-dark);
 }
 
+.treeSnow {
+  fill: var(--globe-snow);
+}
+
+.lights,
 .star {
-  fill: var(--gold);
+  fill: var(--globe-light);
 }
 
 .snow {
-  fill: var(--white);
+  fill: var(--globe-snow);
   animation: fall var(--duration-snow) linear infinite;
 }
 
@@ -37,29 +66,31 @@
   }
 }
 
+/* A hard sliver of light on the glass, like a print's highlight */
 .glare {
-  fill: none;
-  stroke: var(--white);
-  stroke-width: 6;
-  stroke-linecap: round;
-  opacity: 0.7;
+  fill: var(--globe-snow);
 }
 
 .base {
   fill: var(--globe-base);
 }
 
+.baseShade,
 .baseTop {
   fill: var(--globe-base-dark);
 }
 
 .plate {
-  fill: var(--gold);
+  fill: var(--globe-light);
+}
+
+.plateShade {
+  fill: var(--globe-band-orange);
 }
 
 .planned {
-  fill: var(--white);
-  stroke: var(--kraft-deep);
+  fill: var(--globe-snow);
+  stroke: var(--globe-base-dark);
   stroke-width: 1.2;
   stroke-dasharray: 2 1.6;
 }
@@ -80,10 +111,10 @@
 
 .ribbon {
   fill: none;
-  stroke: var(--gold);
+  stroke: var(--globe-light);
   stroke-width: 2;
 }
 
 .bow {
-  fill: var(--gold);
+  fill: var(--globe-light);
 }

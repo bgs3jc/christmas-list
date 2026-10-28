@@ -46,11 +46,19 @@
   --kraft: #c9a57a;
   --kraft-deep: #8c6a43;
 
-  /* Snow globe */
-  --globe-glass: #d7e8f4;
-  --globe-tree: #2f6b4f;
-  --globe-base: #7a4a2b;
-  --globe-base-dark: #5c361e;
+  /* Snow globe, in the house print's inks */
+  --globe-sky: #0039c4;
+  --globe-band-violet: #2c42c9;
+  --globe-band-magenta: #b338a8;
+  --globe-band-orange: #ff513d;
+  --globe-treeline: #002979;
+  --globe-snow: #fee5d5;
+  --globe-snow-shadow: #839aff;
+  --globe-tree: #08222f;
+  --globe-light: #fcb144;
+  --globe-base: #79092c;
+  --globe-base-dark: #1e1448;
+  --globe-shadow: #c9c0f2;
 
   /* Night sky on the home page */
   --night: #1d3461;

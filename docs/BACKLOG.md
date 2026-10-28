@@ -8,7 +8,6 @@ Ideas parked until v1 works. Each one must pass the feature test in `CLAUDE.md`.
 - **Import Brady's spreadsheet:** one-time import from CSV.
 - **Phone polish:** a proper phone layout.
 - **Side-eye notes:** shoppers can leave a hidden, teasing note on someone's wish list item. Fun, but felt forced in the mockup; revisit only with a better form.
-- **Personal snow globes:** each person's scene (pets, interests) drawn from the database, since the code is public.
+- **Personal snow globes:** each person's scene (pets, interests) drawn from the database, since the code is public. The globe already has a `scene` slot; scenes can be made like the house print (ChatGPT, then the flat-ink pass).
 - **Prices for shoppers:** the owner doesn't type prices. Pull them from links (with link auto-fill), so shoppers see a price before clicking through.
 - **Live shipping status:** tracking that updates itself ("Out for delivery") instead of being marked by hand. Needs a tracking service with an API key, likely paid.
-- **Snow globes in the print style:** redraw the globes in Home's flat inks, maybe with the house print inside April's.
