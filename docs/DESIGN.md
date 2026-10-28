@@ -9,7 +9,7 @@ Round-one plaid "Christmas morning" pages were busy. The direction now:
 - **Calm by default.** Cream paper, ink text. Lists are separated by lines and space, not boxes or tinted panels. Hierarchy comes from type size and weight, not color.
 - **One main action per screen** in plaid red; everything else is an outlined or underlined button. Extra options open on click ("Someone else", "Change").
 - **One festive moment per page.** Home: a screen print of the family house at dusk on Christmas Eve (flat inks, colored shadows), with the headline on its sky. Shopping pages: the person's snow globe, with gifts piling up at the bottom (wrapped present = bought, dotted outline = not bought yet). Your own page: your globe just snows.
-- **Quiet rows.** One line each: status pill, name, who. Details open on click. Status: open grey (dashed circle), not bought amber (empty circle), bought green (full circle); each with its own shape and word. On your own gifts the pill is a one-tap switch. Nothing else in a row gets color except a navy truck while something ships.
+- **Quiet rows.** One line each: status pill, name, who. Details open on click. Status: open grey (dashed circle), not bought amber (empty circle), bought green (full circle); each with its own shape and word. On your own gifts the pill is a one-tap switch. Nothing else in a row gets color.
 - **The fun is in small touches:** the gift pile, the wording ("Gimme, gimme, gimme"), the Naughty/Nice tag. No stamps, plaid strips, emoji or handwriting fonts.
 - **Quiet nods** to the family's favorite Christmas movies remain welcome, small enough that only the family notices.
 
