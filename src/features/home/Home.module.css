@@ -138,6 +138,62 @@
   color: var(--sheet);
 }
 
+/* The house print, with the headline on a band of its sky */
+
+.print {
+  background: var(--print-sky);
+  color: var(--starlight);
+}
+
+.print .hero {
+  padding: var(--space-6) var(--space-8) var(--space-4);
+}
+
+/* The bottom of the picture is only sidewalk, so it's trimmed to keep the
+   page from getting too tall. The top is plain sky and meets the band. */
+.printImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1536 / 880;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* Wide screens: the headline moves into the open sky at the picture's top
+   right, so the whole house shows without scrolling. */
+@media (min-width: 1100px) {
+  .print {
+    position: relative;
+  }
+
+  .printTop {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 1;
+  }
+
+  /* Measured from the picture, which is as wide as the screen: its open sky
+     starts just past the middle and runs down to the chimney top. */
+  .print .hero {
+    max-width: none;
+    margin: 0;
+    padding: 0 3vw 0 52vw;
+    align-items: flex-start;
+    gap: var(--space-2);
+    text-align: left;
+  }
+
+  .print .title {
+    font-size: clamp(2rem, 2.9vw, 3.5rem);
+    white-space: nowrap;
+  }
+
+  .print .heroActions {
+    margin-top: var(--space-2);
+  }
+}
+
 /* The snowy part below */
 
 .snow {
@@ -197,6 +253,14 @@
 @media (max-width: 640px) {
   .hero {
     padding: 96px var(--space-4) 120px;
+  }
+
+  .print .hero {
+    padding: var(--space-4) var(--space-4) var(--space-3);
+  }
+
+  .printImage {
+    aspect-ratio: 1086 / 1300;
   }
 
   .page {

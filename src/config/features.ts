@@ -7,6 +7,9 @@ export const features = {
   viewAsSwitch: true,
   // The Naughty / Nice tag, set for each other by the family.
   santasList: true,
+  // Home shows the screen-print picture of the house instead of the night sky
+  // with the sleigh. Off brings the night sky back.
+  housePrint: true,
 } as const
 
 export type FeatureName = keyof typeof features

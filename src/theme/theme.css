@@ -68,6 +68,10 @@
   --snow: #eef3f8;
   --plaid-red-shadow: #5e1418;
 
+  /* The house print on the home page: its sky ink, so the headline band
+     above the picture runs straight into it */
+  --print-sky: #0039c4;
+
   /* Fonts: one display face, one body face */
   --font-display: 'Gloock', Georgia, serif;
   --font-body: 'Nunito Sans', system-ui, sans-serif;

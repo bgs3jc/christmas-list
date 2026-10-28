@@ -1,8 +1,13 @@
+import { features } from '../../config/features'
 import { useOtherPeople, useViewer } from '../../data'
 import { plural } from '../../shared/format'
 import { links, type Route } from '../../shared/router'
 import { SiteHeader } from '../../shared/SiteHeader'
 import { SnowGlobe } from '../../shared/SnowGlobe'
+import housePrintSmall from './house-print-768.webp'
+import housePrintLarge from './house-print-1536.webp'
+import housePrintTallSmall from './house-print-tall-543.webp'
+import housePrintTallLarge from './house-print-tall-1086.webp'
 import { NightSky } from './NightSky'
 import styles from './Home.module.css'
 
@@ -18,21 +23,49 @@ export function HomePage({ route }: { route: Route }) {
   const people = useOtherPeople()
   const sleeps = sleepsUntilChristmas(new Date())
 
+  const hero = (
+    <div className={styles.hero}>
+      <h1 className={styles.title}>{sleeps === 0 ? "It's Christmas morning" : `${plural(sleeps, 'sleep')} until Christmas morning`}</h1>
+      <p className={styles.subtitle}>Hi {viewer.name}. Santa's making his list.</p>
+      <div className={styles.heroActions}>
+        <a href={links.myList} className={styles.addButton}>
+          Add to my list
+        </a>
+      </div>
+    </div>
+  )
+
   return (
     <>
-      <div className={styles.night}>
-        <NightSky />
-        <SiteHeader route={route} tone="night" />
-        <div className={styles.hero}>
-          <h1 className={styles.title}>{sleeps === 0 ? "It's Christmas morning" : `${plural(sleeps, 'sleep')} until Christmas morning`}</h1>
-          <p className={styles.subtitle}>Hi {viewer.name}. Santa's making his list.</p>
-          <div className={styles.heroActions}>
-            <a href={links.myList} className={styles.addButton}>
-              Add to my list
-            </a>
+      {features.housePrint ? (
+        // The headline sits on the picture's own sky: above it on narrower
+        // screens, in its open top-right corner on wide ones.
+        <div className={styles.print}>
+          <div className={styles.printTop}>
+            <SiteHeader route={route} tone="night" />
+            {hero}
           </div>
+          {/* Phones get a tall version of the same print, which fits a narrow screen. */}
+          <picture>
+            <source media="(max-width: 640px)" srcSet={`${housePrintTallSmall} 543w, ${housePrintTallLarge} 1086w`} sizes="100vw" />
+            <img
+              className={styles.printImage}
+              src={housePrintLarge}
+              srcSet={`${housePrintSmall} 768w, ${housePrintLarge} 1536w`}
+              sizes="100vw"
+              width={1536}
+              height={1024}
+              alt="A snowy brick house at dusk on Christmas Eve, with a wreath on the door and rocking chairs on the porch"
+            />
+          </picture>
         </div>
-      </div>
+      ) : (
+        <div className={styles.night}>
+          <NightSky />
+          <SiteHeader route={route} tone="night" />
+          {hero}
+        </div>
+      )}
 
       <main className={styles.snow}>
         <div className={styles.page}>

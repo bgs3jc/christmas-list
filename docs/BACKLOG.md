@@ -11,4 +11,4 @@ Ideas parked until v1 works. Each one must pass the feature test in `CLAUDE.md`.
 - **Personal snow globes:** each person's scene (pets, interests) drawn from the database, since the code is public.
 - **Prices for shoppers:** the owner doesn't type prices. Pull them from links (with link auto-fill), so shoppers see a price before clicking through.
 - **Live shipping status:** tracking that updates itself ("Out for delivery") instead of being marked by hand. Needs a tracking service with an API key, likely paid.
-- **Serigraph look for the illustrations:** flat blocks of bright color, crisp edges, colored (violet, cobalt) shadows, close crops, inspired by a printmaker the family loves. Lists stay quiet paper. Round 7 on the design canvas has three Home options built around Mom's house (porch print on the wall, the house at dusk, or printed globes). A recognizable house is fine in code as long as it has no house number, street signs, corner lot or neighbors, and no street or neighborhood name appears anywhere in the repo.
+- **Snow globes in the print style:** redraw the globes in Home's flat inks, maybe with the house print inside April's.
