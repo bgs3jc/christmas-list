@@ -58,7 +58,7 @@ export function HomePage({ route }: { route: Route }) {
                 srcSet={`${housePrintSmall} 768w, ${housePrintLarge} 1536w, ${housePrintSharp} 3072w`}
                 sizes="100vw"
                 width={1536}
-                height={1024}
+                height={864}
                 alt="A snowy brick house at dusk on Christmas Eve, with a wreath on the door and rocking chairs on the porch"
               />
             </picture>

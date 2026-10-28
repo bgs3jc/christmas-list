@@ -155,7 +155,7 @@
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 1536 / 880;
+  aspect-ratio: 1536 / 800;
   object-fit: cover;
   object-position: top;
 }
@@ -174,18 +174,18 @@
   }
 
   /* Measured from the picture, which is as wide as the screen: its open sky
-     starts just past the middle and runs down to the chimney top. */
+     starts right of the oak and runs down to the roof. */
   .print .hero {
     max-width: none;
     margin: 0;
-    padding: 0 3vw 0 52vw;
+    padding: 0 3vw 0 62vw;
     align-items: flex-start;
     gap: var(--space-2);
     text-align: left;
   }
 
   .print .title {
-    font-size: clamp(2rem, 2.9vw, 3.5rem);
+    font-size: clamp(1.75rem, 2.3vw, 3rem);
     white-space: nowrap;
   }
 
