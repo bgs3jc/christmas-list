@@ -8,7 +8,8 @@
   grid-template-columns: 280px minmax(0, 1fr);
   align-items: start;
   gap: var(--space-16);
-  max-width: 1160px;
+  /* Lines up with the header's menu */
+  max-width: var(--page-width);
   margin: 0 auto;
   padding: 0 var(--space-8) var(--space-16);
 }

@@ -60,8 +60,9 @@
   line-height: 1.15;
 }
 
-/* The two ways to add: flat blocks of the print's inks, no shadows. Stacked,
-   so "Gimme, gimme, gimme" always has room for one line. */
+/* The two ways to add: flat blocks of the print's inks, no shadows.
+   "Gimme, gimme, gimme" always gets one line: side by side when there's room
+   (icon above the words), stacked when there isn't. */
 
 .addButtons {
   display: grid;
@@ -212,6 +213,22 @@
 @media (max-width: 959px) {
   .title {
     font-size: var(--text-3xl);
+  }
+}
+
+/* Laptops: side by side, the icon above the words so the name has the
+   block's whole width. Below 1190px wide, two blocks can't fit it on one line. */
+@media (min-width: 1190px) {
+  .addButtons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .bigButton {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--space-3);
   }
 }
 
