@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
+import { Fragment, useEffect, useId, useRef, type ReactNode } from 'react'
 import styles from './List.module.css'
 
 // The list look, shared by every page. Restyling rows happens here and in
@@ -37,20 +37,19 @@ export function EmptyRow({ children }: { children: ReactNode }) {
 interface RowProps {
   // Left column, usually a status pill. Leave out for rows without one.
   status?: ReactNode
-  // Kept to one line; the full name shows on hover.
   title: ReactNode
-  fullTitle: string
-  // Right column: who's getting it, or one action.
+  // Smaller lines under the name, always showing: notes, a link. Use NoteLine.
+  notes?: ReactNode
+  // Right column: who's getting it, or one or two actions.
   aside?: ReactNode
-  // Shown when the row is opened. Leave out for rows that don't open.
-  details?: ReactNode
+  // Things that belong to this row, such as gifts under an idea.
+  children?: ReactNode
   // Just added: scrolled into view and lit up for a moment.
   highlight?: boolean
 }
 
-// One line per thing. Click it to see the rest.
-export function Row({ status, title, fullTitle, aside, details, highlight }: RowProps) {
-  const [open, setOpen] = useState(false)
+// One thing per row, with everything about it in view: nothing to open.
+export function Row({ status, title, notes, aside, children, highlight }: RowProps) {
   const ref = useRef<HTMLLIElement>(null)
 
   useEffect(() => {
@@ -59,52 +58,16 @@ export function Row({ status, title, fullTitle, aside, details, highlight }: Row
     ref.current?.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' })
   }, [highlight])
 
-  const detailsId = useId()
-  const toggle = () => setOpen((o) => !o)
-  const lineClasses = [styles.line, status ? undefined : styles.noStatus, details ? styles.opens : undefined]
-    .filter(Boolean)
-    .join(' ')
-
+  const classes = [styles.row, status ? undefined : styles.noStatus, highlight ? styles.isNew : undefined]
   return (
-    <li ref={ref} className={[styles.row, open && styles.isOpen, highlight && styles.isNew].filter(Boolean).join(' ')}>
-      {/* Clicking anywhere on the line opens it; the name is the real button for keyboards. */}
-      <div className={lineClasses} onClick={details ? toggle : undefined}>
-        {status && <span className={styles.status}>{status}</span>}
-        {details ? (
-          <button
-            type="button"
-            className={styles.title}
-            title={fullTitle}
-            aria-expanded={open}
-            aria-controls={detailsId}
-            onClick={(event) => {
-              event.stopPropagation()
-              toggle()
-            }}
-          >
-            {title}
-          </button>
-        ) : (
-          <span className={styles.title} title={fullTitle}>
-            {title}
-          </span>
-        )}
-        <span className={styles.aside} onClick={(event) => event.stopPropagation()}>
-          {aside}
-        </span>
-        <span className={styles.chevron} aria-hidden="true">
-          {details && (
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 6l4 4 4-4" />
-            </svg>
-          )}
-        </span>
+    <li ref={ref} className={classes.filter(Boolean).join(' ')}>
+      {status && <div className={styles.status}>{status}</div>}
+      <div className={styles.main}>
+        <div className={styles.title}>{title}</div>
+        {notes}
+        {children}
       </div>
-      {open && details && (
-        <div id={detailsId} className={status ? styles.details : `${styles.details} ${styles.detailsNoStatus}`}>
-          {details}
-        </div>
-      )}
+      {aside && <div className={styles.aside}>{aside}</div>}
     </li>
   )
 }
@@ -114,29 +77,18 @@ export function TitleNote({ children }: { children: ReactNode }) {
   return <span className={styles.titleNote}> · {children}</span>
 }
 
-interface DetailsProps {
-  items: { label: string; value: ReactNode }[]
-  actions?: ReactNode
-  children?: ReactNode
-}
-
-// The opened part of a row: label and value pairs, then actions.
-export function Details({ items, actions, children }: DetailsProps) {
-  const shown = items.filter((item) => item.value !== undefined && item.value !== null && item.value !== '')
+// One small line under a name: its parts joined with dots, empty parts left out.
+export function NoteLine({ parts }: { parts: ReactNode[] }) {
+  const shown = parts.filter((part) => part !== undefined && part !== null && part !== false && part !== '')
+  if (shown.length === 0) return null
   return (
-    <>
-      {shown.length > 0 && (
-        <dl className={styles.detailGrid}>
-          {shown.map((item) => (
-            <div key={item.label} className={styles.detailPair}>
-              <dt>{item.label}</dt>
-              <dd>{item.value}</dd>
-            </div>
-          ))}
-        </dl>
-      )}
-      {children}
-      {actions && <div className={styles.detailActions}>{actions}</div>}
-    </>
+    <p className={styles.note}>
+      {shown.map((part, i) => (
+        <Fragment key={i}>
+          {i > 0 && ' · '}
+          {part}
+        </Fragment>
+      ))}
+    </p>
   )
 }

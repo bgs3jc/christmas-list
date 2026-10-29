@@ -5,7 +5,7 @@ import { LockIcon, StarIcon } from '../../shared/icons'
 import { SnowGlobe } from '../../shared/SnowGlobe'
 import { StatusPill } from '../../shared/StatusPill'
 import { Button } from '../../shared/ui/Button'
-import { Details, EmptyRow, ListSection, Row, Rows, TitleNote } from '../../shared/ui/List'
+import { EmptyRow, ListSection, NoteLine, Row, Rows, TitleNote } from '../../shared/ui/List'
 import { GiftDialog, type GiftDialogSetup } from './GiftDialog'
 import { Overheard } from './Overheard'
 import styles from './Shopping.module.css'
@@ -52,18 +52,24 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
       </a>
     )
 
-  // Shipping shows right after the name, so nobody has to open the row to see it.
+  // Shipping shows right after the name.
   const shipNote = (gift: Gift) => gift.shipTo && <TitleNote>to {houseOf(gift.shipTo)}</TitleNote>
 
-  const giftDetails = (gift: Gift) => [
-    { label: 'Link', value: linkTo(gift.link) },
-    { label: 'Family notes', value: gift.notes },
-  ]
+  // A gift's notes are the family's, so they say whose they are.
+  const familyNote = (gift: Gift) => gift.notes && `${nameOf(gift.giverId)}: ${gift.notes}`
 
-  const wishDetails = (wish: WishItem) => [
-    { label: `${person.name}'s note`, value: wish.notes },
-    { label: 'Link', value: linkTo(wish.link) },
-  ]
+  // Who's getting it. Your own gifts can be changed (or undone) right here.
+  const giver = (gift: Gift, fromList = false) =>
+    gift.giverId === viewer.id ? (
+      <>
+        You
+        <Button variant="quiet" onClick={() => editGift(gift, fromList)} aria-label={`Change ${gift.title}`}>
+          Change
+        </Button>
+      </>
+    ) : (
+      nameOf(gift.giverId)
+    )
 
   const wishTitle = (wish: WishItem) => (
     <>
@@ -97,46 +103,41 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
           <Rows>
             {wishes.map((wish) => {
               const under = giftsByWish.get(wish.id) ?? []
+              const wishNotes = <NoteLine parts={[wish.notes, linkTo(wish.link)]} />
 
               if (wish.kind === 'maybe') {
+                // Several people can each add a gift under an idea.
                 const addUnder = () => setDialog({ heading: `A gift for "${wish.title}"`, wishItemId: wish.id })
                 return (
                   <Row
                     key={wish.id}
                     status={<StatusPill status={under.length ? 'covered' : 'open'} />}
                     title={wishTitle(wish)}
-                    fullTitle={wish.title}
-                    aside={under.length ? [...new Set(under.map((g) => nameOf(g.giverId)))].join(', ') : <Button onClick={addUnder}>Add a gift</Button>}
-                    details={
-                      <Details items={wishDetails(wish)} actions={<Button onClick={addUnder}>Add a gift for this</Button>}>
-                        {under.length > 0 && (
-                          <ul className={styles.underIdea}>
-                            {under.map((gift) => (
-                              <li key={gift.id} className={styles.underIdeaGift}>
-                                <span className={styles.underIdeaText}>
-                                  <span className={styles.underIdeaTitle} title={gift.title}>
-                                    {gift.title}
-                                    {shipNote(gift)}
-                                  </span>
-                                  {(gift.notes || gift.link) && (
-                                    <span className={styles.underIdeaNotes}>
-                                      {gift.notes}
-                                      {gift.notes && gift.link && ' · '}
-                                      {linkTo(gift.link)}
-                                    </span>
-                                  )}
-                                </span>
-                                <span className={styles.underIdeaWho}>{nameOf(gift.giverId)}</span>
-                                <Button variant="quiet" onClick={() => editGift(gift)} aria-label={`Change ${gift.title}`}>
-                                  Change
-                                </Button>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </Details>
-                    }
-                  />
+                    notes={wishNotes}
+                    aside={under.length === 0 && <Button onClick={addUnder}>Add a gift</Button>}
+                  >
+                    {under.length > 0 && (
+                      <ul className={styles.underIdea}>
+                        {under.map((gift) => (
+                          <li key={gift.id} className={styles.underIdeaGift}>
+                            <div className={styles.underIdeaText}>
+                              <span className={styles.underIdeaTitle}>
+                                {gift.title}
+                                {shipNote(gift)}
+                              </span>
+                              <NoteLine parts={[familyNote(gift), linkTo(gift.link)]} />
+                            </div>
+                            <span className={styles.underIdeaWho}>{giver(gift)}</span>
+                          </li>
+                        ))}
+                        <li>
+                          <Button variant="quiet" className={styles.addAnother} onClick={addUnder}>
+                            Add another gift
+                          </Button>
+                        </li>
+                      </ul>
+                    )}
+                  </Row>
                 )
               }
 
@@ -151,25 +152,13 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                       {gift && shipNote(gift)}
                     </>
                   }
-                  fullTitle={wish.title}
-                  aside={gift ? nameOf(gift.giverId) : <Button onClick={() => claim(wish)}>{coverLabel}</Button>}
-                  details={
-                    <Details
-                      items={gift ? [...wishDetails(wish), ...giftDetails(gift)] : wishDetails(wish)}
-                      actions={
-                        gift ? (
-                          <Button onClick={() => editGift(gift, true)}>Change</Button>
-                        ) : (
-                          <Button
-                            variant="quiet"
-                            onClick={() => setDialog({ heading: 'Someone else is getting it', title: wish.title, wishItemId: wish.id, fromList: true })}
-                          >
-                            Put someone else down for this
-                          </Button>
-                        )
-                      }
-                    />
+                  notes={
+                    <>
+                      {wishNotes}
+                      {gift && <NoteLine parts={[familyNote(gift), linkTo(gift.link)]} />}
+                    </>
                   }
+                  aside={gift ? giver(gift, true) : <Button onClick={() => claim(wish)}>{coverLabel}</Button>}
                 />
               )
             })}
@@ -199,9 +188,8 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                     {shipNote(gift)}
                   </>
                 }
-                fullTitle={gift.title}
-                aside={nameOf(gift.giverId)}
-                details={<Details items={giftDetails(gift)} actions={<Button onClick={() => editGift(gift)}>Change</Button>} />}
+                notes={<NoteLine parts={[familyNote(gift), linkTo(gift.link)]} />}
+                aside={giver(gift)}
               />
             ))}
           </Rows>

@@ -78,7 +78,10 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
   }
 
   function remove() {
-    if (gift && window.confirm(`Remove "${gift.title}"? Nobody will be down for it anymore.`)) {
+    const message = gift?.wishItemId
+      ? `Not getting "${gift.title}" after all? It goes back to needing a Santa.`
+      : `Not getting "${gift?.title}" after all? It comes off this page.`
+    if (gift && window.confirm(message)) {
       removeGift(gift.id)
       onClose()
     }
@@ -93,7 +96,7 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
         <>
           {gift && (
             <Button variant="quiet" className={styles.removeButton} onClick={remove}>
-              Remove
+              Not getting it
             </Button>
           )}
           <Button variant="quiet" onClick={onClose}>

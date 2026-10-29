@@ -33,10 +33,10 @@
   vertical-align: -1px;
 }
 
-/* Gifts under an idea, inside the opened row */
+/* Gifts under an idea, under its name */
 
 .underIdea {
-  margin: var(--space-3) 0 0;
+  margin: var(--space-2) 0 var(--space-1);
   padding: 0 0 0 var(--space-3);
   border-left: 2px solid var(--line);
   list-style: none;
@@ -44,33 +44,25 @@
 
 .underIdeaGift {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 0 var(--space-3);
   min-height: 40px;
 }
 
 .underIdeaText {
-  display: flex;
-  flex-direction: column;
   min-width: 0;
   padding: var(--space-1) 0;
 }
 
-.underIdeaNotes {
-  overflow: hidden;
-  color: var(--ink-muted);
-  font-size: var(--text-sm);
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.underIdeaTitle {
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
-.underIdeaTitle {
-  min-width: 0;
-  overflow: hidden;
-  font-weight: 600;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.addAnother {
+  min-height: 40px;
+  padding: 0;
 }
 
 .underIdeaWho {
@@ -135,10 +127,5 @@
 
   .name {
     font-size: var(--text-2xl);
-  }
-
-  .underIdeaGift {
-    grid-template-columns: minmax(0, 1fr) auto;
-    padding: var(--space-1) 0;
   }
 }

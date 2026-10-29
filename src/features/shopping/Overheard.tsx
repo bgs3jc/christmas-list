@@ -38,7 +38,6 @@ export function Overheard({ person, ideas, nameOf, onMakeGift }: OverheardProps)
                   <TitleNote>{nameOf(idea.authorId)}</TitleNote>
                 </>
               }
-              fullTitle={idea.text}
               aside={
                 idea.madeIntoGift ? (
                   <span className={styles.ideaDone}>Now a gift</span>
