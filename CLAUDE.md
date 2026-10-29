@@ -64,4 +64,4 @@ This repo is **public**. Never commit email addresses, Firebase admin credential
   `python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<query>" --domain <domain>`
   Treat results as reference, not authority. Its defaults lean toward generic SaaS/landing-page patterns; the design direction Brady chooses wins.
 - **writing-quality** (built into Claude Code here): use it for user-facing app copy to avoid AI-sounding text.
-- **modern-web-guidance** (Google Chrome plugin; enable it on claude.ai to see it as a skill): current HTML/CSS/JS practices. Without the plugin, run it directly: `npx -y modern-web-guidance@latest search "<2–5 words>"`, then `retrieve "<id>"`. Use before building UI.
+- **modern-web-guidance** (Google Chrome plugin, enabled): current HTML/CSS/JS practices. Load it with the Skill tool before building UI. If it's not listed, run it directly: `npx -y modern-web-guidance@latest search "<2–5 words>"`, then `retrieve "<id>"`.

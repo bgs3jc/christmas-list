@@ -15,7 +15,7 @@ Round-one plaid "Christmas morning" pages were busy. The direction now:
 - **The fun is in small touches:** the gift pile, the wording ("Gimme, gimme, gimme"), the Naughty/Nice tag. No stamps, plaid strips, emoji or handwriting fonts.
 - **Quiet nods** to the family's favorite Christmas movies remain welcome, small enough that only the family notices.
 
-Mockups (private canvas, Brady's account): https://claude.ai/artifact/BkG8hdVD8inaaT2mk3BX2B. Rounds 4 and 5 are current; the building-blocks board shows every piece. The canvas also holds a private note with family details; those stay out of this public repo.
+Mockups (private canvas, Brady's account): https://claude.ai/artifact/BkG8hdVD8inaaT2mk3BX2B. Round 8, concept A, is what's built (rounds 4 and 5 still show the row and pop-up basics); Round 8's concept B was not chosen. The canvas also holds a private note with family details; those stay out of this public repo.
 
 ## Tokens and fonts
 
