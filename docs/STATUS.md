@@ -18,9 +18,9 @@ Update this at the end of every session. Keep it short.
 
 ## Next steps
 
-1. **Start M4 in a new chat:** "Read CLAUDE.md and docs/STATUS.md, then let's do M4." Brady needs about 20 minutes to create the Firebase project (Claude walks through it).
-2. M4 replaces `src/data/store.ts` with Firebase; nothing outside `src/data/` should change. Sign-in replaces the "Viewing as" bar.
-3. Personal snow globes: April's has two cats, Allie's has Bo, Kevin's has Drake Maye. Brady's still needs a scene. Prompt pattern: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then Claude runs the flat-ink pass. In M4, `globeScene` moves to the database with the rest of each person's data.
+1. **Fresh-eyes UX review (next chat, before M4).** A web and UX design review of the live prototype: assess, recommend, then streamline what Brady approves. Out of scope: the personal layer (house print and its style, Santa's sleigh, personal snow globes, the family wording like "Gimme, gimme, gimme", "Needs Santa", gold stars, Naughty/Nice).
+2. **Then M4 in its own chat:** "Read CLAUDE.md and docs/STATUS.md, then let's do M4." Brady needs about 20 minutes to create the Firebase project. M4 replaces `src/data/store.ts` with Firebase; nothing outside `src/data/` should change. Sign-in replaces the "Viewing as" bar; `globeScene` moves to the database.
+3. Brady's personal snow globe still needs a scene. Recipe: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass. The pass scripts aren't in the repo; they're described in `DECISIONS.md` (2026-10-28/29).
 
 ## Milestones to v1
 
