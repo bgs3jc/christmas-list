@@ -50,8 +50,6 @@ export interface Gift {
   wishItemId?: string
   link?: string
   notes?: string
-  // Someone's getting it either way; this says whether it's been bought yet.
-  bought: boolean
   place: GiftPlace
   // Shipping to someone else's house (never the recipient's).
   shipTo?: HomeId

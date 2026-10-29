@@ -2,12 +2,11 @@
 // opens in Excel, Numbers or Google Sheets. Nothing about you is in it.
 
 import type { Gift, Home, Person, ShoppingView } from '../../data'
+import { statusLabels } from '../../shared/format'
 
 const COLUMNS = ['For', 'Section', 'What', 'Status', "Who's getting it", 'Ships to', 'Notes', 'Link']
 
 // Quote every cell so commas, quotes and line breaks in notes stay put.
-const boughtLabel = (gift: Gift) => (gift.bought ? 'Bought' : 'Not bought')
-
 const cell = (value: string | undefined) => `"${(value ?? '').replace(/"/g, '""')}"`
 
 export function toSpreadsheet(views: ShoppingView[], people: Person[], homes: Home[]): string {
@@ -17,7 +16,7 @@ export function toSpreadsheet(views: ShoppingView[], people: Person[], homes: Ho
 
   for (const { person, wishes, gifts, ideas } of views) {
     const giftRow = (section: string, gift: Gift) => [
-      person.name, section, gift.title, boughtLabel(gift), nameOf(gift.giverId), homeOf(gift.shipTo), gift.notes, gift.link,
+      person.name, section, gift.title, '', nameOf(gift.giverId), homeOf(gift.shipTo), gift.notes, gift.link,
     ]
 
     for (const wish of wishes) {
@@ -27,10 +26,10 @@ export function toSpreadsheet(views: ShoppingView[], people: Person[], homes: Ho
       const claimed = wish.kind === 'specific' ? under[0] : undefined
       if (claimed) {
         const notes = [wish.notes, claimed.notes].filter(Boolean).join(' / ')
-        rows.push([person.name, section, wish.title, boughtLabel(claimed), nameOf(claimed.giverId), homeOf(claimed.shipTo), notes, wish.link ?? claimed.link])
+        rows.push([person.name, section, wish.title, statusLabels.covered, nameOf(claimed.giverId), homeOf(claimed.shipTo), notes, wish.link ?? claimed.link])
         continue
       }
-      rows.push([person.name, section, wish.title, under.length ? '' : 'Open', '', '', wish.notes, wish.link])
+      rows.push([person.name, section, wish.title, statusLabels[under.length ? 'covered' : 'open'], '', '', wish.notes, wish.link])
       for (const gift of under) rows.push(giftRow(`  for "${wish.title}"`, gift))
     }
 

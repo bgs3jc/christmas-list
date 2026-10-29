@@ -82,3 +82,5 @@ Newest at the bottom. Each entry: what we decided, and why.
 **2026-10-28: A gift is bought or not.** "Planned" and "Wrapped" weren't real states: someone's getting it (their name says so), and it's bought or it isn't. Rows show Open, Not bought or Bought; on your own gifts the pill is a one-tap switch, so there's nothing to open. Replaces the 2026-10-26 four-status decision.
 
 **2026-10-28: Type pass.** Fifteen text sizes became one scale of seven, and bold stopped being the default: row names are semibold, who's getting it and hints are regular, only buttons and pills are bold. Headings wrap evenly. Guided by the ui-ux-pro-max rules (consistent scale, weight follows hierarchy).
+
+**2026-10-29: Two states, one tap.** A wish needs a Santa or Santa's got it. "I'll be Santa" covers it in one tap; there's no later "bought" step to remember. Gifts carry no status at all: being on the page means someone's getting it. Undo is Change → Remove. Replaces the 2026-10-28 bought/not-bought decision. Words live in `src/shared/format.ts`; alternatives considered: "Up for grabs / In the sack", "On the list / Checked off".

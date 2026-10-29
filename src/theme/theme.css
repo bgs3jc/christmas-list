@@ -31,10 +31,8 @@
   /* Status: color only ever means status. Each pill also has its own shape and word. */
   --status-open: #5e4e48;
   --status-open-soft: #efe9df;
-  --status-not-bought: #7a5418;
-  --status-not-bought-soft: #f6ebd5;
-  --status-bought: #2f5d46;
-  --status-bought-soft: #e3ece5;
+  --status-covered: #2f5d46;
+  --status-covered-soft: #e3ece5;
 
   /* Snow globe, in the house print's inks */
   --globe-sky: #0039c4;

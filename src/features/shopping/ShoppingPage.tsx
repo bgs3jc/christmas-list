@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { addGift, markIdeaGifted, updateGift, useHomes, usePeople, useShopping, useViewer, type Gift, type WishItem } from '../../data'
-import { storeFromLink } from '../../shared/format'
+import { addGift, markIdeaGifted, useHomes, usePeople, useShopping, useViewer, type Gift, type WishItem } from '../../data'
+import { coverLabel, storeFromLink } from '../../shared/format'
 import { LockIcon, StarIcon } from '../../shared/icons'
 import { SnowGlobe } from '../../shared/SnowGlobe'
 import { StatusPill } from '../../shared/StatusPill'
@@ -10,8 +10,6 @@ import { GiftDialog, type GiftDialogSetup } from './GiftDialog'
 import { Overheard } from './Overheard'
 import styles from './Shopping.module.css'
 
-// An idea with several gifts under it counts as bought once they all are.
-const allBought = (gifts: Gift[]) => gifts.every((g) => g.bought)
 
 export function ShoppingPage({ recipientId }: { recipientId: string }) {
   const view = useShopping(recipientId)
@@ -42,18 +40,10 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   const surprises = gifts.filter((g) => !g.wishItemId || !wishIds.has(g.wishItemId))
 
   function claim(wish: WishItem) {
-    addGift({ recipientId: person.id, giverId: viewer.id, title: wish.title, wishItemId: wish.id, bought: false, place: 'tree' })
+    addGift({ recipientId: person.id, giverId: viewer.id, title: wish.title, wishItemId: wish.id, place: 'tree' })
   }
 
   const editGift = (gift: Gift, fromList = false) => setDialog({ heading: 'Change this gift', gift, fromList })
-
-  // Bought or not. On your own gifts it's a one-tap switch.
-  const pill = (gift: Gift) => (
-    <StatusPill
-      status={gift.bought ? 'bought' : 'notBought'}
-      onToggle={gift.giverId === viewer.id ? () => updateGift(gift.id, { bought: !gift.bought }) : undefined}
-    />
-  )
 
   const linkTo = (link?: string) =>
     link && (
@@ -90,7 +80,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   return (
     <main className={styles.page}>
       <div className={styles.header}>
-        <SnowGlobe size={88} gifts={gifts.map((g) => g.bought)} label={`${person.name}'s snow globe, with gifts piling up`} />
+        <SnowGlobe size={88} gifts={gifts.length} label={`${person.name}'s snow globe, with gifts piling up`} />
         <div>
           <h1 className={styles.name}>Shopping for {person.name}</h1>
           <p className={styles.private}>
@@ -113,7 +103,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                 return (
                   <Row
                     key={wish.id}
-                    status={<StatusPill status={!under.length ? 'open' : allBought(under) ? 'bought' : 'notBought'} />}
+                    status={<StatusPill status={under.length ? 'covered' : 'open'} />}
                     title={wishTitle(wish)}
                     fullTitle={wish.title}
                     aside={under.length ? [...new Set(under.map((g) => nameOf(g.giverId)))].join(', ') : <Button onClick={addUnder}>Add a gift</Button>}
@@ -123,7 +113,6 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                           <ul className={styles.underIdea}>
                             {under.map((gift) => (
                               <li key={gift.id} className={styles.underIdeaGift}>
-                                {pill(gift)}
                                 <span className={styles.underIdeaText}>
                                   <span className={styles.underIdeaTitle} title={gift.title}>
                                     {gift.title}
@@ -155,7 +144,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
               return (
                 <Row
                   key={wish.id}
-                  status={gift ? pill(gift) : <StatusPill status="open" />}
+                  status={<StatusPill status={gift ? 'covered' : 'open'} />}
                   title={
                     <>
                       {wishTitle(wish)}
@@ -163,7 +152,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                     </>
                   }
                   fullTitle={wish.title}
-                  aside={gift ? nameOf(gift.giverId) : <Button onClick={() => claim(wish)}>I'll get it</Button>}
+                  aside={gift ? nameOf(gift.giverId) : <Button onClick={() => claim(wish)}>{coverLabel}</Button>}
                   details={
                     <Details
                       items={gift ? [...wishDetails(wish), ...giftDetails(gift)] : wishDetails(wish)}
@@ -203,7 +192,6 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
             {surprises.map((gift) => (
               <Row
                 key={gift.id}
-                status={pill(gift)}
                 title={
                   <>
                     {gift.title}

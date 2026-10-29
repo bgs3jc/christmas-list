@@ -29,11 +29,6 @@ interface GiftDialogProps {
   onClose: () => void
 }
 
-const boughtOptions = [
-  { value: 'no', label: 'Not yet' },
-  { value: 'yes', label: 'Bought' },
-] as const
-
 const placeOptions: { value: GiftPlace; label: string }[] = [
   { value: 'tree', label: 'Under the tree' },
   { value: 'stocking', label: 'Stocking' },
@@ -46,7 +41,6 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
   const [title, setTitle] = useState(gift?.title ?? setup.title ?? '')
   const [link, setLink] = useState(gift?.link ?? '')
   const [giverId, setGiverId] = useState(gift?.giverId ?? viewer.id)
-  const [bought, setBought] = useState<'yes' | 'no'>(gift?.bought ? 'yes' : 'no')
   const [place, setPlace] = useState<GiftPlace>(gift?.place ?? 'tree')
   const [notes, setNotes] = useState(gift?.notes ?? '')
   const [shipTo, setShipTo] = useState(gift?.shipTo ?? NOT_SHIPPING)
@@ -73,7 +67,6 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
       title: title.trim(),
       link: link.trim() || undefined,
       giverId,
-      bought: bought === 'yes',
       place: setup.fromList ? 'tree' : place,
       notes: notes.trim() || undefined,
       shipTo: shipTo === NOT_SHIPPING ? undefined : shipTo,
@@ -125,7 +118,6 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
       )}
       {!setup.fromList && <TextField label="Link" value={link} onChange={setLink} placeholder="https://…" />}
       <Choice legend="Who's getting it?" options={others.map((p) => ({ value: p.id, label: nameFor(p) }))} value={giverId} onChange={setGiverId} />
-      <Choice legend="Bought it yet?" options={[...boughtOptions]} value={bought} onChange={setBought} />
       {!setup.fromList && <Choice legend="Where does it go?" options={placeOptions} value={place} onChange={setPlace} />}
       <Choice legend="Shipping somewhere?" options={shipOptions} value={shipTo} onChange={setShipTo} />
       <TextField label="Notes for the family" value={notes} onChange={setNotes} multiline help={`${recipient.name} never sees this.`} />

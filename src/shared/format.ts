@@ -12,13 +12,17 @@ export function storeFromLink(link?: string): string | undefined {
   }
 }
 
-export type RowStatus = 'open' | 'notBought' | 'bought'
+// A wish either still needs someone to get it, or someone has it covered.
+// The words live here so they can change in one place.
+export type RowStatus = 'open' | 'covered'
 
 export const statusLabels: Record<RowStatus, string> = {
-  open: 'Open',
-  notBought: 'Not bought',
-  bought: 'Bought',
+  open: 'Needs a Santa',
+  covered: "Santa's got it",
 }
+
+// The button that covers a wish.
+export const coverLabel = "I'll be Santa"
 
 export const santasListLabels: Record<SantasListStatus, string> = {
   nice: 'Nice',

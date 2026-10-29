@@ -17,8 +17,8 @@ const SLOTS = [
 interface SnowGlobeProps {
   size?: number
   // Shoppers see the gifts piling up. Leave this out on someone's own page.
-  // One entry per gift: true once it's bought.
-  gifts?: boolean[]
+  // How many gifts are planned for this person. Shoppers see them pile up.
+  gifts?: number
   label?: string
   // A personal scene (pets and so on) to show instead of the tree, drawn in
   // the same 220 x 260 space. It will come from the database, never from this
@@ -29,7 +29,7 @@ interface SnowGlobeProps {
 // The one festive moment on each page, drawn in the house print's flat inks.
 export function SnowGlobe({ size = 220, gifts, label, scene }: SnowGlobeProps) {
   const clipId = `globe${useId().replace(/[^a-zA-Z0-9]/g, '')}`
-  const pile = (gifts ?? []).slice(0, SLOTS.length)
+  const pile = SLOTS.slice(0, gifts ?? 0)
 
   return (
     <svg
@@ -47,8 +47,8 @@ export function SnowGlobe({ size = 220, gifts, label, scene }: SnowGlobeProps) {
       <path d="M28 252 Q110 238 192 252 Q110 262 28 252 Z" className={styles.shadow} />
       <g clipPath={`url(#${clipId})`}>
         {scene ?? <DuskScene />}
-        {pile.map((bought, i) => (
-          <Present key={i} bought={bought} index={i} {...SLOTS[i]} />
+        {pile.map((slot, i) => (
+          <Present key={i} index={i} {...slot} />
         ))}
         <g className={styles.snow}>
           <circle cx="40" cy="40" r="2.5" />
@@ -97,7 +97,6 @@ function DuskScene() {
 }
 
 interface PresentProps {
-  bought: boolean
   index: number
   x: number
   y: number
@@ -105,11 +104,8 @@ interface PresentProps {
   h: number
 }
 
-// Bought gifts are wrapped presents with a bow; the rest are dotted outlines, still to come.
-function Present({ bought, index, x, y, w, h }: PresentProps) {
-  if (!bought) {
-    return <rect x={x + 0.5} y={y + 0.5} width={w - 1} height={h - 1} rx="1" className={styles.notBought} />
-  }
+// A wrapped present with a bow, red and green in turn.
+function Present({ index, x, y, w, h }: PresentProps) {
   const mid = x + w / 2
   return (
     <g>
