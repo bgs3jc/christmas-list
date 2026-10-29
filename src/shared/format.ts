@@ -17,7 +17,7 @@ export function storeFromLink(link?: string): string | undefined {
 export type RowStatus = 'open' | 'covered'
 
 export const statusLabels: Record<RowStatus, string> = {
-  open: 'Needs a Santa',
+  open: 'Needs Santa',
   covered: "Santa's got it",
 }
 
