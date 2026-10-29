@@ -60,19 +60,19 @@
   line-height: 1.15;
 }
 
-/* The two ways to add: flat blocks of the print's inks, no shadows. */
+/* The two ways to add: flat blocks of the print's inks, no shadows. Stacked,
+   so "Gimme, gimme, gimme" always has room for one line. */
 
 .addButtons {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .bigButton {
   display: flex;
   align-items: center;
   gap: var(--space-5);
-  min-height: 128px;
+  min-height: 104px;
   padding: var(--space-5) var(--space-6);
   border: none;
   border-radius: var(--radius-sm);
@@ -115,6 +115,11 @@
   font-family: var(--font-display);
   font-size: var(--text-2xl);
   line-height: 1.1;
+}
+
+.bigHint {
+  /* No lone last word ("it.") on its own line */
+  text-wrap: pretty;
 }
 
 .gimme .bigHint {
@@ -210,9 +215,21 @@
   }
 }
 
+/* Phones: the icon goes above the words, so the name gets the full width. */
 @media (max-width: 640px) {
   .bigButton {
-    min-height: 104px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
     padding: var(--space-4) var(--space-5);
+  }
+
+  .bigButton svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .bigTitle {
+    font-size: var(--text-xl);
   }
 }
