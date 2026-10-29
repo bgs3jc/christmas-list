@@ -86,3 +86,14 @@ Newest at the bottom. Each entry: what we decided, and why.
 **2026-10-29: Two states, one tap.** A wish needs a Santa or Santa's got it. "I'll be Santa" covers it in one tap; there's no later "bought" step to remember. Gifts carry no status at all: being on the page means someone's getting it. Undo is Change → Remove. Replaces the 2026-10-28 bought/not-bought decision. Words live in `src/shared/format.ts`; alternatives considered: "Up for grabs / In the sack", "On the list / Checked off".
 
 **2026-10-29: First personal globe: two cats in April's.** Made like the house print (ChatGPT, then the flat-ink pass and tracing). The picture is in the repo with no pet names anywhere; which globe shows it is data (`globeScene` on the person: sample data now, the database from M4). Scenes are square, with no glass, base or falling snow (the globe draws those), and the subject sits above the bottom quarter, where gifts pile up.
+
+**2026-10-29: Fresh-eyes UX review: everything in view, fewer steps.** A review of the live prototype, judged by "could April do this without calling Brady?" Brady approved all of it.
+- **Rows show everything; nothing opens.** Notes and links sit in small type under each name. The size or color someone asked for is the shopping information, and it was hidden behind a small arrow. Replaces "details on click" (2026-10-26); rows are still one thing each, with color only for status.
+- **Your gifts say "You · Change" in the row.** Undoing an accidental "I'll be Santa" took four hidden steps; now it's Change, then "Not getting it". Only your own gifts show Change.
+- **"Put someone else down for this" is gone.** I'll be Santa, then Change, does the same.
+- **Gifts under an idea are listed under it,** with "Add another gift".
+- **One pop-up pattern for adding.** Gifts start with "Link, or what it is", like your own list; a pasted link brings up a Name box. The second Link box is gone.
+- **Overheard notes move into gifts.** "Make it a gift" puts the words in the gift's notes and leaves the note out of Overheard and the spreadsheet, instead of naming the gift with the whole sentence and listing it twice.
+- **Smaller fixes:** short share links (a.co, amzn.to) take their name from the words pasted with them; a new wish scrolls into view and lights up; faint text and text-box edges meet contrast minimums (4.5:1, 3:1); "Change" everywhere instead of "Edit"; pop-ups sit near the top so they don't jump.
+- **Phones:** names get the whole width and wrap instead of being cut off; status and who go on the line under.
+

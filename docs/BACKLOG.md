@@ -10,3 +10,6 @@ Ideas parked until v1 works. Each one must pass the feature test in `CLAUDE.md`.
 - **Side-eye notes:** shoppers can leave a hidden, teasing note on someone's wish list item. Fun, but felt forced in the mockup; revisit only with a better form.
 - **Personal snow globes:** each person's scene (pets, interests) drawn from the database, since the code is public. The globe already has a `scene` slot; scenes can be made like the house print (ChatGPT, then the flat-ink pass).
 - **Prices for shoppers:** the owner doesn't type prices. Pull them from links (with link auto-fill), so shoppers see a price before clicking through.
+- **In-page confirm and undo:** "Take off my list" and "Not getting it" use the browser's own confirm box, which says "bgs3jc.github.io says". A short "Undo" in the page would be friendlier. Low priority: it's clear as is.
+- **Changing someone else's gift:** only your own gifts show Change now. If the family wants to fix each other's (say, April records what Kevin is getting), add it back for everyone.
+
