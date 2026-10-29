@@ -16,6 +16,9 @@ export interface Person {
   id: PersonId
   name: string
   homeId: HomeId
+  // A picture for inside their snow globe, in place of the tree. Personal,
+  // so it's data: the sample data here, the database from M4.
+  globeScene?: string
   // A family joke. Brady sets it in the data; nobody changes it on the site.
   santasList?: SantasListStatus
 }

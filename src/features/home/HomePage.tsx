@@ -81,7 +81,7 @@ export function HomePage({ route }: { route: Route }) {
             {people.map((person) => (
               <li key={person.id}>
                 <a href={links.shop(person.id)} className={styles.personLink}>
-                  <SnowGlobe size={170} />
+                  <SnowGlobe size={170} scene={person.globeScene} />
                   <span className={styles.personName}>{person.name}</span>
                 </a>
               </li>

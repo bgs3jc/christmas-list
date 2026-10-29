@@ -1,4 +1,4 @@
-import { useId, type ReactNode } from 'react'
+import { useId } from 'react'
 import styles from './SnowGlobe.module.css'
 
 // Spots for gifts at the bottom of the globe, front row first. Nine fit.
@@ -20,10 +20,11 @@ interface SnowGlobeProps {
   // How many gifts are planned for this person. Shoppers see them pile up.
   gifts?: number
   label?: string
-  // A personal scene (pets and so on) to show instead of the tree, drawn in
-  // the same 220 x 260 space. It will come from the database, never from this
-  // public code.
-  scene?: ReactNode
+  // A personal picture (pets and so on) to show instead of the tree. It comes
+  // from the person's data, never from this public code. Square, drawn a bit
+  // larger than the glass so its middle fills the globe and its plain bottom
+  // edge hides behind the base.
+  scene?: string
 }
 
 // The one festive moment on each page, drawn in the house print's flat inks.
@@ -46,7 +47,7 @@ export function SnowGlobe({ size = 220, gifts, label, scene }: SnowGlobeProps) {
       </defs>
       <path d="M28 252 Q110 238 192 252 Q110 262 28 252 Z" className={styles.shadow} />
       <g clipPath={`url(#${clipId})`}>
-        {scene ?? <DuskScene />}
+        {scene ? <image href={scene} x="-5" y="2" width="230" height="230" /> : <DuskScene />}
         {pile.map((slot, i) => (
           <Present key={i} index={i} {...slot} />
         ))}

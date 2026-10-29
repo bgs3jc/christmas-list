@@ -25,7 +25,7 @@ export function MyListPage() {
             <span className={styles.santaStatus}>{santasListLabels[me.santasList]}</span>
           </div>
         )}
-        <SnowGlobe size={150} />
+        <SnowGlobe size={150} scene={me.globeScene} />
         <h1 className={styles.title}>My list</h1>
         <p className={styles.subtitle}>Everyone shops from this. Nobody will tell you what's been taken.</p>
       </div>

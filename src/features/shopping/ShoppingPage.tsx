@@ -80,7 +80,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   return (
     <main className={styles.page}>
       <div className={styles.header}>
-        <SnowGlobe size={88} gifts={gifts.length} label={`${person.name}'s snow globe, with gifts piling up`} />
+        <SnowGlobe size={88} scene={person.globeScene} gifts={gifts.length} label={`${person.name}'s snow globe, with gifts piling up`} />
         <div>
           <h1 className={styles.name}>Shopping for {person.name}</h1>
           <p className={styles.private}>
