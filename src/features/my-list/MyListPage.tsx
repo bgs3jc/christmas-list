@@ -5,6 +5,7 @@ import { santasListLabels } from '../../shared/format'
 import { LightbulbIcon, PresentIcon } from '../../shared/icons'
 import { SnowGlobe } from '../../shared/SnowGlobe'
 import { EmptyRow, ListSection, Rows } from '../../shared/ui/List'
+import { Shelf } from '../../shared/ui/Shelf'
 import { GimmeDialog, MaybeDialog } from './WishDialogs'
 import { WishRow } from './WishRow'
 import styles from './MyList.module.css'
@@ -25,28 +26,31 @@ export function MyListPage() {
   }, [justAdded])
 
   return (
-    <main className={styles.page}>
-      <div className={styles.hero}>
-        {features.santasList && me.santasList && (
-          <div className={styles.santaTag}>
-            <span className={styles.santaLabel}>Santa's list</span>
-            <span className={styles.santaStatus}>{santasListLabels[me.santasList]}</span>
-          </div>
-        )}
-        <SnowGlobe size={150} scene={me.globeScene} />
-        <h1 className={styles.title}>My list</h1>
-        <p className={styles.subtitle}>Everyone shops from this. Nobody will tell you what's been taken.</p>
-      </div>
-
+    <Shelf
+      aside={
+        <>
+          <SnowGlobe size={260} scene={me.globeScene} />
+          <h1 className={styles.title}>My list</h1>
+          <p className={styles.subtitle}>Everyone shops from this. Nobody will tell you what's been taken.</p>
+          {features.santasList && me.santasList && (
+            // A printed gift tag on a gold string
+            <p className={styles.santaTag}>
+              <span className={styles.santaLabel}>Santa's list</span>
+              <span className={styles.santaStatus}>{santasListLabels[me.santasList]}</span>
+            </p>
+          )}
+        </>
+      }
+    >
       <div className={styles.addButtons}>
-        <button type="button" className={styles.bigButton} onClick={() => setDialog({ kind: 'specific' })}>
+        <button type="button" className={`${styles.bigButton} ${styles.gimme}`} onClick={() => setDialog({ kind: 'specific' })}>
           <PresentIcon />
           <span className={styles.bigText}>
             <span className={styles.bigTitle}>Gimme, gimme, gimme</span>
             <span className={styles.bigHint}>Something specific. Paste a link or describe it.</span>
           </span>
         </button>
-        <button type="button" className={styles.bigButton} onClick={() => setDialog({ kind: 'maybe' })}>
+        <button type="button" className={`${styles.bigButton} ${styles.idea}`} onClick={() => setDialog({ kind: 'maybe' })}>
           <LightbulbIcon />
           <span className={styles.bigText}>
             <span className={styles.bigTitle}>An idea…</span>
@@ -76,6 +80,6 @@ export function MyListPage() {
 
       {dialog?.kind === 'specific' && <GimmeDialog item={dialog.item} onClose={close} onAdded={setJustAdded} />}
       {dialog?.kind === 'maybe' && <MaybeDialog item={dialog.item} onClose={close} onAdded={setJustAdded} />}
-    </main>
+    </Shelf>
   )
 }

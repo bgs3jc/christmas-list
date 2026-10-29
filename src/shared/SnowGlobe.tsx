@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import styles from './SnowGlobe.module.css'
 
 // Spots for gifts at the bottom of the globe, front row first. Nine fit.
@@ -32,6 +32,16 @@ export function SnowGlobe({ size = 220, gifts, label, scene }: SnowGlobeProps) {
   const clipId = `globe${useId().replace(/[^a-zA-Z0-9]/g, '')}`
   const pile = SLOTS.slice(0, gifts ?? 0)
 
+  // Presents added while you watch drop into the globe; the ones already
+  // there when the page opens just sit in the pile.
+  const shown = useRef(gifts ?? 0)
+  const [dropFrom, setDropFrom] = useState<number | null>(null)
+  useEffect(() => {
+    const count = gifts ?? 0
+    if (count > shown.current) setDropFrom(shown.current)
+    shown.current = count
+  }, [gifts])
+
   return (
     <svg
       viewBox="0 0 220 260"
@@ -49,7 +59,7 @@ export function SnowGlobe({ size = 220, gifts, label, scene }: SnowGlobeProps) {
       <g clipPath={`url(#${clipId})`}>
         {scene ? <image href={scene} x="-5" y="2" width="230" height="230" /> : <DuskScene />}
         {pile.map((slot, i) => (
-          <Present key={i} index={i} {...slot} />
+          <Present key={i} index={i} drop={dropFrom !== null && i >= dropFrom} {...slot} />
         ))}
         <g className={styles.snow}>
           <circle cx="40" cy="40" r="2.5" />
@@ -99,6 +109,7 @@ function DuskScene() {
 
 interface PresentProps {
   index: number
+  drop?: boolean
   x: number
   y: number
   w: number
@@ -106,10 +117,10 @@ interface PresentProps {
 }
 
 // A wrapped present with a bow, red and green in turn.
-function Present({ index, x, y, w, h }: PresentProps) {
+function Present({ index, drop, x, y, w, h }: PresentProps) {
   const mid = x + w / 2
   return (
-    <g>
+    <g className={drop ? styles.drop : undefined}>
       <rect x={x} y={y} width={w} height={h} rx="1" className={index % 2 ? styles.wrappedGreen : styles.wrappedRed} />
       <path d={`M${mid} ${y}v${h}M${x} ${y + h / 2}h${w}`} className={styles.ribbon} />
       <path d={`M${mid} ${y}q-4-5-6-1q3 2 6 1q4-5 6-1q-3 2-6 1z`} className={styles.bow} />

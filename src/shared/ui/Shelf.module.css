@@ -1,0 +1,90 @@
+/*
+  Two columns on wide screens: the globe on the left, overlapping the dusk
+  band a little, and the page's lists on the right.
+*/
+
+.shelf {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-16);
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 var(--space-8) var(--space-16);
+}
+
+.aside {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  /* Sits a little into the band above, like the globe on Home's snow */
+  margin-top: -36px;
+  text-align: center;
+}
+
+.aside > svg:first-child {
+  width: 260px;
+  height: auto;
+}
+
+.follow {
+  position: sticky;
+  top: var(--space-4);
+}
+
+.content {
+  min-width: 0;
+  padding-top: var(--space-12);
+}
+
+/* Narrower: one column. */
+@media (max-width: 959px) {
+  .shelf {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 0 var(--space-6) var(--space-12);
+  }
+
+  .aside {
+    margin-top: var(--space-6);
+  }
+
+  .aside > svg:first-child {
+    width: 150px;
+  }
+
+  /* A slim bar that stays at the top: small globe, then the words. */
+  .follow {
+    position: sticky;
+    top: 0;
+    flex-direction: row;
+    gap: var(--space-3);
+    margin: 0 calc(-1 * var(--space-6));
+    padding: var(--space-2) var(--space-6);
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+    text-align: left;
+  }
+
+  .follow > svg:first-child {
+    width: 56px;
+  }
+
+  .content {
+    padding-top: var(--space-6);
+  }
+}
+
+@media (max-width: 640px) {
+  .shelf {
+    padding: 0 var(--space-4) var(--space-12);
+  }
+
+  .follow {
+    margin: 0 calc(-1 * var(--space-4));
+    padding: var(--space-2) var(--space-4);
+  }
+}

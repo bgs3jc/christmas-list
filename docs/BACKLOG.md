@@ -12,4 +12,6 @@ Ideas parked until v1 works. Each one must pass the feature test in `CLAUDE.md`.
 - **Prices for shoppers:** the owner doesn't type prices. Pull them from links (with link auto-fill), so shoppers see a price before clicking through.
 - **In-page confirm and undo:** "Take off my list" and "Not getting it" use the browser's own confirm box, which says "bgs3jc.github.io says". A short "Undo" in the page would be friendlier. Low priority: it's clear as is.
 - **Changing someone else's gift:** only your own gifts show Change now. If the family wants to fix each other's (say, April records what Kevin is getting), add it back for everyone.
+- **"What I'm getting":** everything you're Santa for, grouped by person, with where each ships. The list you actually shop from in December; today it takes three pages to assemble. A view, not bookkeeping. Recommended next after M4 (or before, it's small).
+- **A real name and a home-screen icon:** "The Family List" is a placeholder; an icon cropped from the print makes April's bookmark look like an app. Do with M4's sign-in page, designed in the print.
 

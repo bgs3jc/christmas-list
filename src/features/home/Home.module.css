@@ -273,7 +273,8 @@
 /* The snowy part below */
 
 .snow {
-  background: var(--snow);
+  /* The same paper as every other page */
+  background: var(--paper);
 }
 
 .page {

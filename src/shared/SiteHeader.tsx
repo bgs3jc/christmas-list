@@ -4,12 +4,14 @@ import styles from './SiteHeader.module.css'
 
 interface SiteHeaderProps {
   route: Route
-  tone?: 'paper' | 'night'
+  // dusk: the print's sky as a band across the top of every inner page.
+  // night: transparent, drawn on Home's picture.
+  tone?: 'dusk' | 'night'
   // Runs edge to edge on wide screens, lined up with a full-width picture.
   wide?: boolean
 }
 
-export function SiteHeader({ route, tone = 'paper', wide = false }: SiteHeaderProps) {
+export function SiteHeader({ route, tone = 'dusk', wide = false }: SiteHeaderProps) {
   const viewer = useViewer()
   const others = usePeople().filter((p) => p.id !== viewer.id)
 
@@ -24,7 +26,7 @@ export function SiteHeader({ route, tone = 'paper', wide = false }: SiteHeaderPr
   ]
 
   return (
-    <header className={[styles.header, tone === 'night' && styles.night, wide && styles.wide].filter(Boolean).join(' ')}>
+    <header className={[styles.header, styles[tone], wide && styles.wide].filter(Boolean).join(' ')}>
       <div className={styles.inner}>
         <a href={links.home} className={styles.wordmark}>
           The Family List
@@ -41,6 +43,8 @@ export function SiteHeader({ route, tone = 'paper', wide = false }: SiteHeaderPr
           </ul>
         </nav>
       </div>
+      {/* The print's horizon: violet, magenta and orange in flat pulls */}
+      {tone === 'dusk' && <div className={styles.horizon} aria-hidden="true" />}
     </header>
   )
 }

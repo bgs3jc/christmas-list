@@ -69,6 +69,47 @@
   color: var(--starlight);
 }
 
+/* Every other page: a band of the print's dusk sky */
+.dusk {
+  max-width: none;
+  padding: 0;
+  background: var(--print-sky);
+}
+
+.dusk .inner {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-8) var(--space-4);
+  border-bottom: none;
+}
+
+.dusk .wordmark,
+.dusk .link[aria-current='page'],
+.dusk a:hover {
+  color: var(--on-ink);
+}
+
+.dusk .link {
+  color: var(--on-sky-soft);
+}
+
+.dusk .link[aria-current='page'] {
+  box-shadow: inset 0 -3px 0 var(--globe-light);
+}
+
+.dusk :focus-visible {
+  outline-color: var(--on-ink);
+}
+
+.horizon {
+  height: 20px;
+  background: linear-gradient(
+    var(--globe-band-violet) 0 10px,
+    var(--globe-band-magenta) 10px 16px,
+    var(--globe-band-orange) 16px 20px
+  );
+}
+
 @media (min-width: 1200px) {
   .wide {
     max-width: none;
@@ -79,5 +120,13 @@
 @media (max-width: 640px) {
   .header {
     padding: var(--space-4) var(--space-4) 0;
+  }
+
+  .dusk {
+    padding: 0;
+  }
+
+  .dusk .inner {
+    padding: var(--space-4) var(--space-4) var(--space-3);
   }
 }

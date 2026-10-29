@@ -3,6 +3,7 @@ import { addGift, markIdeaGifted, useHomes, usePeople, useShopping, useViewer, t
 import { coverLabel, storeFromLink } from '../../shared/format'
 import { LockIcon, StarIcon } from '../../shared/icons'
 import { SnowGlobe } from '../../shared/SnowGlobe'
+import { Shelf } from '../../shared/ui/Shelf'
 import { StatusPill } from '../../shared/StatusPill'
 import { Button } from '../../shared/ui/Button'
 import { EmptyRow, ListSection, NoteLine, Row, Rows, TitleNote } from '../../shared/ui/List'
@@ -20,7 +21,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
 
   if (!view) {
     return (
-      <main className={styles.page}>
+      <main className={styles.missing}>
         <p>There's nobody here by that name.</p>
       </main>
     )
@@ -86,17 +87,21 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   )
 
   return (
-    <main className={styles.page}>
-      <div className={styles.header}>
-        <SnowGlobe size={88} scene={person.globeScene} gifts={gifts.length} label={`${person.name}'s snow globe, with gifts piling up`} />
-        <div>
-          <h1 className={styles.name}>Shopping for {person.name}</h1>
-          <p className={styles.private}>
-            <LockIcon />
-            {person.name} can't see this page
-          </p>
-        </div>
-      </div>
+    <Shelf
+      follow
+      aside={
+        <>
+          <SnowGlobe size={260} scene={person.globeScene} gifts={gifts.length} label={`${person.name}'s snow globe, with gifts piling up`} />
+          <div>
+            <h1 className={styles.name}>Shopping for {person.name}</h1>
+            <p className={styles.private}>
+              <LockIcon />
+              {person.name} can't see this page
+            </p>
+          </div>
+        </>
+      }
+    >
 
       <ListSection title={`${person.name}'s list`}>
         {wishes.length === 0 ? (
@@ -214,6 +219,6 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
           viewer={viewer}
           onClose={() => setDialog(null)}
         />}
-    </main>
+    </Shelf>
   )
 }

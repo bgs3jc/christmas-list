@@ -8,6 +8,8 @@ Round-one plaid "Christmas morning" pages were busy. The direction now:
 
 - **Calm by default.** Cream paper, ink text. Lists are separated by lines and space, not boxes or tinted panels. Hierarchy comes from type size and weight, not color.
 - **One main action per screen** in plaid red; everything else is an outlined or underlined button. Extra options open on click ("Someone else", "Change").
+- **The print carries through (Round 8, concept A).** Every page but Home opens with a band of the print's dusk sky (cobalt, then violet, magenta and orange in flat pulls). Home and every other page share one paper. The person's snow globe sits on a shelf beside the list on wide screens, overlapping the band a little; on shopping pages it stays in view while you scroll, and each new gift drops into it. Under 960px the shopping globe becomes a slim bar at the top.
+- **My list's two add buttons are flat blocks of ink** (red for "Gimme, gimme, gimme", cobalt for "An idea…"), no shadows. Santa's list is a flat printed gift tag on a gold string.
 - **One festive moment per page.** Home: a screen print of the family house at dusk on Christmas Eve (flat inks, colored shadows), with the headline on its sky. Shopping pages: the person's snow globe, with gifts piling up at the bottom (one wrapped present per gift). Your own page: your globe just snows.
 - **Quiet rows.** Status pill, name, who; notes and links in small type under the name, always in view (nothing opens). Your own gifts show "Change" in the row. On phones the name gets the whole width and status and who go on the line under it. Two states for a wish: "Needs Santa" (grey, dashed circle) and "Santa's got it" (green, full circle), shape and word with the color. Gifts themselves have no status: if it's on the page, someone's getting it. Nothing else in a row gets color.
 - **The fun is in small touches:** the gift pile, the wording ("Gimme, gimme, gimme"), the Naughty/Nice tag. No stamps, plaid strips, emoji or handwriting fonts.
@@ -22,7 +24,7 @@ Mockups (private canvas, Brady's account): https://claude.ai/artifact/BkG8hdVD8i
 - Display: Gloock. Body: Nunito Sans. No handwriting fonts.
 - Contrast: text at least 4.5:1 on paper (`--ink-faint` is the lightest text allowed); text-box edges at least 3:1 (`--field-border`).
 - One type scale, 13 14 16 18 24 30 40 px (tokens `--text-xs` to `--text-3xl`). Weights: 400 for secondary text, 600 for names and labels, 700 for buttons and pills. No other sizes or weights in components.
-- Motion: at most one slow ambient animation per screen (falling snow); off when the device asks for reduced motion.
+- Motion: at most one slow ambient animation per screen (falling snow), plus one moment of feedback: a new gift dropping into the globe. Both off when the device asks for reduced motion.
 
 ## Known gaps
 

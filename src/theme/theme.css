@@ -74,6 +74,10 @@
   --print-ink: #1e1448;
   --print-nose: #ff513d;
   --print-cream: #fee5d5;
+  /* Text on the print's flat inks (the dusk band, the ink blocks). All 5.5:1 or more. */
+  --on-ink: #fee5d5;
+  --on-sky-soft: #dce2ff;
+  --on-red-soft: #ffe3d6;
 
   /* Fonts: one display face, one body face */
   --font-display: 'Gloock', Georgia, serif;
