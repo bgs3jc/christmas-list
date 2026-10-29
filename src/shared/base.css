@@ -17,6 +17,9 @@ body {
   font-family: var(--font-body);
   font-size: var(--text-md);
   line-height: 1.5;
+  /* While the web fonts load, scale the stand-in fonts to match them, so
+     text doesn't jump when Gloock and Nunito Sans arrive. */
+  font-size-adjust: from-font;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -31,6 +34,8 @@ h3 {
 
 p {
   margin: 0;
+  /* No lone last word on its own line */
+  text-wrap: pretty;
 }
 
 a {
@@ -60,13 +65,5 @@ button {
   outline-offset: 2px;
 }
 
-/* Turn off ambient motion when the device asks for less. */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+/* Each animation handles "reduce motion" itself, next to where it's defined
+   (the snow and gifts in SnowGlobe, the sleigh on Home, pop-ups in Dialog). */

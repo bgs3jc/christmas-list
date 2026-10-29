@@ -12,9 +12,11 @@ interface TextFieldProps {
   narrow?: boolean
   required?: boolean
   autoFocus?: boolean
+  // A field that holds a link: a keyboard with "/" and ".com", no autocorrect.
+  link?: boolean
 }
 
-export function TextField({ label, value, onChange, help, placeholder, multiline, rows = 2, narrow, required, autoFocus }: TextFieldProps) {
+export function TextField({ label, value, onChange, help, placeholder, multiline, rows = 2, narrow, required, autoFocus, link }: TextFieldProps) {
   const id = useId()
   const helpId = `${id}-help`
   const shared = {
@@ -26,6 +28,7 @@ export function TextField({ label, value, onChange, help, placeholder, multiline
     'data-autofocus': autoFocus || undefined,
     'aria-describedby': help ? helpId : undefined,
     className: styles.input,
+    ...(link && { inputMode: 'url' as const, autoCapitalize: 'off', autoCorrect: 'off', spellCheck: false }),
   }
   return (
     <div className={narrow ? styles.narrow : undefined}>

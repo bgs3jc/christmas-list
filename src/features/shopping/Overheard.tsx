@@ -58,9 +58,11 @@ export function Overheard({ person, ideas, nameOf, onMakeGift }: OverheardProps)
           className={styles.ideaInput}
           value={text}
           onChange={(e) => setText(e.target.value)}
+          required
+          enterKeyHint="done"
           placeholder={`Heard ${person.name} mention something? Add it here`}
         />
-        <Button type="submit" disabled={!text.trim()}>
+        <Button type="submit">
           Save
         </Button>
       </form>

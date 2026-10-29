@@ -60,6 +60,8 @@ export function HomePage({ route }: { route: Route }) {
                 sizes="100vw"
                 width={1536}
                 height={864}
+                // The biggest thing on the first screen: load it first.
+                fetchPriority="high"
                 alt="A snowy brick house at dusk on Christmas Eve, with a wreath on the door and rocking chairs on the porch"
               />
             </picture>

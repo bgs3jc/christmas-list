@@ -102,7 +102,7 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
           <Button variant="quiet" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="main" type="submit" disabled={!title.trim()}>
+          <Button variant="main" type="submit">
             Save
           </Button>
         </>
@@ -118,6 +118,7 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
               value={entry}
               onChange={setEntry}
               autoFocus
+              required
               help="Paste a link and it gets named for you."
             />
           )}
@@ -129,10 +130,11 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
                 setName(value)
                 setNameEdited(true)
               }}
+              required
               help={gift ? undefined : "Filled in from the link. Fix it if it's off."}
             />
           )}
-          {gift && <TextField label="Link" value={link} onChange={setLink} placeholder="https://…" />}
+          {gift && <TextField label="Link" value={link} onChange={setLink} placeholder="https://…" link />}
         </>
       )}
       <Choice legend="Who's getting it?" options={others.map((p) => ({ value: p.id, label: nameFor(p) }))} value={giverId} onChange={setGiverId} />

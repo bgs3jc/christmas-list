@@ -12,6 +12,9 @@ import { Overheard } from './Overheard'
 import styles from './Shopping.module.css'
 
 
+// The "Change" button on a wish you're getting, so focus can find it.
+const changeId = (wishId: string) => `change-${wishId}`
+
 export function ShoppingPage({ recipientId }: { recipientId: string }) {
   const view = useShopping(recipientId)
   const viewer = useViewer()
@@ -42,6 +45,8 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
 
   function claim(wish: WishItem) {
     addGift({ recipientId: person.id, giverId: viewer.id, title: wish.title, wishItemId: wish.id, place: 'tree' })
+    // The button just pressed is gone. Keep keyboard focus in the row, on its new "Change".
+    requestAnimationFrame(() => document.getElementById(changeId(wish.id))?.focus())
   }
 
   const editGift = (gift: Gift, fromList = false) => setDialog({ heading: 'Change this gift', gift, fromList })
@@ -66,7 +71,12 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
     gift.giverId === viewer.id ? (
       <>
         You
-        <Button variant="quiet" onClick={() => editGift(gift, fromList)} aria-label={`Change ${gift.title}`}>
+        <Button
+          variant="quiet"
+          id={fromList && gift.wishItemId ? changeId(gift.wishItemId) : undefined}
+          onClick={() => editGift(gift, fromList)}
+          aria-label={`Change ${gift.title}`}
+        >
           Change
         </Button>
       </>

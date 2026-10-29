@@ -3,6 +3,11 @@
   the name. Color only ever means status. Nothing hides behind a click.
 */
 
+.section {
+  /* Rows lay themselves out by the room their list has (see the bottom). */
+  container-type: inline-size;
+}
+
 .section + .section {
   margin-top: var(--space-10);
 }
@@ -99,8 +104,10 @@
   border-bottom: 1px solid var(--line-row);
 }
 
-/* Phones: the name gets the whole width; status and who go on a line under it. */
-@media (max-width: 640px) {
+/* A narrow list (a phone, or large text): the name gets the whole width;
+   status and who go on a line under it. Measured in rem, so larger text
+   switches sooner. */
+@container (width < 36rem) {
   .row {
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-areas:

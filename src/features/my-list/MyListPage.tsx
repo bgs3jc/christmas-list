@@ -42,21 +42,23 @@ export function MyListPage() {
         </>
       }
     >
-      <div className={styles.addButtons}>
-        <button type="button" className={`${styles.bigButton} ${styles.gimme}`} onClick={() => setDialog({ kind: 'specific' })}>
-          <PresentIcon />
-          <span className={styles.bigText}>
-            <span className={styles.bigTitle}>Gimme, gimme, gimme</span>
-            <span className={styles.bigHint}>Something specific. Paste a link or describe it.</span>
-          </span>
-        </button>
-        <button type="button" className={`${styles.bigButton} ${styles.idea}`} onClick={() => setDialog({ kind: 'maybe' })}>
-          <LightbulbIcon />
-          <span className={styles.bigText}>
-            <span className={styles.bigTitle}>An idea…</span>
-            <span className={styles.bigHint}>A store, a brand or a hobby. Santa picks.</span>
-          </span>
-        </button>
+      <div className={styles.addArea}>
+        <div className={styles.addButtons}>
+          <button type="button" className={`${styles.bigButton} ${styles.gimme}`} onClick={() => setDialog({ kind: 'specific' })}>
+            <PresentIcon />
+            <span className={styles.bigText}>
+              <span className={styles.bigTitle}>Gimme, gimme, gimme</span>
+              <span className={styles.bigHint}>Something specific. Paste a link or describe it.</span>
+            </span>
+          </button>
+          <button type="button" className={`${styles.bigButton} ${styles.idea}`} onClick={() => setDialog({ kind: 'maybe' })}>
+            <LightbulbIcon />
+            <span className={styles.bigText}>
+              <span className={styles.bigTitle}>An idea…</span>
+              <span className={styles.bigHint}>A store, a brand or a hobby. Santa picks.</span>
+            </span>
+          </button>
+        </div>
       </div>
 
       <div className={styles.listSection}>

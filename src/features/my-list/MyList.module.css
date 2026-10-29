@@ -61,21 +61,30 @@
 }
 
 /* The two ways to add: flat blocks of the print's inks, no shadows.
-   "Gimme, gimme, gimme" always gets one line: side by side when there's room
-   (icon above the words), stacked when there isn't. */
+   "Gimme, gimme, gimme" always gets one line. The blocks arrange themselves
+   by the room they have (container queries at the bottom), measured in rem
+   so larger text rearranges them sooner instead of breaking the name. */
+
+.addArea {
+  container-type: inline-size;
+}
 
 .addButtons {
   display: grid;
   gap: var(--space-3);
 }
 
+/* Narrowest first: icon above the words, the name one size smaller. */
 .bigButton {
   display: flex;
-  align-items: center;
-  gap: var(--space-5);
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-2);
   min-height: 104px;
-  padding: var(--space-5) var(--space-6);
-  border: none;
+  padding: var(--space-4) var(--space-5);
+  /* Invisible, except in high-contrast modes, where it keeps the block's edge */
+  border: 2px solid transparent;
   border-radius: var(--radius-sm);
   color: var(--on-ink);
   text-align: left;
@@ -84,6 +93,8 @@
 
 .bigButton svg {
   flex: none;
+  width: 40px;
+  height: 40px;
 }
 
 .gimme {
@@ -114,7 +125,7 @@
 
 .bigTitle {
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
+  font-size: var(--text-xl);
   line-height: 1.1;
 }
 
@@ -210,15 +221,34 @@
   color: var(--plaid-red);
 }
 
-@media (max-width: 959px) {
+@media (width < 60em) {
   .title {
     font-size: var(--text-3xl);
   }
 }
 
-/* Laptops: side by side, the icon above the words so the name has the
-   block's whole width. Below 1190px wide, two blocks can't fit it on one line. */
-@media (min-width: 1190px) {
+/* Room for the icon beside the words, one block above the other */
+@container (width >= 28.5rem) {
+  .bigButton {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-5);
+    padding: var(--space-5) var(--space-6);
+  }
+
+  .bigButton svg {
+    width: 56px;
+    height: 56px;
+  }
+
+  .bigTitle {
+    font-size: var(--text-2xl);
+  }
+}
+
+/* Room for both side by side: icon above the words again, so the name has
+   the block's whole width. */
+@container (width >= 48.5rem) {
   .addButtons {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-4);
@@ -227,26 +257,6 @@
   .bigButton {
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
     gap: var(--space-3);
-  }
-}
-
-/* Phones: the icon goes above the words, so the name gets the full width. */
-@media (max-width: 640px) {
-  .bigButton {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-2);
-    padding: var(--space-4) var(--space-5);
-  }
-
-  .bigButton svg {
-    width: 40px;
-    height: 40px;
-  }
-
-  .bigTitle {
-    font-size: var(--text-xl);
   }
 }

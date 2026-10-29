@@ -24,7 +24,8 @@ Mockups (private canvas, Brady's account): https://claude.ai/artifact/BkG8hdVD8i
 - Display: Gloock. Body: Nunito Sans. No handwriting fonts.
 - Contrast: text at least 4.5:1 on paper (`--ink-faint` is the lightest text allowed); text-box edges at least 3:1 (`--field-border`).
 - One type scale, 13 14 16 18 24 30 40 px (tokens `--text-xs` to `--text-3xl`). Weights: 400 for secondary text, 600 for names and labels, 700 for buttons and pills. No other sizes or weights in components.
-- Motion: at most one slow ambient animation per screen (falling snow), plus one moment of feedback: a new gift dropping into the globe. Both off when the device asks for reduced motion.
+- Motion: at most one slow ambient animation per screen (falling snow), plus one moment of feedback: a new gift dropping into the globe. Each animation turns itself off when the device asks for reduced motion (no global rule).
+- Sizes in rem, breakpoints in em, components laid out by their own room (container queries), so the phone's text-size setting scales the site without breaking it.
 
 ## Known gaps
 

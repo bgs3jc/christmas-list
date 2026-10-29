@@ -164,7 +164,7 @@
    globes below peek in and it's clear there's more. Only sidewalk is cut. */
 @media (min-width: 641px) {
   .printImage {
-    max-height: max(calc(100vh - 230px), 44vw);
+    max-height: max(calc(100dvh - 230px), 44vw);
   }
 }
 

@@ -4,9 +4,10 @@
      when it grows (a pasted link adds a Name field). */
   margin: var(--dialog-top) auto auto;
   max-height: calc(100dvh - var(--dialog-top) - var(--space-4));
-  --dialog-top: min(12vh, var(--space-16));
+  --dialog-top: min(12dvh, var(--space-16));
   padding: 0;
-  border: none;
+  /* Invisible, except in high-contrast modes, where it keeps the box's edge */
+  border: 1px solid transparent;
   border-radius: var(--radius-lg);
   background: var(--sheet);
   color: var(--ink);
@@ -16,10 +17,36 @@
 .dialog[open] {
   display: flex;
   overflow: hidden;
+  /* Fades and rises in a little when it opens */
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 0.18s ease-out,
+    translate 0.18s ease-out;
+
+  @starting-style {
+    opacity: 0;
+    translate: 0 12px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    translate: none;
+
+    @starting-style {
+      translate: none;
+    }
+  }
+}
+
+/* The page behind doesn't scroll while a pop-up is open. */
+.dialog:modal {
+  overscroll-behavior: contain;
 }
 
 .dialog::backdrop {
   background: var(--scrim);
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 /* Title and buttons stay put; only the fields in between scroll, so Save is
@@ -84,7 +111,7 @@
   border-top: 1px solid var(--line-row);
 }
 
-@media (max-width: 640px) {
+@media (width < 40em) {
   .dialog {
     --dialog-top: var(--space-4);
   }

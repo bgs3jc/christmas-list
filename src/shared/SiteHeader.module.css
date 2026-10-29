@@ -117,7 +117,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (width < 40em) {
   .header {
     padding: var(--space-4) var(--space-4) 0;
   }

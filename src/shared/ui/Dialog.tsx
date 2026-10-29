@@ -35,9 +35,9 @@ export function Dialog({ title, onClose, onSubmit, children, footer }: DialogPro
       ref={ref}
       className={styles.dialog}
       aria-labelledby={titleId}
+      // Closes with the X, Cancel or the Esc key, never by a click outside:
+      // that loses what was typed (say, a pasted list of links).
       onClose={onClose}
-      // A click on the dimmed area outside the box closes it.
-      onClick={(event) => event.target === ref.current && onClose()}
     >
       <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.head}>

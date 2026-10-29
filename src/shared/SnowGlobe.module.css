@@ -55,6 +55,11 @@
 .snow {
   fill: var(--globe-snow);
   animation: fall var(--duration-snow) linear infinite;
+
+  /* With reduced motion the flakes hang still in the glass. */
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 @keyframes fall {
@@ -109,6 +114,11 @@
 /* A new gift falls in from the top of the glass and settles on the pile. */
 .drop {
   animation: drop 0.8s cubic-bezier(0.35, 0.8, 0.4, 1);
+
+  /* With reduced motion the gift simply appears on the pile. */
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 @keyframes drop {

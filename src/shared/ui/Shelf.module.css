@@ -41,8 +41,8 @@
   padding-top: var(--space-12);
 }
 
-/* Narrower: one column. */
-@media (max-width: 959px) {
+/* Narrower, or larger text: one column. In em, so larger text switches sooner. */
+@media (width < 60em) {
   .shelf {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
@@ -79,7 +79,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (width < 40em) {
   .shelf {
     padding: 0 var(--space-4) var(--space-12);
   }

@@ -97,7 +97,7 @@
   width: 1px;
   height: 1px;
   overflow: hidden;
-  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
   white-space: nowrap;
 }
 
@@ -114,7 +114,7 @@
 }
 
 /* In the slim bar on narrower screens */
-@media (max-width: 959px) {
+@media (width < 60em) {
   .name {
     margin-top: 0;
     font-size: var(--text-xl);

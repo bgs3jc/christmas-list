@@ -68,8 +68,6 @@ export function GimmeDialog({ item, onClose, onAdded }: WishDialogProps) {
     onClose()
   }
 
-  const canSave = item ? Boolean(name.trim()) : pasted.length > 0
-
   return (
     <Dialog
       title={item ? 'Change this' : 'Gimme, gimme, gimme'}
@@ -85,14 +83,14 @@ export function GimmeDialog({ item, onClose, onAdded }: WishDialogProps) {
           <Button variant="quiet" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="main" type="submit" disabled={!canSave}>
+          <Button variant="main" type="submit">
             {several ? `Add all ${pasted.length}` : item ? 'Save' : 'Add to my list'}
           </Button>
         </>
       }
     >
       {item ? (
-        <TextField label="Link" value={linkText} onChange={setLinkText} placeholder="https://…" />
+        <TextField label="Link" value={linkText} onChange={setLinkText} placeholder="https://…" link />
       ) : (
         <TextField
           label="Link, or what it is"
@@ -100,6 +98,7 @@ export function GimmeDialog({ item, onClose, onAdded }: WishDialogProps) {
           onChange={setLinkText}
           multiline
           autoFocus
+          required
           help="Got several? Paste them all, one per line."
         />
       )}
@@ -128,6 +127,7 @@ export function GimmeDialog({ item, onClose, onAdded }: WishDialogProps) {
                 setName(value)
                 setNameEdited(true)
               }}
+              required={Boolean(item)}
               help={item ? undefined : 'Filled in from the link. Fix it if it\'s off.'}
             />
           )}
@@ -173,7 +173,7 @@ export function MaybeDialog({ item, onClose, onAdded }: WishDialogProps) {
           <Button variant="quiet" onClick={onClose}>
             Cancel
           </Button>
-          <Button variant="main" type="submit" disabled={!title.trim()}>
+          <Button variant="main" type="submit">
             {item ? 'Save' : 'Add to my list'}
           </Button>
         </>
@@ -184,6 +184,7 @@ export function MaybeDialog({ item, onClose, onAdded }: WishDialogProps) {
         value={title}
         onChange={setTitle}
         autoFocus
+        required
         help="A store, a brand or a hobby. Santa picks the gift."
       />
       <TextField

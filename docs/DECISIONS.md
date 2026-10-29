@@ -99,3 +99,13 @@ Newest at the bottom. Each entry: what we decided, and why.
 
 **2026-10-29: The print carries through every page (Round 8, concept A).** The house print stopped at Home, so the pages people use looked like a generic list app. Chosen over concept B (quiet paper with the print's ink colors, globe leading each page) because a globe that stays in view turns the gift pile into feedback: every "I'll be Santa" visibly lands in the person's globe. Built with five refinements over the mockup: the globe only follows you when there's room for two columns (960px and up), narrower screens get a slim bar, Home's snow section uses the same paper as every other page, My list's globe stays still (nothing lands in your own), and presents only drop when added while you watch (none on page load, none with reduced motion). The add buttons became flat ink blocks and the tilted Santa's list sticker a flat gift tag, the two most template-looking pieces. Inspired by Stripe Press (each book its own world, one system) and Things 3 (quiet rows, one satisfying moment). Mockups: Round 8 on the canvas.
 
+**2026-10-29: Modern web practices across the site (Google Chrome's Modern Web Guidance).** Checked the site against its guides and kept only what changes something for this family:
+- **Layout follows text size, not just screen width.** List rows and My list's add blocks lay themselves out by the room they have (container queries in rem); page layouts switch at widths in em. With larger text, things rearrange instead of squeezing or breaking "Gimme, gimme, gimme".
+- **The phone's own text size applies** (`<meta name="text-scale">`). April's iPhone text setting now carries into the site; everything was already sized in rem, so it scales cleanly.
+- **Pop-ups don't close on a click outside.** A stray click or a text-selection drag ending outside lost what was typed, like a pasted list of links. X, Cancel and Esc close them. The page behind no longer scrolls, and pop-ups fade in.
+- **Save buttons are never greyed out.** A grey button did nothing and said nothing; now an empty required field gets the browser's own "Please fill out this field".
+- **Keyboard focus stays put** after "I'll be Santa" (it moves to the row's new "Change").
+- **Reduced motion is handled per animation** (snow, gift drop, sleigh, pop-ups) instead of one global rule that cut every animation to near zero.
+- **Smaller:** Home's print loads first (`fetchpriority`), fallback fonts are scaled to ours while they load (`font-size-adjust`), paragraphs avoid lone last words, link fields don't autocapitalize, and solid-color buttons keep an edge in high-contrast modes.
+- **Not done:** dark mode, skip links and scroll-state sticky effects. Nothing in them helps this site now.
+
