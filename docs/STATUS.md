@@ -20,7 +20,7 @@ Update this at the end of every session. Keep it short.
 
 1. **Start M4 in a new chat:** "Read CLAUDE.md and docs/STATUS.md, then let's do M4." Brady needs about 20 minutes to create the Firebase project (Claude walks through it).
 2. M4 replaces `src/data/store.ts` with Firebase; nothing outside `src/data/` should change. Sign-in replaces the "Viewing as" bar.
-3. Personal snow globes: April's has two cats. Allie's, Kevin's and Brady's need a scene each. Prompt pattern: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then Claude runs the flat-ink pass. In M4, `globeScene` moves to the database with the rest of each person's data.
+3. Personal snow globes: April's has two cats, Allie's has Bo. Kevin's (a #10 quarterback, prompt in this session's chat) and Brady's still need a scene. Prompt pattern: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then Claude runs the flat-ink pass. In M4, `globeScene` moves to the database with the rest of each person's data.
 
 ## Milestones to v1
 
@@ -39,5 +39,5 @@ One chat each. M1–M3 are firm; the order and scope after that can change as we
 
 - Is April's @me.com address tied to a Google account? (Doesn't block anything; email-link sign-in works either way.)
 - App name: undecided. "The Family List" is a placeholder.
-- Personal globe scenes for Allie, Kevin and Brady: one idea each (Bo for Allie and Kevin? Patriots for Kevin?). Brady's is undecided.
+- Personal globe scenes for Kevin and Brady. Brady's is undecided.
 - Prices for shoppers: owners don't type them, and shoppers no longer enter what they paid. Pull prices from links later (see BACKLOG)?
