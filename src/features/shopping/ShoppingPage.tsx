@@ -55,8 +55,10 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   // Shipping shows right after the name.
   const shipNote = (gift: Gift) => gift.shipTo && <TitleNote>to {houseOf(gift.shipTo)}</TitleNote>
 
-  // A gift's notes are the family's, so they say whose they are.
-  const familyNote = (gift: Gift) => gift.notes && `${nameOf(gift.giverId)}: ${gift.notes}`
+  // On a list row, a gift's notes say whose they are, so they aren't taken
+  // for the wisher's own note above them.
+  const familyNote = (gift: Gift) =>
+    gift.notes && `${gift.giverId === viewer.id ? 'Your' : `${nameOf(gift.giverId)}'s`} note: ${gift.notes}`
 
   // Who's getting it. Your own gifts can be changed (or undone) right here.
   const giver = (gift: Gift, fromList = false) =>
@@ -188,7 +190,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                     {shipNote(gift)}
                   </>
                 }
-                notes={<NoteLine parts={[familyNote(gift), linkTo(gift.link)]} />}
+                notes={<NoteLine parts={[gift.notes, linkTo(gift.link)]} />}
                 aside={giver(gift)}
               />
             ))}
@@ -200,7 +202,8 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
         person={person}
         ideas={ideas}
         nameOf={nameOf}
-        onMakeGift={(idea) => setDialog({ heading: `Add a gift for ${person.name}`, title: idea.text, onSaved: () => markIdeaGifted(idea.id) })}
+        // The note becomes the gift's note, and leaves Overheard once it's a gift.
+        onMakeGift={(idea) => setDialog({ heading: `Add a gift for ${person.name}`, notes: idea.text, onSaved: () => markIdeaGifted(idea.id) })}
       />
 
       {dialog && <GiftDialog

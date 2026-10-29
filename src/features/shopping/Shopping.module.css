@@ -78,11 +78,6 @@
   font-weight: 400;
 }
 
-.ideaDone {
-  color: var(--pine);
-  font-weight: 700;
-}
-
 .ideaForm {
   display: flex;
   gap: var(--space-2);

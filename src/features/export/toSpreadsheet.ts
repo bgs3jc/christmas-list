@@ -37,8 +37,9 @@ export function toSpreadsheet(views: ShoppingView[], people: Person[], homes: Ho
     for (const gift of gifts.filter((g) => !g.wishItemId || !wishIds.has(g.wishItemId))) {
       rows.push(giftRow(gift.place === 'stocking' ? 'Stocking' : 'Surprise', gift))
     }
-    for (const idea of ideas) {
-      rows.push([person.name, 'Overheard', idea.text, idea.madeIntoGift ? 'Now a gift' : '', '', '', `Heard by ${nameOf(idea.authorId)}`, ''])
+    // Notes made into gifts are already in the file, as the gift's notes.
+    for (const idea of ideas.filter((i) => !i.madeIntoGift)) {
+      rows.push([person.name, 'Overheard', idea.text, '', '', '', `Heard by ${nameOf(idea.authorId)}`, ''])
     }
   }
 

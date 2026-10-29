@@ -12,6 +12,7 @@ export interface GiftDialogSetup {
   gift?: Gift
   // ...or starting a new one with some of it filled in.
   title?: string
+  notes?: string
   wishItemId?: string
   // A gift claimed from the list keeps the list's name, and always goes under the tree.
   fromList?: boolean
@@ -38,11 +39,15 @@ const NOT_SHIPPING = 'none'
 
 export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }: GiftDialogProps) {
   const { gift } = setup
-  const [title, setTitle] = useState(gift?.title ?? setup.title ?? '')
+  // A new gift starts with one box, a link or what it is, like adding to your
+  // own list. A pasted link gets a Name box, filled in from the link.
+  const [entry, setEntry] = useState(setup.title ?? '')
+  const [name, setName] = useState(gift?.title ?? '')
+  const [nameEdited, setNameEdited] = useState(Boolean(gift))
   const [link, setLink] = useState(gift?.link ?? '')
   const [giverId, setGiverId] = useState(gift?.giverId ?? viewer.id)
   const [place, setPlace] = useState<GiftPlace>(gift?.place ?? 'tree')
-  const [notes, setNotes] = useState(gift?.notes ?? '')
+  const [notes, setNotes] = useState(gift?.notes ?? setup.notes ?? '')
   const [shipTo, setShipTo] = useState(gift?.shipTo ?? NOT_SHIPPING)
 
   const nameFor = (p: Person) => (p.id === viewer.id ? 'Me' : p.name)
@@ -51,21 +56,16 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
     ...homes.map((h) => ({ value: h.id, label: h.id === viewer.homeId ? 'To my place' : `To ${h.name}` })),
   ]
 
-  // Pasting a link where the name goes keeps the link and names it from the link.
-  function changeTitle(value: string) {
-    if (isLink(value)) {
-      setLink(value.trim())
-      setTitle(nameFromLink(value.trim()))
-    } else {
-      setTitle(value)
-    }
-  }
+  const entryIsLink = !gift && isLink(entry)
+  const shownName = nameEdited ? name : entryIsLink ? nameFromLink(entry.trim()) : ''
+  const title = gift || entryIsLink ? shownName : entry
+  const showName = Boolean(gift) || entryIsLink
 
   function save() {
     if (!title.trim()) return
     const fields = {
       title: title.trim(),
-      link: link.trim() || undefined,
+      link: (gift ? link : entryIsLink ? entry : '').trim() || undefined,
       giverId,
       place: setup.fromList ? 'tree' : place,
       notes: notes.trim() || undefined,
@@ -111,15 +111,30 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
       {setup.fromList ? (
         <p className={styles.dialogItem}>{title}</p>
       ) : (
-        <TextField
-          label="What is it?"
-          value={title}
-          onChange={changeTitle}
-          autoFocus={!gift && !title}
-          help="Type a name, or paste a link and it gets named for you."
-        />
+        <>
+          {!gift && (
+            <TextField
+              label="Link, or what it is"
+              value={entry}
+              onChange={setEntry}
+              autoFocus
+              help="Paste a link and it gets named for you."
+            />
+          )}
+          {showName && (
+            <TextField
+              label="Name"
+              value={shownName}
+              onChange={(value) => {
+                setName(value)
+                setNameEdited(true)
+              }}
+              help={gift ? undefined : "Filled in from the link. Fix it if it's off."}
+            />
+          )}
+          {gift && <TextField label="Link" value={link} onChange={setLink} placeholder="https://…" />}
+        </>
       )}
-      {!setup.fromList && <TextField label="Link" value={link} onChange={setLink} placeholder="https://…" />}
       <Choice legend="Who's getting it?" options={others.map((p) => ({ value: p.id, label: nameFor(p) }))} value={giverId} onChange={setGiverId} />
       {!setup.fromList && <Choice legend="Where does it go?" options={placeOptions} value={place} onChange={setPlace} />}
       <Choice legend="Shipping somewhere?" options={shipOptions} value={shipTo} onChange={setShipTo} />

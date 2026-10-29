@@ -13,8 +13,10 @@ interface OverheardProps {
 
 // Things noticed about someone through the year, to turn into gifts later.
 // Notes, not gifts: nobody is getting them yet. One line each, nothing to open.
+// A note made into a gift leaves here; its words go with the gift.
 export function Overheard({ person, ideas, nameOf, onMakeGift }: OverheardProps) {
   const [text, setText] = useState('')
+  const notes = ideas.filter((idea) => !idea.madeIntoGift)
 
   function save(event: FormEvent) {
     event.preventDefault()
@@ -25,11 +27,11 @@ export function Overheard({ person, ideas, nameOf, onMakeGift }: OverheardProps)
 
   return (
     <ListSection title="Overheard">
-      {ideas.length === 0 ? (
+      {notes.length === 0 ? (
         <EmptyRow>Nothing yet. Heard {person.name} mention something? Add it below.</EmptyRow>
       ) : (
         <Rows>
-          {ideas.map((idea) => (
+          {notes.map((idea) => (
             <Row
               key={idea.id}
               title={
@@ -39,13 +41,9 @@ export function Overheard({ person, ideas, nameOf, onMakeGift }: OverheardProps)
                 </>
               }
               aside={
-                idea.madeIntoGift ? (
-                  <span className={styles.ideaDone}>Now a gift</span>
-                ) : (
-                  <Button variant="quiet" onClick={() => onMakeGift(idea)}>
-                    Make it a gift
-                  </Button>
-                )
+                <Button variant="quiet" onClick={() => onMakeGift(idea)}>
+                  Make it a gift
+                </Button>
               }
             />
           ))}
