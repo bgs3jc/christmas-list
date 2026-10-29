@@ -100,11 +100,11 @@
 .ideaInput {
   flex: 1;
   min-width: 0;
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 var(--space-3);
-  border: 1.5px solid var(--line);
+  border: 1.5px solid var(--field-border);
   border-radius: var(--radius-md);
-  background: var(--sheet);
+  background: var(--white);
 }
 
 .visuallyHidden {

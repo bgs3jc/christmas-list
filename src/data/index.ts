@@ -98,13 +98,16 @@ const currentViewer = () => getSnapshot().viewerId
 
 export type WishDraft = Pick<WishItem, 'kind' | 'title' | 'link' | 'notes' | 'topPick'>
 
-export function addWishes(drafts: WishDraft[]) {
+// Returns the new wishes' ids, so the page can point them out.
+export function addWishes(drafts: WishDraft[]): string[] {
   const ownerId = currentViewer()
+  const ids = drafts.map(() => newId())
   commit((data) => {
     let order = Math.max(0, ...data.wishes.filter((w) => w.ownerId === ownerId).map((w) => w.order))
-    const added = drafts.map((draft) => ({ ...draft, id: newId(), ownerId, order: (order += 1), createdAt: now() }))
+    const added = drafts.map((draft, i) => ({ ...draft, id: ids[i], ownerId, order: (order += 1), createdAt: now() }))
     return { ...data, wishes: [...data.wishes, ...added] }
   })
+  return ids
 }
 
 // Only the owner can change their own wishes.

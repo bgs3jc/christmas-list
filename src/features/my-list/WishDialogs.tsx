@@ -12,6 +12,8 @@ interface WishDialogProps {
   // Leave out to add something new.
   item?: WishItem
   onClose: () => void
+  // Told the ids of anything new, so the list can point it out.
+  onAdded: (ids: string[]) => void
 }
 
 const blankToUndefined = (value: string) => value.trim() || undefined
@@ -24,7 +26,7 @@ function confirmRemove(item: WishItem, onClose: () => void) {
 }
 
 // "Gimme, gimme, gimme": one specific thing, or several pasted at once.
-export function GimmeDialog({ item, onClose }: WishDialogProps) {
+export function GimmeDialog({ item, onClose, onAdded }: WishDialogProps) {
   const [linkText, setLinkText] = useState(item?.link ?? '')
   const [name, setName] = useState(item?.title ?? '')
   const [nameEdited, setNameEdited] = useState(Boolean(item))
@@ -48,9 +50,9 @@ export function GimmeDialog({ item, onClose }: WishDialogProps) {
         topPick,
       })
     } else if (several) {
-      addWishes(pasted.map((p) => ({ kind: 'specific', topPick: false, ...p })))
+      onAdded(addWishes(pasted.map((p) => ({ kind: 'specific', topPick: false, ...p }))))
     } else if (first) {
-      addWishes([
+      const ids = addWishes([
         {
           kind: 'specific',
           title: (first.link ? shownName : first.title).trim() || first.title,
@@ -59,6 +61,7 @@ export function GimmeDialog({ item, onClose }: WishDialogProps) {
           topPick,
         },
       ])
+      onAdded(ids)
     } else {
       return
     }
@@ -143,7 +146,7 @@ export function GimmeDialog({ item, onClose }: WishDialogProps) {
 }
 
 // "An idea…": a store, brand or kind of thing. The giver picks.
-export function MaybeDialog({ item, onClose }: WishDialogProps) {
+export function MaybeDialog({ item, onClose, onAdded }: WishDialogProps) {
   const [title, setTitle] = useState(item?.title ?? '')
   const [notes, setNotes] = useState(item?.notes ?? '')
 
@@ -151,7 +154,7 @@ export function MaybeDialog({ item, onClose }: WishDialogProps) {
     if (!title.trim()) return
     const fields = { title: title.trim(), notes: blankToUndefined(notes) }
     if (item) updateWish(item.id, fields)
-    else addWishes([{ kind: 'maybe', topPick: false, ...fields }])
+    else onAdded(addWishes([{ kind: 'maybe', topPick: false, ...fields }]))
     onClose()
   }
 

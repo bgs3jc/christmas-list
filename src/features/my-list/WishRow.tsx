@@ -7,15 +7,17 @@ import styles from './MyList.module.css'
 
 interface WishRowProps {
   item: WishItem
+  isNew?: boolean
   onEdit: () => void
 }
 
 // One wish as its owner sees it: no claims, no hints.
-export function WishRow({ item, onEdit }: WishRowProps) {
+export function WishRow({ item, isNew, onEdit }: WishRowProps) {
   const store = storeFromLink(item.link)
   const hasDetails = Boolean(item.notes || item.link)
   return (
     <Row
+      highlight={isNew}
       title={
         <>
           {item.title}
@@ -35,7 +37,7 @@ export function WishRow({ item, onEdit }: WishRowProps) {
             <StarIcon filled={item.topPick} />
           </button>
           <Button variant="quiet" onClick={onEdit}>
-            Edit
+            Change
           </Button>
         </>
       }

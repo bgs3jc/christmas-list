@@ -1,6 +1,10 @@
 .dialog {
   width: min(480px, calc(100vw - 2 * var(--space-4)));
-  max-height: calc(100vh - 2 * var(--space-8));
+  /* Pinned near the top rather than centered, so the box doesn't jump up
+     when it grows (a pasted link adds a Name field). */
+  margin: var(--dialog-top) auto auto;
+  max-height: calc(100dvh - var(--dialog-top) - var(--space-4));
+  --dialog-top: min(12vh, var(--space-16));
   padding: 0;
   border: none;
   border-radius: var(--radius-lg);
@@ -78,4 +82,10 @@
   padding: var(--space-4) var(--space-6) var(--space-5);
   margin-top: var(--space-2);
   border-top: 1px solid var(--line-row);
+}
+
+@media (max-width: 640px) {
+  .dialog {
+    --dialog-top: var(--space-4);
+  }
 }

@@ -1,4 +1,4 @@
-import { useId, useState, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import styles from './List.module.css'
 
 // The list look, shared by every page. Restyling rows happens here and in
@@ -44,11 +44,21 @@ interface RowProps {
   aside?: ReactNode
   // Shown when the row is opened. Leave out for rows that don't open.
   details?: ReactNode
+  // Just added: scrolled into view and lit up for a moment.
+  highlight?: boolean
 }
 
 // One line per thing. Click it to see the rest.
-export function Row({ status, title, fullTitle, aside, details }: RowProps) {
+export function Row({ status, title, fullTitle, aside, details, highlight }: RowProps) {
   const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLLIElement>(null)
+
+  useEffect(() => {
+    if (!highlight) return
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ref.current?.scrollIntoView({ block: 'nearest', behavior: calm ? 'auto' : 'smooth' })
+  }, [highlight])
+
   const detailsId = useId()
   const toggle = () => setOpen((o) => !o)
   const lineClasses = [styles.line, status ? undefined : styles.noStatus, details ? styles.opens : undefined]
@@ -56,7 +66,7 @@ export function Row({ status, title, fullTitle, aside, details }: RowProps) {
     .join(' ')
 
   return (
-    <li className={open ? `${styles.row} ${styles.isOpen}` : styles.row}>
+    <li ref={ref} className={[styles.row, open && styles.isOpen, highlight && styles.isNew].filter(Boolean).join(' ')}>
       {/* Clicking anywhere on the line opens it; the name is the real button for keyboards. */}
       <div className={lineClasses} onClick={details ? toggle : undefined}>
         {status && <span className={styles.status}>{status}</span>}

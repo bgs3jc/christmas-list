@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { features } from '../../config/features'
 import { useMyList, type WishItem, type WishKind } from '../../data'
 import { santasListLabels } from '../../shared/format'
@@ -15,6 +15,14 @@ export function MyListPage() {
   const { me, wishes } = useMyList()
   const [dialog, setDialog] = useState<OpenDialog>(null)
   const close = () => setDialog(null)
+  // Just added: pointed out for a few seconds, since new things go to the bottom.
+  const [justAdded, setJustAdded] = useState<string[]>([])
+
+  useEffect(() => {
+    if (justAdded.length === 0) return
+    const timer = window.setTimeout(() => setJustAdded([]), 3000)
+    return () => window.clearTimeout(timer)
+  }, [justAdded])
 
   return (
     <main className={styles.page}>
@@ -54,15 +62,20 @@ export function MyListPage() {
           ) : (
             <Rows>
               {wishes.map((item) => (
-                <WishRow key={item.id} item={item} onEdit={() => setDialog({ kind: item.kind, item })} />
+                <WishRow
+                  key={item.id}
+                  item={item}
+                  isNew={justAdded.includes(item.id)}
+                  onEdit={() => setDialog({ kind: item.kind, item })}
+                />
               ))}
             </Rows>
           )}
         </ListSection>
       </div>
 
-      {dialog?.kind === 'specific' && <GimmeDialog item={dialog.item} onClose={close} />}
-      {dialog?.kind === 'maybe' && <MaybeDialog item={dialog.item} onClose={close} />}
+      {dialog?.kind === 'specific' && <GimmeDialog item={dialog.item} onClose={close} onAdded={setJustAdded} />}
+      {dialog?.kind === 'maybe' && <MaybeDialog item={dialog.item} onClose={close} onAdded={setJustAdded} />}
     </main>
   )
 }

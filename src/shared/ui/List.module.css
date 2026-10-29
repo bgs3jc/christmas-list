@@ -35,6 +35,16 @@
   border-bottom: 1px solid var(--line-row);
 }
 
+/* Fades back to paper once the page drops the highlight. */
+.row {
+  transition: background-color 1.2s var(--ease-gentle);
+}
+
+.isNew {
+  background: var(--row-new);
+  transition-duration: var(--duration-quick);
+}
+
 .line {
   display: grid;
   grid-template-columns: var(--status-column) minmax(0, 1fr) auto 20px;

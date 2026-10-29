@@ -13,10 +13,14 @@
   --white: #ffffff;
   --ink: #2b1d1a;
   --ink-muted: #5e4e48;
-  /* Small icons such as arrows and empty stars */
-  --ink-faint: #8a7a68;
+  /* Quiet words after a name, small icons such as empty stars. Still 4.5:1 on paper. */
+  --ink-faint: #75665a;
   --line: #e6daca;
   --line-strong: #cdbfa8;
+  /* Edges of text boxes: dark enough to see where to type (3:1) */
+  --field-border: #9a8a76;
+  /* A row that was just added, for a moment */
+  --row-new: #f7e6b8;
   --line-row: #ece3d4;
   --row-hover: #f6efe2;
   --scrim: rgb(43 29 26 / 0.45);
