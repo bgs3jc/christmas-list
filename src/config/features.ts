@@ -2,9 +2,9 @@
 // so they can ship turned off and be switched on (or back off) in one place.
 
 export const features = {
-  // Prototype only: a bar to switch who you're "signed in" as. Real sign-in
-  // replaces it in M4.
-  viewAsSwitch: true,
+  // Real sign-in and the Firebase database. Off: the prototype, on browser
+  // storage with sample data and a "Viewing as" bar to switch who you are.
+  realSignIn: false,
   // The Naughty / Nice tag, set for each other by the family.
   santasList: true,
   // Home shows the screen-print picture of the house instead of the night sky

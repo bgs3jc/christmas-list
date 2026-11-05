@@ -2,9 +2,11 @@
 
 Update this at the end of every session. Keep it short.
 
-**Last updated:** 2026-10-29
+**Last updated:** 2026-11-05
 
 ## Where things stand
+
+- **M4 in progress (2026-11-05).** Brady created the Firebase project. Real sign-in and the Firestore database are built and tested against Firebase's local emulator, but switched off (`realSignIn: false`) until Brady fills in the console. The live site is still the prototype. Setup steps: `docs/FIREBASE-SETUP.md`. The sign-in page is a plain first version; its design round is still to do.
 
 - **M1, M2 and M3 done, plus a UX review, design round 8 and a modern-web pass.** Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`. The prototype runs on browser storage with made-up sample data; a "Viewing as" bar stands in for sign-in until M4.
 - **What the prototype does now:**
@@ -22,8 +24,8 @@ Update this at the end of every session. Keep it short.
 ## Next steps
 
 1. **Brady clicks through today's changes** on the live site, as April on a phone especially (try her iPhone with larger text), and notes anything that feels off.
-2. **M4 in its own chat:** "Read CLAUDE.md and docs/STATUS.md, then let's do M4." Brady needs about 20 minutes to create the Firebase project. M4 replaces `src/data/store.ts` with Firebase; nothing outside `src/data/` should change. Sign-in replaces the "Viewing as" bar; `globeScene` moves to the database.
-3. **During M4:** design the sign-in page in the print (April's first impression), pick a real name, and add a home-screen icon cropped from the print (see BACKLOG).
+2. **M4, next:** Brady publishes `firestore.rules` and types in homes, people and members (`docs/FIREBASE-SETUP.md`). Then Claude switches `realSignIn` on, and Brady signs in on the live site with Google and tries an email link to his own address.
+3. **M4, then:** design the sign-in page in the print (April's first impression), pick a real name, and add a home-screen icon cropped from the print (see BACKLOG). Brady's personal inspiration comes first.
 4. **Small, before or after M4:** "What I'm getting", everything you're Santa for in one place (BACKLOG).
 5. Brady's personal snow globe still needs a scene. Recipe: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass. The scripts and how to run them are in `tools/print-pass/`.
 
@@ -36,8 +38,8 @@ One chat each. M1–M3 are firm; the order and scope after that can change as we
 | M1 | Design direction | Brady picks one of 2–3 mockup styles; theme tokens recorded |
 | M2 | App scaffold + deploy | Empty themed app is live on GitHub Pages via GitHub Actions |
 | M3 ✅ | Clickable prototype | Wish lists, gifts, claims and ideas work on browser storage; Brady has clicked through it |
-| M4 | Firebase + sign-in | Brady has set up Firebase; Google + email-link sign-in work; data in Firestore |
-| M5 | Surprise protection | Security rules hide recipients' gifts; verified by testing as each person |
+| M4 | Firebase + sign-in | Brady has set up Firebase; Google + email-link sign-in work; data in Firestore. Hiding rules written and emulator-tested here too |
+| M5 | Surprise protection | Verified on the real site by signing in as each person; rules tightened (field checks) |
 | M6 | Family launch | April, Allie and Kevin signed in on their devices; feedback captured in BACKLOG |
 
 ## Open questions

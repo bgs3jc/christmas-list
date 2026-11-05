@@ -1,10 +1,12 @@
-import { resetSampleData, usePeople, useViewer, viewAs } from '../../data'
+import { prototype, usePeople, useViewer } from '../../data'
 import styles from './ViewAsBar.module.css'
 
-// Prototype only: pretend to be anyone. Real sign-in replaces this in M4.
+// Prototype only: pretend to be anyone. Gone once real sign-in is on.
 export function ViewAsBar() {
   const viewer = useViewer()
   const people = usePeople()
+  if (!prototype) return null
+  const { viewAs, resetSampleData } = prototype
 
   function reset() {
     if (window.confirm('Put back the sample data? Anything you added will be lost.')) resetSampleData()

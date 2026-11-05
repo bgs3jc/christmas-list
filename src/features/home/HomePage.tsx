@@ -1,6 +1,6 @@
 import { features } from '../../config/features'
 import { DownloadLink } from '../export'
-import { useOtherPeople, useViewer } from '../../data'
+import { canSignOut, signOut, useOtherPeople, useViewer } from '../../data'
 import { plural } from '../../shared/format'
 import { links, type Route } from '../../shared/router'
 import { SiteHeader } from '../../shared/SiteHeader'
@@ -92,6 +92,14 @@ export function HomePage({ route }: { route: Route }) {
           {features.spreadsheetDownload && (
             <p className={styles.download}>
               <DownloadLink />
+            </p>
+          )}
+          {canSignOut && (
+            <p className={styles.signOut}>
+              Not {viewer.name}?{' '}
+              <button type="button" className={styles.signOutButton} onClick={() => void signOut()}>
+                Sign out
+              </button>
             </p>
           )}
         </div>

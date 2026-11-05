@@ -3,9 +3,7 @@
 // in this public code. "Reset sample data" in the prototype bar restores it.
 // The Santa's list calls are Brady's to make here (in the database from M4).
 
-import quarterback from './globe-scenes/quarterback.webp'
-import tabby from './globe-scenes/tabby.webp'
-import twoCats from './globe-scenes/two-cats.webp'
+import { globeSceneUrl } from './globe-scenes'
 import type { AppData, Gift, WishItem } from './types'
 
 const day = (d: string) => `2026-${d}T15:00:00.000Z`
@@ -25,9 +23,9 @@ export function sampleData(): AppData {
   return {
     people: [
       { id: 'brady', name: 'Brady', homeId: 'brady', santasList: 'naughty' },
-      { id: 'april', name: 'April', homeId: 'april', santasList: 'nice', globeScene: twoCats },
-      { id: 'allie', name: 'Allie', homeId: 'allie', santasList: 'nice', globeScene: tabby },
-      { id: 'kevin', name: 'Kevin', homeId: 'allie', santasList: 'fence', globeScene: quarterback },
+      { id: 'april', name: 'April', homeId: 'april', santasList: 'nice', globeScene: globeSceneUrl('two-cats') },
+      { id: 'allie', name: 'Allie', homeId: 'allie', santasList: 'nice', globeScene: globeSceneUrl('tabby') },
+      { id: 'kevin', name: 'Kevin', homeId: 'allie', santasList: 'fence', globeScene: globeSceneUrl('quarterback') },
     ],
     homes: [
       { id: 'brady', name: "Brady's" },

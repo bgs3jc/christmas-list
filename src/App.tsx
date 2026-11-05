@@ -1,14 +1,21 @@
 import { useEffect } from 'react'
-import { features } from './config/features'
-import { useViewer } from './data'
+import { prototype, useSession, useViewer } from './data'
 import { HomePage } from './features/home/HomePage'
 import { MyListPage } from './features/my-list/MyListPage'
 import { ShoppingPage } from './features/shopping/ShoppingPage'
+import { SignInPage } from './features/sign-in/SignInPage'
 import { ViewAsBar } from './features/view-as/ViewAsBar'
 import { useRoute } from './shared/router'
 import { SiteHeader } from './shared/SiteHeader'
 
 export function App() {
+  const session = useSession()
+  // Nothing about the family shows until you're signed in and on the list.
+  if (session.status !== 'ready') return <SignInPage session={session} />
+  return <SignedIn />
+}
+
+function SignedIn() {
   const route = useRoute()
   const viewer = useViewer()
 
@@ -30,7 +37,7 @@ export function App() {
 
   return (
     <>
-      {features.viewAsSwitch && <ViewAsBar />}
+      {prototype && <ViewAsBar />}
       {route.name !== 'home' && <SiteHeader route={route} />}
       {page}
     </>

@@ -14,9 +14,11 @@ interface TextFieldProps {
   autoFocus?: boolean
   // A field that holds a link: a keyboard with "/" and ".com", no autocorrect.
   link?: boolean
+  // A field for your own email: the email keyboard, and the browser can fill it in.
+  email?: boolean
 }
 
-export function TextField({ label, value, onChange, help, placeholder, multiline, rows = 2, narrow, required, autoFocus, link }: TextFieldProps) {
+export function TextField({ label, value, onChange, help, placeholder, multiline, rows = 2, narrow, required, autoFocus, link, email }: TextFieldProps) {
   const id = useId()
   const helpId = `${id}-help`
   const shared = {
@@ -29,6 +31,7 @@ export function TextField({ label, value, onChange, help, placeholder, multiline
     'aria-describedby': help ? helpId : undefined,
     className: styles.input,
     ...(link && { inputMode: 'url' as const, autoCapitalize: 'off', autoCorrect: 'off', spellCheck: false }),
+    ...(email && { autoComplete: 'email', autoCapitalize: 'off', autoCorrect: 'off', spellCheck: false }),
   }
   return (
     <div className={narrow ? styles.narrow : undefined}>
@@ -38,7 +41,7 @@ export function TextField({ label, value, onChange, help, placeholder, multiline
       {multiline ? (
         <textarea {...shared} rows={rows} onChange={(e) => onChange(e.target.value)} />
       ) : (
-        <input {...shared} type="text" onChange={(e) => onChange(e.target.value)} />
+        <input {...shared} type={email ? 'email' : 'text'} onChange={(e) => onChange(e.target.value)} />
       )}
       {help && (
         <p id={helpId} className={styles.help}>

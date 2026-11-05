@@ -1,0 +1,93 @@
+rules_version = '2';
+
+// Who can read and write what, checked by Google's servers on every request.
+// The site asks only for what you may see, but these rules are what actually
+// keep the surprise: even someone poking at the site with developer tools
+// can't read a gift, a claim or an overheard note about themselves.
+//
+// The family list is the `members` collection: one document per email
+// (lowercase, as the document's name) with `personId` saying who that is.
+// Brady adds people there by hand in the Firebase console. Nobody can change
+// members, people or homes from the site.
+//
+// To publish a change: Firebase console > Firestore > Rules, paste this whole
+// file, Publish. Test first with `npm run test:rules`.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- Who's asking ----
+
+    function signedIn() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+
+    function memberDoc() {
+      return /databases/$(database)/documents/members/$(request.auth.token.email.lower());
+    }
+
+    function isFamily() {
+      return signedIn() && exists(memberDoc());
+    }
+
+    // The person (people/{id}) the signed-in email belongs to.
+    function me() {
+      return get(memberDoc()).data.personId;
+    }
+
+    function unchanged(field) {
+      return request.resource.data[field] == resource.data[field];
+    }
+
+    // ---- Set up by Brady in the console ----
+
+    match /members/{email} {
+      // You can look yourself up, nobody else.
+      allow read: if signedIn() && email == request.auth.token.email.lower();
+      allow write: if false;
+    }
+
+    match /people/{personId} {
+      allow read: if isFamily();
+      allow write: if false;
+    }
+
+    match /homes/{homeId} {
+      allow read: if isFamily();
+      allow write: if false;
+    }
+
+    // ---- Written on the site ----
+
+    // Your own list. Everyone sees wishes; who's getting what is in gifts.
+    match /wishes/{wishId} {
+      allow read: if isFamily();
+      allow create: if isFamily() && request.resource.data.ownerId == me();
+      allow update: if isFamily() && resource.data.ownerId == me() && unchanged('ownerId');
+      allow delete: if isFamily() && resource.data.ownerId == me();
+    }
+
+    // Gifts, including claims on someone's list. Never for the person they're for.
+    match /gifts/{giftId} {
+      allow read: if isFamily() && resource.data.recipientId != me();
+      allow create: if isFamily()
+        && request.resource.data.recipientId != me()
+        && request.resource.data.updatedBy == me();
+      allow update: if isFamily()
+        && resource.data.recipientId != me()
+        && unchanged('recipientId')
+        && request.resource.data.updatedBy == me();
+      allow delete: if isFamily() && resource.data.recipientId != me();
+    }
+
+    // Overheard notes. Never for the person they're about.
+    match /ideas/{ideaId} {
+      allow read: if isFamily() && resource.data.aboutId != me();
+      allow create: if isFamily()
+        && request.resource.data.aboutId != me()
+        && request.resource.data.authorId == me();
+      allow update: if isFamily() && resource.data.aboutId != me() && unchanged('aboutId') && unchanged('authorId');
+      allow delete: if isFamily() && resource.data.aboutId != me();
+    }
+  }
+}

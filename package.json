@@ -6,13 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:rules": "npx -y firebase-tools@15.35.0 emulators:exec --only firestore --project demo-family-christmas \"node --test tests/firestore-rules.test.mjs\"",
+    "dev:emulators": "npx -y firebase-tools@15.35.0 emulators:exec --only auth,firestore --project demo-family-christmas \"node tools/firebase/seed-emulator.mjs && VITE_FIREBASE_EMULATORS=true vite\""
   },
   "dependencies": {
+    "firebase": "^12.19.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",

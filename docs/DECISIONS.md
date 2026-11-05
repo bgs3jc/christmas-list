@@ -109,3 +109,10 @@ Newest at the bottom. Each entry: what we decided, and why.
 - **Smaller:** Home's print loads first (`fetchpriority`), fallback fonts are scaled to ours while they load (`font-size-adjust`), paragraphs avoid lone last words, link fields don't autocapitalize, and solid-color buttons keep an edge in high-contrast modes.
 - **Not done:** dark mode, skip links and scroll-state sticky effects. Nothing in them helps this site now.
 
+
+**2026-11-05: M4 data layer: Firebase behind one switch.** `realSignIn` in `src/config/features.ts` picks the database: off is the prototype (browser storage, sample data, "Viewing as" bar); on is Firebase sign-in and Firestore. Both sit behind one small interface in `src/data/backend.ts`, so pages didn't change. Pages show only once everything has loaded, so nobody sees a half-filled list.
+- **The family list lives in the database.** A `members` collection, one document per email, says who each signed-in person is. Brady types it in the Firebase console, so no email is ever in the public code. Anyone not on it sees "This list is just for the family".
+- **The hiding rules came in M4, not M5.** The site's reads had to be built around them anyway ("every gift not for me"), and real gifts should never be readable by the person they're for, even through developer tools. `firestore.rules` is tested as each person against Firebase's local emulator (`npm run test:rules`); M5 becomes testing on the real site as each person.
+- **Nothing stays on the device.** The database keeps its copy in memory only, not in the browser's storage, so on a shared computer the next person can't dig up the last person's surprises.
+- **Globe pictures stay in the code; who gets which is data.** A person's `globeScene` is a picture's name (`two-cats`). Firebase's file storage now needs a paid plan, and the pictures have no names or places in them.
+- **Sign-in:** Google opens in a pop-up (the redirect kind is unreliable when the site and Firebase live on different domains). An email link opened on another device asks for the email again, as Firebase requires.

@@ -1,4 +1,5 @@
-// The shapes of everything the app stores. Firebase (M4) stores the same shapes.
+// The shapes of everything the app stores. Firestore stores the same shapes,
+// with each record's id as its document's name.
 
 export type PersonId = string
 export type HomeId = string
@@ -16,10 +17,11 @@ export interface Person {
   id: PersonId
   name: string
   homeId: HomeId
-  // A picture for inside their snow globe, in place of the tree. Personal,
-  // so it's data: the sample data here, the database from M4.
+  // The picture inside their snow globe, in place of the tree. The database
+  // stores a scene's name ("two-cats", see globe-scenes/); the site gets the
+  // picture's address.
   globeScene?: string
-  // A family joke. Brady sets it in the data; nobody changes it on the site.
+  // A family joke. Brady sets it in the database; nobody changes it on the site.
   santasList?: SantasListStatus
 }
 
