@@ -20,7 +20,12 @@ Claude tests rule changes with `npm run test:rules` before you publish them.
 
 ## The family (typed in by hand)
 
-Firestore > **Data** tab > **+ Start collection**. For each document, **type the Document ID yourself** (don't click Auto-ID). Every field is type **string**.
+Done 2026-11-05. How the console works, for adding more later:
+
+- **A new collection:** Firestore > **Data** tab > **+ Start collection** in the left column. Type the collection's name (say `people`), **Next**.
+- **A document:** type the **Document ID** yourself (never click Auto-ID). Then **Field** is the field's name, **Type** stays **string**, and the value goes in the box under it, labeled "String". **+ Add field** for each extra field. **Save**.
+- **More documents in a collection:** select the collection in the middle column, then **+ Add document** at its top.
+- Names are case-sensitive and the console won't catch typos: `homeId` and `personId` have a capital I.
 
 **`homes`**: the houses gifts can ship to. Field `name` is how it's said.
 

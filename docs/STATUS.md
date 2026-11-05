@@ -6,7 +6,7 @@ Update this at the end of every session. Keep it short.
 
 ## Where things stand
 
-- **M4 in progress (2026-11-05).** Brady created the Firebase project. Real sign-in and the Firestore database are built and tested against Firebase's local emulator, but switched off (`realSignIn: false`) until Brady fills in the console. The live site is still the prototype. Setup steps: `docs/FIREBASE-SETUP.md`. The sign-in page is a plain first version; its design round is still to do.
+- **M4 in progress (2026-11-05).** Brady created the Firebase project, published the rules and typed in homes, people and members. Real sign-in is on (`realSignIn: true`): the live site now asks you to sign in and reads from Firestore, which starts empty of wishes and gifts (the sample data was prototype only). How the console is set up: `docs/FIREBASE-SETUP.md`. The sign-in page is a plain first version; its design round is still to do.
 
 - **M1, M2 and M3 done, plus a UX review, design round 8 and a modern-web pass.** Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`. The prototype runs on browser storage with made-up sample data; a "Viewing as" bar stands in for sign-in until M4.
 - **What the prototype does now:**
@@ -24,7 +24,7 @@ Update this at the end of every session. Keep it short.
 ## Next steps
 
 1. **Brady clicks through today's changes** on the live site, as April on a phone especially (try her iPhone with larger text), and notes anything that feels off.
-2. **M4, next:** Brady publishes `firestore.rules` and types in homes, people and members (`docs/FIREBASE-SETUP.md`). Then Claude switches `realSignIn` on, and Brady signs in on the live site with Google and tries an email link to his own address.
+2. **M4, next:** Brady signs in on the live site with Google, then (in a private window) tries an email link to his own address, and adds a wish or two. Then April's address once, to see whether the email lands in Junk.
 3. **M4, then:** design the sign-in page in the print (April's first impression), pick a real name, and add a home-screen icon cropped from the print (see BACKLOG). Brady's personal inspiration comes first.
 4. **Small, before or after M4:** "What I'm getting", everything you're Santa for in one place (BACKLOG).
 5. Brady's personal snow globe still needs a scene. Recipe: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass. The scripts and how to run them are in `tools/print-pass/`.
