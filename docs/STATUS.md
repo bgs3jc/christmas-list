@@ -24,7 +24,7 @@ Update this at the end of every session. Keep it short.
 ## Next steps
 
 1. **Brady clicks through today's changes** on the live site, as April on a phone especially (try her iPhone with larger text), and notes anything that feels off.
-2. **M4, next:** Brady signs in on the live site with Google, then (in a private window) tries an email link to his own address, and adds a wish or two. Then April's address once, to see whether the email lands in Junk.
+2. **Sign-in works on the live site (2026-11-05):** Brady signed in with Google and with an email link. The link email landed in Gmail's spam; Brady decided April can check Junk. Still worth one test link to April's address before launch, to see where iCloud puts it.
 3. **M4, then:** design the sign-in page in the print (April's first impression), pick a real name, and add a home-screen icon cropped from the print (see BACKLOG). Brady's personal inspiration comes first.
 4. **Small, before or after M4:** "What I'm getting", everything you're Santa for in one place (BACKLOG).
 5. Brady's personal snow globe still needs a scene. Recipe: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass. The scripts and how to run them are in `tools/print-pass/`.

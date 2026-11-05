@@ -116,3 +116,5 @@ Newest at the bottom. Each entry: what we decided, and why.
 - **Nothing stays on the device.** The database keeps its copy in memory only, not in the browser's storage, so on a shared computer the next person can't dig up the last person's surprises.
 - **Globe pictures stay in the code; who gets which is data.** A person's `globeScene` is a picture's name (`two-cats`). Firebase's file storage now needs a paid plan, and the pictures have no names or places in them.
 - **Sign-in:** Google opens in a pop-up (the redirect kind is unreliable when the site and Firebase live on different domains). An email link opened on another device asks for the email again, as Firebase requires.
+
+**2026-11-05: Sign-in emails stay as Firebase sends them.** The link email lands in spam (a generic `firebaseapp.com` sender). Brady judged that April can check Junk, and she needs it only once per device. Sending through Brady's Gmail (Firebase's SMTP setting) is the fix if that proves wrong.
