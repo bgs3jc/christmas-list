@@ -1,4 +1,4 @@
-// Fills Firebase's local emulator with made-up family data, for trying the
+// Fills Firebase's local emulator with the prototype's made-up sample data, for trying the
 // site with real sign-in on your own machine (npm run dev:emulators).
 // Never touches the real database: the emulator's "demo-" project is local.
 // Sign in on the site with any of the example.com emails below using
@@ -36,19 +36,32 @@ const records = {
   wishes: {
     'w-allie-1': { ownerId: 'allie', kind: 'specific', title: 'Weighted blanket', notes: '15 lb, queen size', topPick: true, order: 1, createdAt: day('10-02') },
     'w-allie-2': { ownerId: 'allie', kind: 'specific', title: 'Gooseneck pour-over kettle', notes: 'Matte black', topPick: false, order: 2, createdAt: day('10-02') },
-    'w-april-1': { ownerId: 'april', kind: 'maybe', title: 'Anything Christmas-y for the house', topPick: true, order: 1, createdAt: day('10-10') },
+    'w-allie-3': { ownerId: 'allie', kind: 'maybe', title: 'Houseplants that are hard to kill', notes: 'Low light. Heavy pots.', topPick: false, order: 3, createdAt: day('10-05') },
+    'w-allie-4': { ownerId: 'allie', kind: 'specific', title: 'Wool beanie', notes: 'Any color but orange', topPick: false, order: 4, createdAt: day('10-05') },
+    'w-allie-5': { ownerId: 'allie', kind: 'specific', title: 'Platform clogs', notes: 'Size 8, the green ones', topPick: false, order: 5, createdAt: day('10-23') },
+    'w-allie-6': { ownerId: 'allie', kind: 'specific', title: 'Waterproof field notebooks, 3-pack', notes: 'Any color', topPick: false, order: 6, createdAt: day('10-23') },
+    'w-april-1': { ownerId: 'april', kind: 'maybe', title: 'Anything Christmas-y for the house', notes: 'Ornaments, candles, a new tree skirt', topPick: true, order: 1, createdAt: day('10-10') },
     'w-april-2': { ownerId: 'april', kind: 'specific', title: 'Cozy slippers', notes: 'Size 8', topPick: false, order: 2, createdAt: day('10-12') },
     'w-kevin-1': { ownerId: 'kevin', kind: 'specific', title: 'Wireless earbuds', topPick: true, order: 1, createdAt: day('10-08') },
-    'w-brady-1': { ownerId: 'brady', kind: 'specific', title: 'Cast iron skillet', notes: '12 inch', topPick: false, order: 1, createdAt: day('10-01') },
+    'w-kevin-2': { ownerId: 'kevin', kind: 'specific', title: 'Zip hoodie', notes: 'Large, navy', topPick: false, order: 2, createdAt: day('10-08') },
+    'w-kevin-3': { ownerId: 'kevin', kind: 'maybe', title: 'Anything for game day', notes: 'Large in shirts', topPick: false, order: 3, createdAt: day('10-15') },
+    'w-brady-1': { ownerId: 'brady', kind: 'specific', title: 'Mechanical keyboard', notes: 'Tactile switches', topPick: true, order: 1, createdAt: day('10-01') },
+    'w-brady-2': { ownerId: 'brady', kind: 'specific', title: 'Cast iron skillet', notes: '12 inch', topPick: false, order: 2, createdAt: day('10-01') },
+    'w-brady-3': { ownerId: 'brady', kind: 'specific', title: 'Running socks', notes: 'Size L', topPick: false, order: 3, createdAt: day('10-04') },
   },
   gifts: {
-    'g-1': { recipientId: 'allie', giverId: 'brady', title: 'Gooseneck pour-over kettle', wishItemId: 'w-allie-2', place: 'tree', shipTo: 'april', createdAt: day('10-06'), updatedAt: day('10-06'), updatedBy: 'brady' },
-    'g-2': { recipientId: 'april', giverId: 'allie', title: 'Cozy slippers', wishItemId: 'w-april-2', place: 'tree', createdAt: day('10-18'), updatedAt: day('10-18'), updatedBy: 'allie' },
-    'g-3': { recipientId: 'allie', giverId: 'april', title: 'Lip balm trio', place: 'stocking', createdAt: day('10-16'), updatedAt: day('10-16'), updatedBy: 'april' },
+    'g-1': { recipientId: 'allie', giverId: 'brady', title: 'Gooseneck pour-over kettle', wishItemId: 'w-allie-2', shipTo: 'april', place: 'tree', createdAt: day('10-06'), updatedAt: day('10-06'), updatedBy: 'brady' },
+    'g-2': { recipientId: 'allie', giverId: 'april', title: 'Wool beanie', wishItemId: 'w-allie-4', place: 'tree', createdAt: day('10-09'), updatedBy: 'brady', updatedAt: day('10-09') },
+    'g-3': { recipientId: 'allie', giverId: 'brady', title: 'Snake plant in a ceramic pot', wishItemId: 'w-allie-3', shipTo: 'april', place: 'tree', createdAt: day('10-11'), updatedAt: day('10-11'), updatedBy: 'brady' },
+    'g-4': { recipientId: 'allie', giverId: 'kevin', title: 'Heated throw blanket', place: 'tree', createdAt: day('10-14'), updatedAt: day('10-22'), updatedBy: 'kevin' },
+    'g-5': { recipientId: 'allie', giverId: 'april', title: 'Lip balm trio', place: 'stocking', createdAt: day('10-16'), updatedAt: day('10-16'), updatedBy: 'april' },
+    'g-6': { recipientId: 'april', giverId: 'allie', title: 'Cozy slippers', wishItemId: 'w-april-2', place: 'tree', createdAt: day('10-18'), updatedAt: day('10-18'), updatedBy: 'allie' },
+    'g-7': { recipientId: 'kevin', giverId: 'brady', title: 'Zip hoodie', wishItemId: 'w-kevin-2', place: 'tree', createdAt: day('10-20'), updatedAt: day('10-20'), updatedBy: 'brady' },
   },
   ideas: {
-    'i-1': { aboutId: 'april', authorId: 'allie', text: 'Her reading lamp keeps flickering', createdAt: day('10-12') },
-    'i-2': { aboutId: 'allie', authorId: 'kevin', text: 'Said her favorite mug finally chipped', createdAt: day('10-19') },
+    'i-1': { aboutId: 'allie', authorId: 'kevin', text: 'Said her favorite mug finally chipped', createdAt: day('10-19') },
+    'i-2': { aboutId: 'allie', authorId: 'brady', text: 'Wants to try the new bakery downtown', createdAt: day('10-03') },
+    'i-3': { aboutId: 'april', authorId: 'allie', text: 'Her reading lamp keeps flickering', createdAt: day('10-12') },
   },
 }
 
