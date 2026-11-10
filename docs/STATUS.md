@@ -2,7 +2,7 @@
 
 Update this at the end of every session. Keep it short.
 
-**Last updated:** 2026-11-10 (M5 finish chat: family password, real-site test)
+**Last updated:** 2026-11-10 (M5 finish chat: family password, real-site test, launch email)
 
 ## Where things stand
 
@@ -13,6 +13,8 @@ Update this at the end of every session. Keep it short.
   - **From outside** (`tests/live/outside.cjs`, 41 checks): the database refuses everyone not signed in or not on the family list, nobody can make a new account with a family email, and the sign-in page works on desktop and April's phone.
   - **Brady's own view** is covered on the emulator (`tests/live-site.e2e.cjs`, 240 checks as all four), since a test can't do Google sign-in. Plus `tests/site-flows.e2e.cjs` (35) and the rule checks (23).
 - **The rules are published** (2026-11-10), including the stricter field checks from the start of M5.
+- **The first real wish is on the live site:** April sent Brady a request; Claude added it to her list as an idea, signed in as her (her words, nothing added).
+- **Set in the console (checked 2026-11-10):** Brady's globe is the swordsman. Nobody has a Naughty/Nice tag yet; Brady is setting everyone to Nice (Next steps 2).
 - **The plain sign-in page stays as is for now** (Brady: beautification, not critical). Its design round (the matching-pajamas idea), a real name and an icon are in BACKLOG.
 - **The prototype still exists:** `realSignIn: false` in `src/config/features.ts` brings back browser storage, sample data and the "Viewing as" bar.
 - **What the site does:**
@@ -31,13 +33,40 @@ Update this at the end of every session. Keep it short.
 
 ## Next steps
 
-1. **Brady: decide on launch (M6).** Name anything else that must work before the family starts; launch only when Brady says it's finished. At launch, tell each person: the link, "your email and the family password", and:
-   - **Allie and Kevin: the family password, not "Sign in with Google".** Google sign-in replaces their password account (their emails are Gmail), and the family password then stops working for them. Details in `FIREBASE-SETUP.md`.
-   - **April:** a Safari bookmark is the safe choice. "Add to Home Screen" should now work too (she'd type the password once more there), but it's untested on a real iPhone.
-2. **Brady: try the pre-launch build on the live site** (Santa's sack in the top bar). Each look change in step 7 is one line to undo if it's not right.
-3. **Brady's snow globe is in the code (the swordsman, added in another chat).** To show it on the real site: Firebase console > Firestore > Data > `people` > `brady` > **+ Add field**: `globeScene`, string, `swordsman`. (Not set yet at the 2026-11-10 test run.) Recipe for future scenes: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass in `tools/print-pass/`.
-4. **Optional, any time:** switch off **Email link** in the console (Authentication > Sign-in method > Email/Password). Nothing uses it now.
-5. **Watch once launched:** whether everyone gets in on their own devices.
+1. **Brady: launch (M6) when ready.** Optional first: the UI polish pass (Brady has the starter prompt from the M5 chat; it works on a branch and shows before/after screenshots before anything reaches `main`). Then send the launch email below to April, Allie and Kevin, each at the address they sign in with.
+   - **Allie and Kevin: the family password, not "Sign in with Google".** Google sign-in replaces their password account (their emails are Gmail), and the family password then stops working for them. Brady's email doesn't say this; if it happens, delete their account in Authentication > Users and Claude makes it again. Details in `FIREBASE-SETUP.md`.
+   - **April:** a Safari bookmark is the safe choice. "Add to Home Screen" should work too (she'd type the password once more there), but it's untested on a real iPhone.
+2. **Brady: Naughty or Nice.** Firebase console > **Firestore** > **Data** tab > `people` > click a person (`allie`, `april`, `brady`, `kevin`). If there's no `santasList` field: **+ Add field**, Field `santasList`, Type `string`, Value `nice`, **Add**. If there is one: hover its value, click the pencil, change it, **Update**. The choices are `nice`, `fence` (on the fence) and `naughty`, all lowercase. Each person sees their own tag on My list. The site can't change it (the rules refuse), only the console.
+3. **Optional, any time:** switch off **Email link** in the console (Authentication > Sign-in method > Email/Password). Nothing uses it now.
+4. **Watch once launched:** whether everyone gets in on their own devices, and what they find confusing. Feedback goes in BACKLOG.
+5. Future globe scenes: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass in `tools/print-pass/`.
+
+## The launch email (Brady's, 2026-11-10)
+
+The real password is never written in this repo (it's public): Brady fills it in when sending.
+
+> Hello family,
+>
+> Here's the site I've been casually building and hope y'all like it: https://bgs3jc.github.io/christmas-list/
+>
+> **Signing in**
+>
+> * Use the email address I sent this to when logging in.
+> * The family password is easy to remember: [the family password]
+> * You only need to sign-in once per device. If your browser offers to save the password, say yes.
+>
+> **How it works**
+>
+> * My list is your wish list. "Gimme, gimme, gimme" is for specific things (paste a link if you have one). "An idea…" is for... you got it... an idea, where Santa picks. You can also star your favorites (so Allie can star everything on her list).
+> * Pick someone's name to shop for them. "I'll be Santa" claims something off their list. "Add a gift" is for surprises and stocking stuffers. "Overheard" is for things you hear them mention.
+> * Santa's sack shows everything you're getting for people.
+>
+> It should be intuitive once you check it out, and don't worry, you won't see what's been claimed from your list, or any gifts/notes about you. April, I already added your scarf thing you sent the other day.
+>
+> If anything's confusing or broken, or you want a personal walkthrough, let me know.
+>
+> Ho ho ho!
+> Brady
 
 ## Pre-launch build (done 2026-11-10)
 
@@ -63,7 +92,7 @@ One chat each. M1–M3 are firm; the order and scope after that can change as we
 | M3 ✅ | Clickable prototype | Wish lists, gifts, claims and ideas work on browser storage; Brady has clicked through it |
 | M4 ✅ | Firebase + sign-in | Brady has set up Firebase; Google + email-link sign-in work (email link replaced by the family password in M5); data in Firestore. Hiding rules written and emulator-tested here too |
 | M5 ✅ | Surprise protection | Verified on the real site by signing in as each person; rules tightened (field checks) |
-| M6 | Family launch | April, Allie and Kevin signed in on their devices; feedback captured in BACKLOG |
+| M6 (next) | Family launch | April, Allie and Kevin signed in on their devices; feedback captured in BACKLOG |
 
 ## Open questions
 
