@@ -29,7 +29,7 @@ const records = {
     allie: { name: "Allie's" },
   },
   people: {
-    brady: { name: 'Brady', homeId: 'brady', santasList: 'naughty' },
+    brady: { name: 'Brady', homeId: 'brady', santasList: 'naughty', globeScene: 'swordsman' },
     april: { name: 'April', homeId: 'april', santasList: 'nice', globeScene: 'two-cats' },
     allie: { name: 'Allie', homeId: 'allie', santasList: 'nice', globeScene: 'tabby' },
     kevin: { name: 'Kevin', homeId: 'allie', santasList: 'fence', globeScene: 'quarterback' },

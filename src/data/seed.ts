@@ -22,7 +22,7 @@ export function sampleData(): AppData {
   nextOrder = 0
   return {
     people: [
-      { id: 'brady', name: 'Brady', homeId: 'brady', santasList: 'naughty' },
+      { id: 'brady', name: 'Brady', homeId: 'brady', santasList: 'naughty', globeScene: globeSceneUrl('swordsman') },
       { id: 'april', name: 'April', homeId: 'april', santasList: 'nice', globeScene: globeSceneUrl('two-cats') },
       { id: 'allie', name: 'Allie', homeId: 'allie', santasList: 'nice', globeScene: globeSceneUrl('tabby') },
       { id: 'kevin', name: 'Kevin', homeId: 'allie', santasList: 'fence', globeScene: globeSceneUrl('quarterback') },

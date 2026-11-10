@@ -35,11 +35,11 @@ Done 2026-11-05. How the console works, for adding more later:
 | `april` | `April's` |
 | `allie` | `Allie's` |
 
-**`people`**: who's in the family. `homeId` is one of the homes above. `globeScene` is the picture in their snow globe (`two-cats`, `tabby` or `quarterback`; leave it out for the plain tree). `santasList` is optional: `nice`, `fence` or `naughty`.
+**`people`**: who's in the family. `homeId` is one of the homes above. `globeScene` is the picture in their snow globe (`two-cats`, `tabby`, `quarterback` or `swordsman`; leave it out for the plain tree). `santasList` is optional: `nice`, `fence` or `naughty`.
 
 | Document ID | name | homeId | globeScene |
 |---|---|---|---|
-| `brady` | `Brady` | `brady` | |
+| `brady` | `Brady` | `brady` | `swordsman` |
 | `april` | `April` | `april` | `two-cats` |
 | `allie` | `Allie` | `allie` | `tabby` |
 | `kevin` | `Kevin` | `allie` | `quarterback` |
