@@ -77,7 +77,13 @@ export function Row({ status, title, notes, aside, children, highlight }: RowPro
 
 // A quiet word after a name, like "· idea" or "· stocking".
 export function TitleNote({ children }: { children: ReactNode }) {
-  return <span className={styles.titleNote}> · {children}</span>
+  // The dot stays with its word, so a line never ends on a lone dot.
+  return (
+    <>
+      {' '}
+      <span className={styles.titleNote}>· {children}</span>
+    </>
+  )
 }
 
 // One small line under a name: its parts joined with dots, empty parts left out.

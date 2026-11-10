@@ -87,6 +87,7 @@
 }
 
 .titleNote {
+  white-space: nowrap;
   font-weight: 400;
   color: var(--ink-faint);
 }
