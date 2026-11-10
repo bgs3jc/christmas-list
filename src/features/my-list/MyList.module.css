@@ -102,16 +102,20 @@
   background: var(--plaid-red);
 }
 
-.gimme:hover {
-  background: var(--plaid-red-deep);
+@media (hover: hover) {
+  .gimme:hover {
+    background: var(--plaid-red-deep);
+  }
 }
 
 .idea {
   background: var(--print-sky);
 }
 
-.idea:hover {
-  background: var(--globe-band-violet);
+@media (hover: hover) {
+  .idea:hover {
+    background: var(--globe-band-violet);
+  }
 }
 
 .bigButton:focus-visible {
@@ -159,9 +163,11 @@
   color: var(--ink-faint);
 }
 
-.iconButton:hover:not(:disabled) {
-  background: var(--sheet);
-  color: var(--ink);
+@media (hover: hover) {
+  .iconButton:hover:not(:disabled) {
+    background: var(--sheet);
+    color: var(--ink);
+  }
 }
 
 .iconButton:disabled {

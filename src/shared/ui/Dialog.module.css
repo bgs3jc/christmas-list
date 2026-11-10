@@ -87,9 +87,11 @@
   color: var(--ink-muted);
 }
 
-.close:hover {
-  background: var(--paper);
-  color: var(--ink);
+@media (hover: hover) {
+  .close:hover {
+    background: var(--paper);
+    color: var(--ink);
+  }
 }
 
 .body {

@@ -30,8 +30,12 @@
   font-weight: 700;
 }
 
-.main:hover:not(:disabled) {
-  background: var(--plaid-red-deep);
+/* Hover looks only where there's a pointer that hovers. On a phone a
+   button would otherwise stay dark after a tap. */
+@media (hover: hover) {
+  .main:hover:not(:disabled) {
+    background: var(--plaid-red-deep);
+  }
 }
 
 .secondary {
@@ -40,9 +44,11 @@
   color: var(--ink);
 }
 
-.secondary:hover:not(:disabled) {
-  background: var(--ink);
-  color: var(--sheet);
+@media (hover: hover) {
+  .secondary:hover:not(:disabled) {
+    background: var(--ink);
+    color: var(--sheet);
+  }
 }
 
 .quiet {
@@ -55,6 +61,8 @@
   text-underline-offset: 3px;
 }
 
-.quiet:hover:not(:disabled) {
-  color: var(--ink);
+@media (hover: hover) {
+  .quiet:hover:not(:disabled) {
+    color: var(--ink);
+  }
 }
