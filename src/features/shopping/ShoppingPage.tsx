@@ -15,6 +15,8 @@ import styles from './Shopping.module.css'
 // The "Change" button on a wish you're getting, so focus can find it.
 const changeId = (wishId: string) => `change-${wishId}`
 
+const santaCount = (n: number) => ['Two', 'Three', 'Four'][n - 2] ?? String(n)
+
 export function ShoppingPage({ recipientId }: { recipientId: string }) {
   const view = useShopping(recipientId)
   const viewer = useViewer()
@@ -67,13 +69,14 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
     gift.notes && `${gift.giverId === viewer.id ? 'Your' : `${nameOf(gift.giverId)}'s`} note: ${gift.notes}`
 
   // Who's getting it. Your own gifts can be changed (or undone) right here.
-  const giver = (gift: Gift, fromList = false) =>
+  // `focusHere` marks the Change button that I'll be Santa moves focus to.
+  const giver = (gift: Gift, fromList = false, focusHere = fromList) =>
     gift.giverId === viewer.id ? (
       <>
         You
         <Button
           variant="quiet"
-          id={fromList && gift.wishItemId ? changeId(gift.wishItemId) : undefined}
+          id={focusHere && gift.wishItemId ? changeId(gift.wishItemId) : undefined}
           onClick={() => editGift(gift, fromList)}
           aria-label={`Change ${gift.title}`}
         >
@@ -158,7 +161,10 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                 )
               }
 
+              // Usually one gift. Two people can claim the same wish at once;
+              // then every Santa shows, so they can sort it out.
               const gift = under[0]
+              const shipsTo = [...new Set(under.map((g) => g.shipTo).filter(Boolean))]
               return (
                 <Row
                   key={wish.id}
@@ -166,16 +172,37 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                   title={
                     <>
                       {wishTitle(wish)}
-                      {gift && shipNote(gift)}
+                      {shipsTo.map((home) => (
+                        <TitleNote key={home}>to {houseOf(home!)}</TitleNote>
+                      ))}
                     </>
                   }
                   notes={
                     <>
                       {wishNotes}
-                      {gift && <NoteLine parts={[familyNote(gift), linkTo(gift.link)]} />}
+                      {under.map((g) => (
+                        <NoteLine key={g.id} parts={[familyNote(g), linkTo(g.link)]} />
+                      ))}
+                      {under.length > 1 && (
+                        <NoteLine parts={[`${santaCount(under.length)} Santas on this one. One of you can tap Change, then Not getting it.`]} />
+                      )}
                     </>
                   }
-                  aside={gift ? giver(gift, true) : <Button onClick={() => claim(wish)}>{coverLabel}</Button>}
+                  aside={
+                    !gift ? (
+                      <Button onClick={() => claim(wish)}>{coverLabel}</Button>
+                    ) : under.length === 1 ? (
+                      giver(gift, true)
+                    ) : (
+                      <span className={styles.givers}>
+                        {under.map((g, i) => (
+                          <span key={g.id} className={styles.underIdeaWho}>
+                            {giver(g, true, i === 0)}
+                          </span>
+                        ))}
+                      </span>
+                    )
+                  }
                 />
               )
             })}

@@ -21,6 +21,14 @@ async function docs(name) {
   return (j.documents ?? []).map((d) => ({ id: d.name.split('/').pop(), fields: d.fields }))
 }
 
+// Writes a record straight into the emulator, as the owner (no rules), like
+// two people claiming the same wish at the same moment.
+async function put(name, id, record) {
+  const fields = Object.fromEntries(Object.entries(record).map(([k, v]) => [k, typeof v === 'boolean' ? { booleanValue: v } : { stringValue: v }]))
+  const r = await fetch(`${DB}/${name}?documentId=${id}`, { method: 'POST', headers: { Authorization: 'Bearer owner', 'Content-Type': 'application/json' }, body: JSON.stringify({ fields }) })
+  if (!r.ok) throw new Error(`put ${name}/${id}: ${r.status}`)
+}
+
 async function signIn(browser, email) {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true })
   const page = await ctx.newPage()
@@ -122,7 +130,13 @@ const settle = (page) => page.waitForTimeout(700)
   check('Spreadsheet download includes the new gifts', csv.includes('Wool socks') && csv.includes('Grill brush'))
   check('Allie\'s spreadsheet has nothing about her own gifts (no "Lip balm")', !csv.includes('Lip balm'))
 
-  // 9. Kevin signs in: none of it shows anywhere.
+  // 9. Two Santas on one wish: Brady and April both got Allie's weighted blanket.
+  const at = '2026-11-01T15:00:00.000Z'
+  for (const [id, giverId] of [['g-two-1', 'brady'], ['g-two-2', 'april']]) {
+    await put('gifts', id, { recipientId: 'allie', giverId, title: 'Weighted blanket', wishItemId: 'w-allie-1', place: 'tree', createdAt: at, updatedAt: at, updatedBy: giverId })
+  }
+
+  // 10. Kevin signs in: none of it shows anywhere.
   const { page: k, errors: kErrors } = await signIn(browser, 'kevin@example.com')
   let seen = await k.locator('body').innerText()
   await k.goto(BASE + '#/my-list'); await k.getByText('Wireless earbuds').waitFor()
@@ -133,6 +147,15 @@ const settle = (page) => page.waitForTimeout(700)
   seen += require('fs').readFileSync(await kdl.path(), 'utf8')
   check('Kevin sees no trace of his gifts or the note about him', !/Wool socks|Grill brush|grill brush/.test(seen))
   check("Kevin's own list shows no claim", !(await (async () => { await k.goto(BASE + '#/my-list'); await k.getByText('Wireless earbuds').waitFor(); return k.locator('main').innerText() })()).includes("Santa's got it"))
+
+  // Back to 9: Kevin sees both Santas on Allie's blanket; Allie sees nothing new.
+  await k.goto(BASE + '#/shop/allie')
+  const blanket = await row(k, 'Weighted blanket').first().innerText()
+  check('Two Santas on one wish: both names show', blanket.includes('Brady') && blanket.includes('April'))
+  check('...with the note to sort it out', blanket.includes('Two Santas on this one. One of you can tap Change, then Not getting it.'))
+  await a.goto(BASE + '#/my-list'); await a.getByText('Weighted blanket').waitFor(); await settle(a)
+  const ownBlanket = await row(a, 'Weighted blanket').first().innerText()
+  check("...and Allie's own list shows nothing new", !/Brady|April|Santa/.test(ownBlanket))
 
   check('No errors in either browser', errors.length === 0 && kErrors.length === 0)
   if (errors.length || kErrors.length) console.log(errors, kErrors)

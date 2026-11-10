@@ -23,10 +23,12 @@ export function toSpreadsheet(views: ShoppingView[], people: Person[], homes: Ho
       const under = gifts.filter((g) => g.wishItemId === wish.id)
       const section = wish.kind === 'maybe' ? 'List (idea)' : 'List'
       // A specific wish that someone's getting is one row: the wish and its gift together.
+      // If two people both claimed it, the extra gifts get a row each under it.
       const claimed = wish.kind === 'specific' ? under[0] : undefined
       if (claimed) {
         const notes = [wish.notes, claimed.notes].filter(Boolean).join(' / ')
         rows.push([person.name, section, wish.title, statusLabels.covered, nameOf(claimed.giverId), homeOf(claimed.shipTo), notes, wish.link ?? claimed.link])
+        for (const extra of under.slice(1)) rows.push(giftRow(`  for "${wish.title}"`, extra))
         continue
       }
       rows.push([person.name, section, wish.title, statusLabels[under.length ? 'covered' : 'open'], '', '', wish.notes, wish.link])

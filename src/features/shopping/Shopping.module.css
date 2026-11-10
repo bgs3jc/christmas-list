@@ -70,6 +70,13 @@
   color: var(--ink-muted);
 }
 
+/* Two Santas on one wish: one name per line */
+.givers {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 /* Overheard */
 
 .ideaText {
