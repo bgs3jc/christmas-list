@@ -157,6 +157,16 @@ const settle = (page) => page.waitForTimeout(700)
   const ownBlanket = await row(a, 'Weighted blanket').first().innerText()
   check("...and Allie's own list shows nothing new", !/Brady|April|Santa/.test(ownBlanket))
 
+  // Kevin changes the note on April's lip balm for Allie: anyone can change any gift.
+  await row(k, 'Lip balm trio').getByRole('button', { name: /Change/ }).click()
+  check("Someone else's gift says Take it off, not Not getting it", (await k.getByRole('dialog').getByRole('button', { name: 'Take it off' }).count()) === 1)
+  await k.getByRole('dialog').getByLabel('Notes for the family').fill('Got the vanilla one')
+  await k.getByRole('dialog').getByRole('button', { name: 'Save' }).click()
+  await row(k, 'Lip balm trio').getByText(/Got the vanilla one/).waitFor()
+  await settle(k)
+  const balm = (await docs('gifts')).find((d) => d.id === 'g-5')
+  check("Kevin's note on April's gift is saved, marked as changed by Kevin", balm.fields.notes?.stringValue === 'Got the vanilla one' && balm.fields.updatedBy.stringValue === 'kevin' && balm.fields.giverId.stringValue === 'april')
+
   check('No errors in either browser', errors.length === 0 && kErrors.length === 0)
   if (errors.length || kErrors.length) console.log(errors, kErrors)
   await browser.close()

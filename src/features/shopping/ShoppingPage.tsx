@@ -68,24 +68,25 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   const familyNote = (gift: Gift) =>
     gift.notes && `${gift.giverId === viewer.id ? 'Your' : `${nameOf(gift.giverId)}'s`} note: ${gift.notes}`
 
-  // Who's getting it. Your own gifts can be changed (or undone) right here.
+  // Who's getting it, and a Change button. Anyone can change any gift
+  // (say, a note on Mom's), not only their own.
   // `focusHere` marks the Change button that I'll be Santa moves focus to.
-  const giver = (gift: Gift, fromList = false, focusHere = fromList) =>
-    gift.giverId === viewer.id ? (
+  const giver = (gift: Gift, fromList = false, focusHere = fromList) => {
+    const mine = gift.giverId === viewer.id
+    return (
       <>
-        You
+        {nameOf(gift.giverId)}
         <Button
           variant="quiet"
-          id={focusHere && gift.wishItemId ? changeId(gift.wishItemId) : undefined}
+          id={mine && focusHere && gift.wishItemId ? changeId(gift.wishItemId) : undefined}
           onClick={() => editGift(gift, fromList)}
-          aria-label={`Change ${gift.title}`}
+          aria-label={mine ? `Change ${gift.title}` : `Change ${nameOf(gift.giverId)}'s ${gift.title}`}
         >
           Change
         </Button>
       </>
-    ) : (
-      nameOf(gift.giverId)
     )
+  }
 
   const wishTitle = (wish: WishItem) => (
     <>

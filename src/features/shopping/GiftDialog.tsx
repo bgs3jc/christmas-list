@@ -77,10 +77,15 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
     onClose()
   }
 
+  // Someone else's gift can be taken off too, but they should hear about it first.
+  const giverName = gift && gift.giverId !== viewer.id ? others.find((p) => p.id === gift.giverId)?.name ?? 'someone else' : undefined
+
   function remove() {
-    const message = gift?.wishItemId
-      ? `Not getting "${gift.title}" after all? It goes back to needing a Santa.`
-      : `Not getting "${gift?.title}" after all? It comes off this page.`
+    const message = giverName
+      ? `Take off "${gift?.title}"? It's ${giverName}'s gift, so check with them first.`
+      : gift?.wishItemId
+        ? `Not getting "${gift.title}" after all? It goes back to needing a Santa.`
+        : `Not getting "${gift?.title}" after all? It comes off this page.`
     if (gift && window.confirm(message)) {
       removeGift(gift.id)
       onClose()
@@ -96,7 +101,7 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
         <>
           {gift && (
             <Button variant="quiet" className={styles.removeButton} onClick={remove}>
-              Not getting it
+              {giverName ? 'Take it off' : 'Not getting it'}
             </Button>
           )}
           <Button variant="quiet" onClick={onClose}>
