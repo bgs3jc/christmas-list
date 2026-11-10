@@ -133,6 +133,20 @@ const settle = (page) => page.waitForTimeout(700)
   check('Gold star toggles off', w.fields.topPick.booleanValue === false)
   check('Clearing a note removes it', !('notes' in w.fields))
 
+  // 7b. Rows copied from a spreadsheet: a header row, a row with a link, one without.
+  await a.getByRole('button', { name: /Gimme, gimme, gimme/ }).click()
+  await a.getByRole('dialog').getByLabel('Link, or what it is').fill(
+    'Item\tLink\tSize\tColor\nTrail runners\thttps://www.rei.com/product/12345/trail-runners\t8\tBlue\nWool scarf\t\t\tRed',
+  )
+  await a.getByRole('dialog').getByRole('button', { name: 'Add all 2' }).click()
+  await settle(a)
+  const pastedWishes = (await docs('wishes')).filter((d) => d.fields.ownerId.stringValue === 'allie' && ['Trail runners', 'Wool scarf'].includes(d.fields.title.stringValue))
+  const runners = pastedWishes.find((d) => d.fields.title.stringValue === 'Trail runners')
+  const scarf = pastedWishes.find((d) => d.fields.title.stringValue === 'Wool scarf')
+  check('Pasted spreadsheet rows make two wishes (header skipped)', pastedWishes.length === 2 && !(await docs('wishes')).some((d) => d.fields.title.stringValue === 'Item'))
+  check('...the row with a link keeps its link, and the other cells as the note', runners?.fields.link?.stringValue === 'https://www.rei.com/product/12345/trail-runners' && runners?.fields.notes?.stringValue === '8, Blue')
+  check('...the row without a link has no link, and its note', scarf && !('link' in scarf.fields) && scarf.fields.notes?.stringValue === 'Red')
+
   // 8. Spreadsheet download works with the real database.
   await a.goto(BASE)
   const [dl] = await Promise.all([a.waitForEvent('download'), a.getByText(/spreadsheet/i).click()])
