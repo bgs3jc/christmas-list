@@ -2,14 +2,18 @@
 
 Update this at the end of every session. Keep it short.
 
-**Last updated:** 2026-11-10 (M5 test chat)
+**Last updated:** 2026-11-10 (M5 finish chat: family password, real-site test)
 
 ## Where things stand
 
-- **M1–M4 done; M5 (surprise protection) in progress.** Not launched to the family yet: Brady decides when it's finished. Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`. Real sign-in (Google, or an email link for April) and the Firestore database are on. The family list, people and homes are typed into the Firebase console (`docs/FIREBASE-SETUP.md`). The database started empty: the old sample data was prototype only.
+- **M1–M5 done.** Not launched to the family yet: Brady decides when (M6). Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`. Sign-in is your email and the **family password** (April, Allie, Kevin), or Google (Brady); the email link is gone. The Firestore database is on. The family list, people and homes are typed into the Firebase console (`docs/FIREBASE-SETUP.md`). The database started empty: the old sample data was prototype only.
 - **Privacy is enforced by the server:** `firestore.rules` hides gifts, claims and overheard notes from the person they're about. Tested as each person against the local emulator (`npm run test:rules`). Brady publishes rule changes by pasting the file into the console.
-- **Tested so far (2026-11-10):** from outside, the live database refuses every read and write from someone not signed in or with a self-made account (`tests/live/outside.cjs`, 41 checks, passes on the live site, including the new "Send a new link"). The whole site as each person (`tests/live-site.e2e.cjs`, 229 checks: sign-in, My list, every shopping page, Santa's sack, spreadsheets, every gift flow, nothing about yourself on any page, and the database refusing it when asked directly with each person's sign-in) passes on the emulator with the stricter rules. **Not yet run against the real project:** see Next steps 1.
-- **The plain sign-in page stays as is for now** (Brady: beautification, not critical). Its design round (the matching-pajamas idea), a real name and an icon are in BACKLOG. Sign-in emails land in spam; Brady decided April can check Junk.
+- **Tested on the real site (2026-11-10), all passing:**
+  - **As April, Allie and Kevin** (`TARGET=live-family tests/live-site.e2e.cjs`, 166 checks): signing in with the family password (and a wrong one), staying signed in, My list, every shopping page, every gift flow, Santa's sack, spreadsheets, nothing about yourself on any page, and the database refusing it when asked directly with each person's sign-in. Cleanup left the database exactly as it was.
+  - **From outside** (`tests/live/outside.cjs`, 41 checks): the database refuses everyone not signed in or not on the family list, nobody can make a new account with a family email, and the sign-in page works on desktop and April's phone.
+  - **Brady's own view** is covered on the emulator (`tests/live-site.e2e.cjs`, 240 checks as all four), since a test can't do Google sign-in. Plus `tests/site-flows.e2e.cjs` (35) and the rule checks (23).
+- **The rules are published** (2026-11-10), including the stricter field checks from the start of M5.
+- **The plain sign-in page stays as is for now** (Brady: beautification, not critical). Its design round (the matching-pajamas idea), a real name and an icon are in BACKLOG.
 - **The prototype still exists:** `realSignIn: false` in `src/config/features.ts` brings back browser storage, sample data and the "Viewing as" bar.
 - **What the site does:**
   - **Home:** a screen print of Mom's house at dusk on Christmas Eve (flat inks, colored shadows), Santa's sleigh in a red hat flying behind the oak and chimney, "Add to my list", a snow globe per person, and "Download everything as a spreadsheet".
@@ -27,10 +31,12 @@ Update this at the end of every session. Keep it short.
 
 ## Next steps
 
-1. **M5, open: follow `docs/M5-PLAN.md`.** Recommended 2026-11-10: sign-in becomes email + a family password (easier for April, and it lets a cloud chat test the real site as April, Allie and Kevin, which admin access can't do from the cloud). Brady's part: pick the password, paste the starter prompt in the plan into a new chat, and publish the rules once when asked. If Brady says no to the family password, the fallback is running `TARGET=live node tests/live-site.e2e.cjs` from Brady's computer (needs Node, gcloud as the project owner, `npm ci`, `npx playwright install chromium`; `... cleanup` if cut off).
-2. **Then:** Brady names what else must work before the family starts. Launch (M6) only when Brady says it's finished. At launch, April bookmarks the site in Safari, not "Add to Home Screen" (BACKLOG).
-3. **Brady: try the pre-launch build on the live site** (Santa's sack in the top bar; before/after of the new corners in the chat). Each look change in step 7 is one line to undo if it's not right.
-4. Brady's personal snow globe still needs a scene. Recipe: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass. The scripts and how to run them are in `tools/print-pass/`.
+1. **Brady: decide on launch (M6).** Name anything else that must work before the family starts; launch only when Brady says it's finished. At launch, tell each person: the link, "your email and the family password", and:
+   - **Allie and Kevin: the family password, not "Sign in with Google".** Google sign-in replaces their password account (their emails are Gmail), and the family password then stops working for them. Details in `FIREBASE-SETUP.md`.
+   - **April:** a Safari bookmark is the safe choice. "Add to Home Screen" should now work too (she'd type the password once more there), but it's untested on a real iPhone.
+2. **Brady: try the pre-launch build on the live site** (Santa's sack in the top bar). Each look change in step 7 is one line to undo if it's not right.
+3. **Brady's snow globe is in the code (the swordsman, added in another chat).** To show it on the real site: Firebase console > Firestore > Data > `people` > `brady` > **+ Add field**: `globeScene`, string, `swordsman`. (Not set yet at the 2026-11-10 test run.) Recipe for future scenes: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass in `tools/print-pass/`.
+4. **Optional, any time:** switch off **Email link** in the console (Authentication > Sign-in method > Email/Password). Nothing uses it now.
 5. **Watch once launched:** whether everyone gets in on their own devices.
 
 ## Pre-launch build (done 2026-11-10)
@@ -55,14 +61,12 @@ One chat each. M1–M3 are firm; the order and scope after that can change as we
 | M1 | Design direction | Brady picks one of 2–3 mockup styles; theme tokens recorded |
 | M2 | App scaffold + deploy | Empty themed app is live on GitHub Pages via GitHub Actions |
 | M3 ✅ | Clickable prototype | Wish lists, gifts, claims and ideas work on browser storage; Brady has clicked through it |
-| M4 ✅ | Firebase + sign-in | Brady has set up Firebase; Google + email-link sign-in work; data in Firestore. Hiding rules written and emulator-tested here too |
-| M5 (in progress) | Surprise protection | Verified on the real site by signing in as each person; rules tightened (field checks) |
+| M4 ✅ | Firebase + sign-in | Brady has set up Firebase; Google + email-link sign-in work (email link replaced by the family password in M5); data in Firestore. Hiding rules written and emulator-tested here too |
+| M5 ✅ | Surprise protection | Verified on the real site by signing in as each person; rules tightened (field checks) |
 | M6 | Family launch | April, Allie and Kevin signed in on their devices; feedback captured in BACKLOG |
 
 ## Open questions
 
-- Is April's @me.com address tied to a Google account? (Doesn't block anything; email-link sign-in works either way.)
 - App name: undecided. "The Family List" is a placeholder.
-- Brady's globe scene: undecided.
 - Does anyone who doesn't sign in get gifts through the site (a partner, the pets' stockings)? Brady hasn't said; see BACKLOG.
-- April's iPhone may sign her out after about a week without a visit (Safari clears a site's saved data). If it happens, she needs a fresh link from Junk each time; the password option in DECISIONS (2026-11-10) fixes it.
+- April's iPhone may sign her out after about a week without a visit (Safari clears a site's saved data). With the family password she just types it again (Safari can fill it in if she saved it).

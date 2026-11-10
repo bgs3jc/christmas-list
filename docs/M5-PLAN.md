@@ -1,5 +1,7 @@
 # M5 finish plan: family password, then the real-site test
 
+**Done 2026-11-10.** Kept as the record of how M5 finished; what happened is in STATUS and DECISIONS.
+
 Written 2026-11-10. Finishes M5 so Brady can decide on launch. Brady does no testing; Claude does it all from a cloud chat.
 
 ## Why this plan

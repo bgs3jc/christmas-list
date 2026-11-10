@@ -21,7 +21,7 @@ If a request or idea breaks a principle, say so plainly before building. Don't b
 ## Tech decisions (see DECISIONS.md for why)
 
 - Vite + React + TypeScript, static site on GitHub Pages, deployed by GitHub Actions on push to `main`.
-- Firebase (free Spark plan): Firestore for data; Auth with Google sign-in (Brady, Allie, Kevin) and email-link sign-in (April, who uses @me.com). Console setup and the family list: `docs/FIREBASE-SETUP.md`.
+- Firebase (free Spark plan): Firestore for data; Auth with email + one family password (April, Allie, Kevin) and Google sign-in (Brady). Each family email gets its account before its members entry. Console setup and the family list: `docs/FIREBASE-SETUP.md`.
 - Desktop browsers first. Must not break on phones, but phone polish is out of scope for now.
 
 ## Architecture rules (modularity is a hard requirement)

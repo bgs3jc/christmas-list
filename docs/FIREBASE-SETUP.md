@@ -5,7 +5,8 @@ What lives in the Firebase console (project `family-christmas`) and how to chang
 ## One-time setup (done 2026-11-05)
 
 - Firestore database, production mode, US location.
-- Sign-in methods: Google, and Email/Password with **Email link** on.
+- Sign-in methods: Google, and Email/Password. (Email link was on until 2026-11-10; the site no longer uses it, so it can be switched off: Authentication > Sign-in method > Email/Password > uncheck **Email link**.)
+- Authentication > Settings > **User account linking**: **Link accounts that use the same email** (Firebase's default; checked 2026-11-10). Keep it that way: it's what allows only one account per email, which the family password relies on.
 - Authorized domain: `bgs3jc.github.io`.
 - A web app, whose public settings are in `src/data/firebase-config.ts`.
 
@@ -17,6 +18,13 @@ What lives in the Firebase console (project `family-christmas`) and how to chang
 2. Delete everything there, paste in the whole of [`firestore.rules`](https://github.com/bgs3jc/christmas-list/blob/main/firestore.rules), click **Publish**.
 
 Claude tests rule changes with `npm run test:rules` before you publish them.
+
+## How people sign in (since 2026-11-10)
+
+- **April, Allie and Kevin:** their email and the **family password** (one password, the same for everyone; it lives only in Brady's head and the browser's saved passwords, never in this repo). Each has an Email/Password account, made by Claude through Firebase's public sign-up. Nothing was emailed to them.
+- **Brady:** Sign in with Google.
+- **Why a shared password is safe enough:** the database answers only emails on the `members` list, and each of those emails already has an account, so nobody else can make one with it. Inside the family it runs on trust.
+- **Allie and Kevin: use the family password, not Google.** Their emails are Gmail. If one of them clicks "Sign in with Google", Firebase swaps their password account for a Google one (Google is trusted for Gmail addresses). They still get in with Google, but the family password stops working for them until their account is remade (delete it in Authentication > Users, then Claude makes it again).
 
 ## The family (typed in by hand)
 
@@ -57,11 +65,15 @@ Someone with two emails gets two documents with the same `personId`.
 
 ## Later changes
 
-- **Add a person:** a `people` document, a `members` document for their email, and a `homes` document if they have a new house.
+- **Add a person, in this order:**
+  1. **Their sign-in account first.** Either they sign in with Google once, or (for the family password) ask Claude to make an Email/Password account for their email with the family password. Check it's there: Authentication > **Users**.
+  2. **Then** a `members` document for their email, a `people` document, and a `homes` document if they have a new house.
+
+  Never add a `members` entry for an email that has no account yet: until it has one, anyone could make that account with any password and be let in as that person.
+- **Change the family password:** ask Claude; each account's password has to be changed while signed in as them (or deleted and remade). Nobody else's sign-in changes.
 - **Naughty or nice:** change `santasList` on their `people` document.
 - **A new globe picture:** Claude adds the picture to the code and tells you its name; you set `globeScene`.
 
 ## Good to know
 
-- Sign-in emails come from `noreply@family-christmas-d65ce.firebaseapp.com`. They can land in Junk, so the site says to check there. Authentication > **Templates** lets you change the sender name.
 - Stay on the free Spark plan. Four people use a tiny fraction of its daily limits.

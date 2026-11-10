@@ -23,7 +23,7 @@ Brady, April, Allie, Kevin. The people list is data, not code, so adding someone
 
 ## v1 scope
 
-1. Sign in (Google, plus email link for April).
+1. Sign in (your email and the family password; Google for Brady).
 2. My wish list: add, edit, reorder and remove items.
 3. Shopping for [person]: their wish list with claim status, plus off-list gifts and ideas, hidden from them.
 4. Claim an item / add an off-list gift, with giver, price and status.
