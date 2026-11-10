@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { addGift, markIdeaGifted, useHomes, usePeople, useShopping, useViewer, type Gift, type WishItem } from '../../data'
+import { addGift, markIdeaGifted, updateGift, useHomes, usePeople, usualShipTo, useShopping, useViewer, type Gift, type HomeId, type WishItem } from '../../data'
 import { coverLabel, storeFromLink } from '../../shared/format'
 import { GiftDialog, type GiftDialogSetup } from '../../shared/GiftDialog'
 import { LockIcon, StarIcon } from '../../shared/icons'
@@ -23,6 +23,8 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   const people = usePeople()
   const homes = useHomes()
   const [dialog, setDialog] = useState<GiftDialogSetup | null>(null)
+  // Just claimed, by someone who usually ships: "Shipping it to April's?"
+  const [shipAsk, setShipAsk] = useState<{ giftId: string; homeId: HomeId } | null>(null)
 
   if (!view) {
     return (
@@ -46,7 +48,9 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
   const surprises = gifts.filter((g) => !g.wishItemId || !wishIds.has(g.wishItemId))
 
   function claim(wish: WishItem) {
-    addGift({ recipientId: person.id, giverId: viewer.id, title: wish.title, wishItemId: wish.id, place: 'tree' })
+    const homeId = usualShipTo(person.id)
+    const giftId = addGift({ recipientId: person.id, giverId: viewer.id, title: wish.title, wishItemId: wish.id, place: 'tree' })
+    setShipAsk(giftId && homeId ? { giftId, homeId } : null)
     // The button just pressed is gone. Keep keyboard focus in the row, on its new "Change".
     requestAnimationFrame(() => document.getElementById(changeId(wish.id))?.focus())
   }
@@ -186,6 +190,24 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                       {under.map((g) => (
                         <NoteLine key={g.id} parts={[familyNote(g), linkTo(g.link)]} />
                       ))}
+                      {shipAsk && under.some((g) => g.id === shipAsk.giftId && !g.shipTo) && (
+                        <NoteLine
+                          parts={[
+                            <>
+                              Shipping it to {houseOf(shipAsk.homeId)}?{' '}
+                              <Button
+                                variant="quiet"
+                                onClick={() => {
+                                  updateGift(shipAsk.giftId, { shipTo: shipAsk.homeId })
+                                  setShipAsk(null)
+                                }}
+                              >
+                                Yes
+                              </Button>
+                            </>,
+                          ]}
+                        />
+                      )}
                       {under.length > 1 && (
                         <NoteLine parts={[`${santaCount(under.length)} Santas on this one. One of you can tap Change, then Not getting it.`]} />
                       )}

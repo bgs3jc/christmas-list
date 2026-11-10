@@ -203,6 +203,25 @@ const settle = (page) => page.waitForTimeout(700)
   await settle(a)
   await b.getByText("No longer on Allie's list").waitFor({ timeout: 5000 }).catch(() => {})
   check("Sack: a wish taken off the list shows \"No longer on Allie's list\"", (await row(forAllie, 'Gooseneck pour-over kettle').innerText()).includes("No longer on Allie's list"))
+  // 12. Shipping in the same step as claiming. Brady ships to April's, so he's asked.
+  await b.goto(BASE + '#/shop/allie')
+  await row(b, 'Platform clogs').getByRole('button', { name: "I'll be Santa" }).click()
+  await row(b, 'Platform clogs').getByText("Shipping it to April's?").waitFor({ timeout: 5000 }).catch(() => {})
+  check("After I'll be Santa, Brady is asked \"Shipping it to April's?\"", (await row(b, 'Platform clogs').innerText()).includes("Shipping it to April's?"))
+  await row(b, 'Platform clogs').getByRole('button', { name: 'Yes' }).click()
+  await row(b, 'Platform clogs').getByText(/to April's/).waitFor()
+  await settle(b)
+  const clogs = (await docs('gifts')).find((d) => d.fields.title.stringValue === 'Platform clogs')
+  check('Yes saves shipping to April\'s', clogs?.fields.shipTo?.stringValue === 'april')
+  check('...and the question goes away', !(await row(b, 'Platform clogs').innerText()).includes('Shipping it to'))
+
+  // Kevin has never shipped anything: no question.
+  await k.goto(BASE + '#/shop/allie')
+  await row(k, 'Waterproof field notebooks').getByRole('button', { name: "I'll be Santa" }).click()
+  await row(k, 'Waterproof field notebooks').getByText("Santa's got it").waitFor()
+  await settle(k)
+  check('Kevin, who never ships, is not asked about shipping', !(await row(k, 'Waterproof field notebooks').innerText()).includes('Shipping it to'))
+
   errors.push(...bErrors, ...apErrors)
 
   check('No errors in any browser', errors.length === 0 && kErrors.length === 0)

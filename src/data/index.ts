@@ -8,7 +8,7 @@
 import { useMemo, useSyncExternalStore } from 'react'
 import { SignInError, type Session, type SignInProblem } from './backend'
 import { backend, prototype, signIn } from './store'
-import type { AppData, Gift, Home, Idea, Person, PersonId, WishItem } from './types'
+import type { AppData, Gift, Home, HomeId, Idea, Person, PersonId, WishItem } from './types'
 
 export type * from './types'
 export type { Session, SignInProblem }
@@ -145,6 +145,21 @@ export function useSack(): Sack {
   }, [data, viewerId])
 }
 
+// Where you usually ship gifts for this person, if you ship at all: the
+// house your most recent shipped gift went to, preferring gifts for people
+// who live with them. Most people order to their own house and are never asked.
+export function usualShipTo(recipientId: PersonId): HomeId | undefined {
+  const { data, viewerId } = getSnapshot()
+  const recipient = data.people.find((p) => p.id === recipientId)
+  if (!recipient) return
+  const homeOf = (id: PersonId) => data.people.find((p) => p.id === id)?.homeId
+  const shipped = data.gifts
+    .filter((g) => g.giverId === viewerId && g.shipTo && g.shipTo !== recipient.homeId)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+  const sameHouse = shipped.find((g) => homeOf(g.recipientId) === recipient.homeId)
+  return (sameHouse ?? shipped[0])?.shipTo
+}
+
 // ---- Writes ----
 // Each write checks it's allowed for the viewer before it goes to the
 // database, which checks again.
@@ -188,11 +203,14 @@ export type GiftDraft = Pick<
   'recipientId' | 'giverId' | 'title' | 'wishItemId' | 'link' | 'notes' | 'place' | 'shipTo'
 >
 
-export function addGift(draft: GiftDraft) {
+// Returns the new gift's id.
+export function addGift(draft: GiftDraft): string | undefined {
   const viewerId = currentViewer()
   if (draft.recipientId === viewerId) return
   const time = now()
-  backend.put('gifts', [{ ...draft, id: newId(), createdAt: time, updatedAt: time, updatedBy: viewerId }])
+  const id = newId()
+  backend.put('gifts', [{ ...draft, id, createdAt: time, updatedAt: time, updatedBy: viewerId }])
+  return id
 }
 
 // Gifts can't be read or changed by the person they're for. (You only ever
