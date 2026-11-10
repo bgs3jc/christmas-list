@@ -376,6 +376,7 @@
 }
 
 .signOutButton {
+  min-height: 44px;
   padding: 0;
   border: none;
   background: none;

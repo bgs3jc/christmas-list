@@ -3,7 +3,8 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  min-height: 40px;
+  /* Big enough to tap (44px), like every control on the site */
+  min-height: 44px;
   padding: 0 var(--space-4);
   border-radius: var(--radius-md);
   font-size: var(--text-md);
@@ -20,7 +21,6 @@
 }
 
 .main {
-  min-height: 44px;
   padding: 0 var(--space-5);
   /* Invisible, except in high-contrast modes, where it keeps the button's edge */
   border: 1.5px solid transparent;

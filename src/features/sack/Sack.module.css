@@ -26,6 +26,9 @@
 
 /* "Allie's page": as quiet as the Change buttons */
 .pageLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--ink-muted);
   font-weight: 700;
   text-underline-offset: 3px;
