@@ -126,3 +126,20 @@ Newest at the bottom. Each entry: what we decided, and why.
 **2026-11-10: M5 is its own step, not folded into launch.** Claude had moved M5 into the launch without asking; Brady caught it. M5 is: tighter rules, then a real-site check before the family starts.
 - **Tighter rules.** Gifts and overheard notes must be about a real person (a gift for "April" instead of "april" would be about nobody, so April could read it), from a real person, never to yourself, shipped only to a real house, with only the fields the site writes. Wishes and notes likewise. 20 rule checks pass, and the site's whole click-through still passes under them.
 - **Checking the real site as April, without April.** Gmail delivers `you+april@gmail.com` to your own inbox, but Firebase treats it as a different email. A temporary `members` entry maps that address to `april`, so Brady can sign in as April by email link and look for her surprises. The entry and the test records are deleted afterwards.
+
+**2026-11-10: Pre-launch review: a short list, built around Brady's shopping.** A review asked what would make December clearly better than the old spreadsheets. Brady kept seven items (the build plan in `STATUS.md`) and turned the rest down.
+- **"Santa's sack" (Round 9, concept A): a page of its own, by person.** Everything you're getting, grouped by who it's for, with the size or link from their wish and where it ships. Chosen over sorting by house (answers "what's in each box", asked less often) and over putting it on Home (pushes the globes down). The shelf holds your own globe: a sack drawn in code looked like clip art beside the print.
+- **"Landing at your place" is part of that page.** It's the only place the person receiving a box can see what's coming and who it's for. First on the page when it has anything, left out when empty.
+- **Shipping is mostly Brady's.** The others order to their own house. So the site asks "Shipping it to April's?" after a claim only for someone who has shipped a gift before, and never preselects it.
+- **Everyone can change any gift they can see.** Brady enters gifts for others and needs to fix them. The rules already allowed it. Replaces "only your own gifts show Change" (2026-10-29).
+- **A gift from someone's list can go in a stocking.** It was always saved as under the tree.
+- **Two claims on one wish both show.** Two people tapping at the same moment both saved a gift, and the row showed one.
+- **Spreadsheet rows paste into "Gimme, gimme, gimme".** Replaces the one-time import in BACKLOG.
+- **The last generic looks come out:** soft pop-up shadows, round pills, the raised Home button, hover lifts. Flat ink and hard edges, like the print.
+
+**2026-11-10: Not building, from the same review.**
+- **Wrapping night, printed gift tags, Christmas morning.** The family loves wrapping and organizes it themselves. Still no tracking of "From: Santa".
+- **A first-visit welcome or a guided tour.** Three kinds of page with one main button each don't need one; tours break when layouts shift and need upkeep. Brady's text to the family is the introduction.
+- **"New since you looked" markers.** The 2026-10-26 decision stands. The one costly case, a wish removed after you claimed it, shows in Santa's sack.
+- **Prices and link auto-fill.** The price is one click away on the link; auto-fill needs a separate service that Amazon blocks. Cut, not parked.
+- **A password for April now.** Stays the fallback (see the sign-in entry above), with one more reason to watch: Safari on iPhone clears a site's saved sign-in after about a week without a visit.
