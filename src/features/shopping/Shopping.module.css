@@ -99,6 +99,22 @@
   background: var(--white);
 }
 
+/* A narrow list (a phone, or large text): the box gets the whole width so
+   its hint isn't cut off, and Save goes under it. */
+@container (width < 30rem) {
+  .ideaForm {
+    flex-wrap: wrap;
+  }
+
+  .ideaInput {
+    flex-basis: 100%;
+  }
+
+  .ideaInput::placeholder {
+    font-size: var(--text-xs);
+  }
+}
+
 .visuallyHidden {
   position: absolute;
   width: 1px;
