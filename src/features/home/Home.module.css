@@ -124,13 +124,12 @@
   gap: var(--space-3);
   min-height: 52px;
   padding: 0 var(--space-6);
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   background: var(--plaid-red);
   color: var(--sheet);
   font-size: var(--text-lg);
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 3px 0 var(--plaid-red-shadow);
 }
 
 .addButton:hover {
@@ -306,12 +305,10 @@
   align-items: center;
   gap: var(--space-2);
   text-decoration: none;
-  transition: transform var(--duration-quick) var(--ease-gentle);
 }
 
 .personLink:hover {
   color: var(--ink);
-  transform: translateY(-3px);
 }
 
 .download {

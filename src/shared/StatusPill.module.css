@@ -3,7 +3,7 @@
   align-items: center;
   gap: 6px;
   padding: 3px 10px;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   font-size: var(--text-xs);
   font-weight: 700;
   white-space: nowrap;

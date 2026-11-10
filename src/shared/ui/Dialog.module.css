@@ -6,8 +6,8 @@
   max-height: calc(100dvh - var(--dialog-top) - var(--space-4));
   --dialog-top: min(12dvh, var(--space-16));
   padding: 0;
-  /* Invisible, except in high-contrast modes, where it keeps the box's edge */
-  border: 1px solid transparent;
+  /* A printed ink edge, in place of a soft shadow */
+  border: 1.5px solid var(--ink);
   border-radius: var(--radius-lg);
   background: var(--sheet);
   color: var(--ink);
