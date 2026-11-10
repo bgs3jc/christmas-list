@@ -27,13 +27,11 @@ Update this at the end of every session. Keep it short.
 
 ## Next steps
 
-1. **M5, open: two steps left.**
-   - **Publish the stricter rules (Brady, 1 minute):** paste `firestore.rules` into the console (`docs/FIREBASE-SETUP.md`, "The rules"). They pass the 20 rule checks and the full 229-check run on the emulator. One unknown: records already in the real database that don't fit them (a stray field) would become read-only on the site. Unlikely, since every record was saved by the site, but the live run below checks it.
-   - **Run the test against the real project from Brady's computer.** A cloud session can't: `gcloud auth login` works, but the session's network proxy swaps Google's token for a placeholder, so every Firebase admin call is refused (found 2026-11-10). On a computer with Node and gcloud: `gcloud auth login` (as the project owner), `npm ci`, `npx playwright install chromium`, then `TARGET=live node tests/live-site.e2e.cjs`. It snapshots the database first, makes four `m5-test-…@example.com` accounts and members entries, marks everything it makes "TEST M5", cleans up only that, and checks the database matches the snapshot. It never prints records about anyone, so Brady can watch it. If it's cut off: `TARGET=live node tests/live-site.e2e.cjs cleanup`. Easiest: Claude Code on that computer (CLI, or the desktop app with Remote Control), saying "Run the live M5 test from STATUS."
+1. **M5, open: follow `docs/M5-PLAN.md`.** Recommended 2026-11-10: sign-in becomes email + a family password (easier for April, and it lets a cloud chat test the real site as April, Allie and Kevin, which admin access can't do from the cloud). Brady's part: pick the password, paste the starter prompt in the plan into a new chat, and publish the rules once when asked. If Brady says no to the family password, the fallback is running `TARGET=live node tests/live-site.e2e.cjs` from Brady's computer (needs Node, gcloud as the project owner, `npm ci`, `npx playwright install chromium`; `... cleanup` if cut off).
 2. **Then:** Brady names what else must work before the family starts. Launch (M6) only when Brady says it's finished. At launch, April bookmarks the site in Safari, not "Add to Home Screen" (BACKLOG).
 3. **Brady: try the pre-launch build on the live site** (Santa's sack in the top bar; before/after of the new corners in the chat). Each look change in step 7 is one line to undo if it's not right.
 4. Brady's personal snow globe still needs a scene. Recipe: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass. The scripts and how to run them are in `tools/print-pass/`.
-5. **Watch once launched:** whether April manages the email link; if not, an email-and-password option is a small job (see DECISIONS, 2026-11-10).
+5. **Watch once launched:** whether everyone gets in on their own devices.
 
 ## Pre-launch build (done 2026-11-10)
 
