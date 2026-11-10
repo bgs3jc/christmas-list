@@ -5,7 +5,7 @@
 import { after, before, beforeEach, describe, test } from 'node:test'
 import { readFileSync } from 'node:fs'
 import { assertFails, assertSucceeds, initializeTestEnvironment } from '@firebase/rules-unit-testing'
-import { collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore'
+import { collection, deleteDoc, deleteField, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore'
 
 let env
 
@@ -46,6 +46,7 @@ beforeEach(async () => {
       await setDoc(doc(db, 'people', personId), { name: personId, homeId: personId })
     }
     await setDoc(doc(db, 'homes', 'april'), { name: "April's" })
+    await setDoc(doc(db, 'homes', 'allie'), { name: "Allie's" })
     await setDoc(doc(db, 'wishes', 'w-april'), { ownerId: 'april', kind: 'specific', title: 'Slippers', topPick: false, order: 1, createdAt: '2026-11-01T00:00:00Z' })
     await setDoc(doc(db, 'wishes', 'w-brady'), { ownerId: 'brady', kind: 'specific', title: 'Skillet', topPick: false, order: 1, createdAt: '2026-11-01T00:00:00Z' })
     await setDoc(doc(db, 'gifts', 'g-for-april'), { ...gift('april', 'allie'), wishItemId: 'w-april' })
@@ -173,5 +174,45 @@ describe('wish lists', () => {
     await assertFails(updateDoc(doc(db, 'wishes', 'w-brady'), { title: 'Coal' }))
     await assertFails(deleteDoc(doc(db, 'wishes', 'w-brady')))
     await assertFails(updateDoc(doc(db, 'wishes', 'w-april'), { ownerId: 'brady' }))
+  })
+})
+
+describe('only real people and known fields', () => {
+  test('a gift for someone who is not a person is refused (the misspelled-name leak)', async () => {
+    const db = as(family.brady)
+    await assertFails(setDoc(doc(db, 'gifts', 'typo'), gift('April', 'brady')))
+    await assertFails(setDoc(doc(db, 'gifts', 'ghost'), gift('nobody', 'brady')))
+    await assertFails(setDoc(doc(db, 'gifts', 'fromghost'), gift('allie', 'nobody')))
+  })
+
+  test('a gift from yourself to yourself, or to a made-up house, is refused', async () => {
+    const db = as(family.brady)
+    await assertFails(setDoc(doc(db, 'gifts', 'self'), gift('allie', 'allie')))
+    await assertFails(setDoc(doc(db, 'gifts', 'nohouse'), { ...gift('allie', 'brady'), shipTo: 'mars' }))
+    await assertSucceeds(setDoc(doc(db, 'gifts', 'shipped'), { ...gift('allie', 'brady'), shipTo: 'april', link: 'https://example.com', notes: 'Blue' }))
+  })
+
+  test('unknown or wrong-kind fields are refused', async () => {
+    const db = as(family.brady)
+    await assertFails(setDoc(doc(db, 'gifts', 'extra'), { ...gift('allie', 'brady'), secret: 'x' }))
+    await assertFails(setDoc(doc(db, 'gifts', 'place'), { ...gift('allie', 'brady'), place: 'roof' }))
+    await assertFails(setDoc(doc(db, 'gifts', 'blank'), { ...gift('allie', 'brady'), title: '' }))
+    await assertFails(updateDoc(doc(db, 'gifts', 'g-for-allie'), { title: 123, updatedBy: 'brady' }))
+    const wish = { ownerId: 'brady', kind: 'specific', title: 'Socks', topPick: false, order: 3, createdAt: '2026-11-02T00:00:00Z' }
+    await assertSucceeds(setDoc(doc(db, 'wishes', 'ok'), wish))
+    await assertFails(setDoc(doc(db, 'wishes', 'kind'), { ...wish, kind: 'urgent' }))
+    await assertFails(setDoc(doc(db, 'wishes', 'star'), { ...wish, topPick: 'yes' }))
+    await assertFails(setDoc(doc(db, 'wishes', 'missing'), { ownerId: 'brady', title: 'Socks' }))
+    const note = { aboutId: 'allie', authorId: 'brady', text: 'Likes tea', createdAt: '2026-11-02T00:00:00Z' }
+    await assertFails(setDoc(doc(db, 'ideas', 'nobody'), { ...note, aboutId: 'Allie' }))
+    await assertFails(setDoc(doc(db, 'ideas', 'extra'), { ...note, recipientId: 'allie' }))
+  })
+
+  test('clearing a field is allowed (shipping back to none, a note removed)', async () => {
+    const db = as(family.brady)
+    await assertSucceeds(updateDoc(doc(db, 'gifts', 'g-for-allie'), { shipTo: 'april', updatedBy: 'brady' }))
+    await assertSucceeds(updateDoc(doc(db, 'gifts', 'g-for-allie'), { shipTo: deleteField(), updatedBy: 'brady' }))
+    await assertSucceeds(updateDoc(doc(db, 'wishes', 'w-brady'), { notes: 'x' }))
+    await assertSucceeds(updateDoc(doc(db, 'wishes', 'w-brady'), { notes: deleteField() }))
   })
 })

@@ -39,6 +39,66 @@ service cloud.firestore {
       return request.resource.data[field] == resource.data[field];
     }
 
+    // ---- What a record may hold ----
+    // Only the fields the site writes, of the right kind. A gift or note must
+    // be about a real person: one for "April" instead of "april" would be
+    // about nobody, so April could read it.
+
+    function isPerson(id) {
+      return id is string && exists(/databases/$(database)/documents/people/$(id));
+    }
+
+    function isHome(id) {
+      return id is string && exists(/databases/$(database)/documents/homes/$(id));
+    }
+
+    function text(value, longest) {
+      return value is string && value.size() > 0 && value.size() <= longest;
+    }
+
+    // A field that can be left out, or a string up to `longest` characters.
+    function maybeText(data, field, longest) {
+      return !(field in data) || (data[field] is string && data[field].size() <= longest);
+    }
+
+    function validWish(d) {
+      return d.keys().hasAll(['ownerId', 'kind', 'title', 'topPick', 'order', 'createdAt'])
+        && d.keys().hasOnly(['ownerId', 'kind', 'title', 'link', 'notes', 'price', 'topPick', 'order', 'createdAt'])
+        && d.kind in ['specific', 'maybe']
+        && text(d.title, 500)
+        && maybeText(d, 'link', 4000)
+        && maybeText(d, 'notes', 5000)
+        && maybeText(d, 'price', 100)
+        && d.topPick is bool
+        && d.order is number
+        && text(d.createdAt, 40);
+    }
+
+    function validGift(d) {
+      return d.keys().hasAll(['recipientId', 'giverId', 'title', 'place', 'createdAt', 'updatedAt', 'updatedBy'])
+        && d.keys().hasOnly(['recipientId', 'giverId', 'title', 'wishItemId', 'link', 'notes', 'place', 'shipTo', 'createdAt', 'updatedAt', 'updatedBy'])
+        && isPerson(d.recipientId)
+        && isPerson(d.giverId)
+        && d.giverId != d.recipientId
+        && text(d.title, 500)
+        && d.place in ['tree', 'stocking']
+        && maybeText(d, 'wishItemId', 100)
+        && maybeText(d, 'link', 4000)
+        && maybeText(d, 'notes', 5000)
+        && (!('shipTo' in d) || isHome(d.shipTo))
+        && text(d.createdAt, 40)
+        && text(d.updatedAt, 40);
+    }
+
+    function validIdea(d) {
+      return d.keys().hasAll(['aboutId', 'authorId', 'text', 'createdAt'])
+        && d.keys().hasOnly(['aboutId', 'authorId', 'text', 'createdAt', 'madeIntoGift'])
+        && isPerson(d.aboutId)
+        && text(d.text, 2000)
+        && (!('madeIntoGift' in d) || d.madeIntoGift is bool)
+        && text(d.createdAt, 40);
+    }
+
     // ---- Set up by Brady in the console ----
 
     match /members/{email} {
@@ -62,8 +122,8 @@ service cloud.firestore {
     // Your own list. Everyone sees wishes; who's getting what is in gifts.
     match /wishes/{wishId} {
       allow read: if isFamily();
-      allow create: if isFamily() && request.resource.data.ownerId == me();
-      allow update: if isFamily() && resource.data.ownerId == me() && unchanged('ownerId');
+      allow create: if isFamily() && request.resource.data.ownerId == me() && validWish(request.resource.data);
+      allow update: if isFamily() && resource.data.ownerId == me() && unchanged('ownerId') && validWish(request.resource.data);
       allow delete: if isFamily() && resource.data.ownerId == me();
     }
 
@@ -72,11 +132,13 @@ service cloud.firestore {
       allow read: if isFamily() && resource.data.recipientId != me();
       allow create: if isFamily()
         && request.resource.data.recipientId != me()
-        && request.resource.data.updatedBy == me();
+        && request.resource.data.updatedBy == me()
+        && validGift(request.resource.data);
       allow update: if isFamily()
         && resource.data.recipientId != me()
         && unchanged('recipientId')
-        && request.resource.data.updatedBy == me();
+        && request.resource.data.updatedBy == me()
+        && validGift(request.resource.data);
       allow delete: if isFamily() && resource.data.recipientId != me();
     }
 
@@ -85,8 +147,13 @@ service cloud.firestore {
       allow read: if isFamily() && resource.data.aboutId != me();
       allow create: if isFamily()
         && request.resource.data.aboutId != me()
-        && request.resource.data.authorId == me();
-      allow update: if isFamily() && resource.data.aboutId != me() && unchanged('aboutId') && unchanged('authorId');
+        && request.resource.data.authorId == me()
+        && validIdea(request.resource.data);
+      allow update: if isFamily()
+        && resource.data.aboutId != me()
+        && unchanged('aboutId')
+        && unchanged('authorId')
+        && validIdea(request.resource.data);
       allow delete: if isFamily() && resource.data.aboutId != me();
     }
   }

@@ -6,10 +6,10 @@ Update this at the end of every session. Keep it short.
 
 ## Where things stand
 
-- **M1–M4 done. The family launch (M6) starts 2026-11-10.** Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`. Real sign-in (Google, or an email link for April) and the Firestore database are on. The family list, people and homes are typed into the Firebase console (`docs/FIREBASE-SETUP.md`). The database started empty: the old sample data was prototype only.
+- **M1–M4 done; M5 (surprise protection) in progress.** Not launched to the family yet: Brady decides when it's finished. Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`. Real sign-in (Google, or an email link for April) and the Firestore database are on. The family list, people and homes are typed into the Firebase console (`docs/FIREBASE-SETUP.md`). The database started empty: the old sample data was prototype only.
 - **Privacy is enforced by the server:** `firestore.rules` hides gifts, claims and overheard notes from the person they're about. Tested as each person against the local emulator (`npm run test:rules`). Brady publishes rule changes by pasting the file into the console.
-- **Tested before launch (2026-11-10):** the live database refuses all reads and writes from outside; 16 rule checks as each person pass; a click-through of every gift and list flow on the emulator (`tests/site-flows.e2e.cjs`) passes, including that Kevin sees no trace of gifts or notes about him. Not yet tested on the real site as anyone but Brady: that's M5, during launch.
-- **The plain sign-in page launched as is.** Its design round (the matching-pajamas idea), a real name and an icon are in BACKLOG. Sign-in emails land in spam; Brady decided April can check Junk.
+- **Tested so far (2026-11-10):** the live database refuses all reads and writes from outside; 16 rule checks as each person pass; a click-through of every gift and list flow on the emulator (`tests/site-flows.e2e.cjs`) passes, including that Kevin sees no trace of gifts or notes about him. Not yet tested on the real site as anyone but Brady: that's M5.
+- **The plain sign-in page stays as is for now** (Brady: beautification, not critical). Its design round (the matching-pajamas idea), a real name and an icon are in BACKLOG. Sign-in emails land in spam; Brady decided April can check Junk.
 - **The prototype still exists:** `realSignIn: false` in `src/config/features.ts` brings back browser storage, sample data and the "Viewing as" bar.
 - **What the site does:**
   - **Home:** a screen print of Mom's house at dusk on Christmas Eve (flat inks, colored shadows), Santa's sleigh in a red hat flying behind the oak and chimney, "Add to my list", a snow globe per person, and "Download everything as a spreadsheet".
@@ -25,11 +25,11 @@ Update this at the end of every session. Keep it short.
 
 ## Next steps
 
-1. **Launch:** Brady sends the site to April, Allie and Kevin. Allie and Kevin: "Sign in with Google". April: email link, check Junk, then **bookmark it in Safari** (not "Add to Home Screen": see BACKLOG). Feedback goes in BACKLOG.
-2. **First real-site privacy check (M5):** once someone adds a gift or overheard note about Brady, Brady confirms he can't see it anywhere. Repeat with each person as the family uses it.
+1. **M5:** tighten the rules (only real people, only known fields) and verify on the real site, with Brady signed in as "April" through a Gmail alias. See DECISIONS.
+2. **Then:** Brady names what else must work before the family starts. Launch (M6) only when Brady says it's finished. At launch, April bookmarks the site in Safari, not "Add to Home Screen" (BACKLOG).
 3. **Next feature, in a new chat:** "What I'm getting", everything you're Santa for, grouped by person, with where each ships (BACKLOG). Start with: "Read CLAUDE.md and docs/STATUS.md, then let's build What I'm getting."
 4. Brady's personal snow globe still needs a scene. Recipe: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass. The scripts and how to run them are in `tools/print-pass/`.
-5. **Watch at launch:** whether April manages the email link; if not, an email-and-password option is a small job (see DECISIONS, 2026-11-10).
+5. **Watch once launched:** whether April manages the email link; if not, an email-and-password option is a small job (see DECISIONS, 2026-11-10).
 
 ## Milestones to v1
 
@@ -41,8 +41,8 @@ One chat each. M1–M3 are firm; the order and scope after that can change as we
 | M2 | App scaffold + deploy | Empty themed app is live on GitHub Pages via GitHub Actions |
 | M3 ✅ | Clickable prototype | Wish lists, gifts, claims and ideas work on browser storage; Brady has clicked through it |
 | M4 ✅ | Firebase + sign-in | Brady has set up Firebase; Google + email-link sign-in work; data in Firestore. Hiding rules written and emulator-tested here too |
-| M5 (during launch) | Surprise protection | Verified on the real site by signing in as each person; rules tightened (field checks) |
-| M6 (started) | Family launch | April, Allie and Kevin signed in on their devices; feedback captured in BACKLOG |
+| M5 (in progress) | Surprise protection | Verified on the real site by signing in as each person; rules tightened (field checks) |
+| M6 | Family launch | April, Allie and Kevin signed in on their devices; feedback captured in BACKLOG |
 
 ## Open questions
 
