@@ -6,11 +6,11 @@ Update this at the end of every session. Keep it short.
 
 ## Where things stand
 
-- **M4 done; family launch (M6) starts 2026-11-10.** Brady decided the plain sign-in page is good enough to launch with; its design round (with the matching-pajamas idea) is in BACKLOG. M5's checks on the real site happen during launch.
-- **M4 (2026-11-05).** Brady created the Firebase project, published the rules and typed in homes, people and members. Real sign-in is on (`realSignIn: true`): the live site now asks you to sign in and reads from Firestore, which starts empty of wishes and gifts (the sample data was prototype only). How the console is set up: `docs/FIREBASE-SETUP.md`. The sign-in page is a plain first version; its design round is still to do.
-
-- **M1, M2 and M3 done, plus a UX review, design round 8 and a modern-web pass.** Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`. The prototype runs on browser storage with made-up sample data; a "Viewing as" bar stands in for sign-in until M4.
-- **What the prototype does now:**
+- **M1–M4 done. The family launch (M6) starts 2026-11-10.** Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`. Real sign-in (Google, or an email link for April) and the Firestore database are on. The family list, people and homes are typed into the Firebase console (`docs/FIREBASE-SETUP.md`). The database started empty: the old sample data was prototype only.
+- **Privacy is enforced by the server:** `firestore.rules` hides gifts, claims and overheard notes from the person they're about. Tested as each person against the local emulator (`npm run test:rules`). Brady publishes rule changes by pasting the file into the console.
+- **The plain sign-in page launched as is.** Its design round (the matching-pajamas idea), a real name and an icon are in BACKLOG. Sign-in emails land in spam; Brady decided April can check Junk.
+- **The prototype still exists:** `realSignIn: false` in `src/config/features.ts` brings back browser storage, sample data and the "Viewing as" bar.
+- **What the site does:**
   - **Home:** a screen print of Mom's house at dusk on Christmas Eve (flat inks, colored shadows), Santa's sleigh in a red hat flying behind the oak and chimney, "Add to my list", a snow globe per person, and "Download everything as a spreadsheet".
   - **My list:** "Gimme, gimme, gimme" (paste one link or many) and "An idea…" (a store, a brand or a hobby). Gold star your favorites. No prices, no claims shown.
   - **Shopping for [person]:** their list, then "Surprises & stockings", then "Overheard". A wish shows "Needs Santa" or "Santa's got it"; "I'll be Santa" covers it in one tap, and "You · Change" in the row undoes it. Notes and links show under every name; rows don't open. Gifts have no status and no price. A gift can have a link, notes for the family, and "to April's" if it ships somewhere (houses, not people: Allie and Kevin share one).
@@ -24,11 +24,11 @@ Update this at the end of every session. Keep it short.
 
 ## Next steps
 
-1. **Brady clicks through today's changes** on the live site, as April on a phone especially (try her iPhone with larger text), and notes anything that feels off.
-2. **Sign-in works on the live site (2026-11-05):** Brady signed in with Google and with an email link. The link email landed in Gmail's spam; Brady decided April can check Junk. Still worth one test link to April's address before launch, to see where iCloud puts it.
-3. **Launch:** Brady sends the site to April, Allie and Kevin. April uses a Safari bookmark, not "Add to Home Screen" (see BACKLOG). Once someone adds a gift for Brady, Brady checks he can't see it anywhere (the first real-site M5 check).
-4. **Small, before or after M4:** "What I'm getting", everything you're Santa for in one place (BACKLOG).
-5. Brady's personal snow globe still needs a scene. Recipe: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass. The scripts and how to run them are in `tools/print-pass/`.
+1. **Launch:** Brady sends the site to April, Allie and Kevin. Allie and Kevin: "Sign in with Google". April: email link, check Junk, then **bookmark it in Safari** (not "Add to Home Screen": see BACKLOG). Feedback goes in BACKLOG.
+2. **First real-site privacy check (M5):** once someone adds a gift or overheard note about Brady, Brady confirms he can't see it anywhere. Repeat with each person as the family uses it.
+3. **Next feature, in a new chat:** "What I'm getting", everything you're Santa for, grouped by person, with where each ships (BACKLOG). Start with: "Read CLAUDE.md and docs/STATUS.md, then let's build What I'm getting."
+4. Brady's personal snow globe still needs a scene. Recipe: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass. The scripts and how to run them are in `tools/print-pass/`.
+5. **Watch at launch:** whether April manages the email link; if not, an email-and-password option is a small job (see DECISIONS, 2026-11-10).
 
 ## Milestones to v1
 
@@ -40,8 +40,8 @@ One chat each. M1–M3 are firm; the order and scope after that can change as we
 | M2 | App scaffold + deploy | Empty themed app is live on GitHub Pages via GitHub Actions |
 | M3 ✅ | Clickable prototype | Wish lists, gifts, claims and ideas work on browser storage; Brady has clicked through it |
 | M4 ✅ | Firebase + sign-in | Brady has set up Firebase; Google + email-link sign-in work; data in Firestore. Hiding rules written and emulator-tested here too |
-| M5 | Surprise protection | Verified on the real site by signing in as each person; rules tightened (field checks) |
-| M6 | Family launch | April, Allie and Kevin signed in on their devices; feedback captured in BACKLOG |
+| M5 (during launch) | Surprise protection | Verified on the real site by signing in as each person; rules tightened (field checks) |
+| M6 (started) | Family launch | April, Allie and Kevin signed in on their devices; feedback captured in BACKLOG |
 
 ## Open questions
 

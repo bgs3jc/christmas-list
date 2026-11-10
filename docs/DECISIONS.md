@@ -118,3 +118,7 @@ Newest at the bottom. Each entry: what we decided, and why.
 - **Sign-in:** Google opens in a pop-up (the redirect kind is unreliable when the site and Firebase live on different domains). An email link opened on another device asks for the email again, as Firebase requires.
 
 **2026-11-05: Sign-in emails stay as Firebase sends them.** The link email lands in spam (a generic `firebaseapp.com` sender). Brady judged that April can check Junk, and she needs it only once per device. Sending through Brady's Gmail (Firebase's SMTP setting) is the fix if that proves wrong.
+
+**2026-11-10: Launch with the plain sign-in page.** Brady wants the family using the site now; a designed sign-in page is beautification, not day-one function. Parked in BACKLOG with Brady's idea (matching pajamas on Christmas Eve and Christmas Day).
+
+**2026-11-10: Signing in needs proof, not just an email typed in.** Brady asked whether typing your email could be enough. Claude recommended against and Brady didn't overrule: anyone who typed another person's email would see that person's view, including their own surprises, and the site's address and code are public, so a stranger could too. The database rules can only protect gifts if they know who's really asking. It costs one email per device; the site then stays signed in until you sign out. If April struggles with the link, the fallback is an email and a password of her own (Brady creates it in the console).

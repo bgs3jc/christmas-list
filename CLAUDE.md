@@ -21,7 +21,7 @@ If a request or idea breaks a principle, say so plainly before building. Don't b
 ## Tech decisions (see DECISIONS.md for why)
 
 - Vite + React + TypeScript, static site on GitHub Pages, deployed by GitHub Actions on push to `main`.
-- Firebase (free Spark plan): Firestore for data; Auth with Google sign-in (Brady, Allie, Kevin) and email-link sign-in (April, who uses @me.com).
+- Firebase (free Spark plan): Firestore for data; Auth with Google sign-in (Brady, Allie, Kevin) and email-link sign-in (April, who uses @me.com). Console setup and the family list: `docs/FIREBASE-SETUP.md`.
 - Desktop browsers first. Must not break on phones, but phone polish is out of scope for now.
 
 ## Architecture rules (modularity is a hard requirement)
@@ -30,6 +30,7 @@ If a request or idea breaks a principle, say so plainly before building. Don't b
 - **One data layer:** all reads and writes go through `src/data/`. Components never call Firebase directly. This lets us run on browser storage for prototypes and swap to Firebase in one place.
 - **Theme tokens:** colors, fonts, spacing and motion live in one theme file as CSS variables. No raw hex values in components.
 - **Feature flags:** new or experimental features sit behind a flag in `src/config/features.ts` so they can ship dark or be turned off.
+- **Database rules:** `firestore.rules` keeps each person's surprises from them. Any data change that touches who can see what needs a rules change and a test in `tests/` (`npm run test:rules`, runs Firebase's local emulator; needs Java). Brady publishes rules by pasting the file into the console; tell him when to.
 - Prefer small, plain code over clever abstractions. Brady should be able to read it with an explanation.
 
 ## Privacy
