@@ -8,6 +8,7 @@ Update this at the end of every session. Keep it short.
 
 - **M1–M4 done. The family launch (M6) starts 2026-11-10.** Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`. Real sign-in (Google, or an email link for April) and the Firestore database are on. The family list, people and homes are typed into the Firebase console (`docs/FIREBASE-SETUP.md`). The database started empty: the old sample data was prototype only.
 - **Privacy is enforced by the server:** `firestore.rules` hides gifts, claims and overheard notes from the person they're about. Tested as each person against the local emulator (`npm run test:rules`). Brady publishes rule changes by pasting the file into the console.
+- **Tested before launch (2026-11-10):** the live database refuses all reads and writes from outside; 16 rule checks as each person pass; a click-through of every gift and list flow on the emulator (`tests/site-flows.e2e.cjs`) passes, including that Kevin sees no trace of gifts or notes about him. Not yet tested on the real site as anyone but Brady: that's M5, during launch.
 - **The plain sign-in page launched as is.** Its design round (the matching-pajamas idea), a real name and an icon are in BACKLOG. Sign-in emails land in spam; Brady decided April can check Junk.
 - **The prototype still exists:** `realSignIn: false` in `src/config/features.ts` brings back browser storage, sample data and the "Viewing as" bar.
 - **What the site does:**
