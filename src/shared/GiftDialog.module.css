@@ -1,0 +1,12 @@
+/* The gift pop-up, used on shopping pages and in Santa's sack */
+
+/* A list gift's name, which isn't edited here */
+.dialogItem {
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.removeButton {
+  margin-right: auto;
+  color: var(--plaid-red);
+}

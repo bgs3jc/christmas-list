@@ -1,0 +1,26 @@
+/* Santa's sack, in the house print's inks (all from theme.css) */
+
+.sack {
+  display: block;
+  height: auto;
+}
+
+.shadow { fill: var(--globe-shadow); }
+.gold { fill: var(--globe-light); }
+.goldDeep { fill: var(--gold-deep); }
+.orange { fill: var(--globe-band-orange); }
+.blue { fill: var(--print-sky); }
+.blueDeep { fill: var(--globe-treeline); }
+.cream { fill: var(--print-cream); }
+.pine { fill: var(--pine); }
+.pineDeep { fill: var(--globe-tree); }
+.sackRed { fill: var(--globe-base); }
+.sackLight { fill: var(--plaid-red); }
+.ink { fill: var(--print-ink); }
+.snowShadow { fill: var(--globe-snow-shadow); }
+
+.string {
+  fill: none;
+  stroke: var(--globe-light);
+  stroke-width: 2.5;
+}

@@ -12,6 +12,9 @@ export const features = {
   housePrint: true,
   // A link on Home to download everything you can see as a spreadsheet.
   spreadsheetDownload: true,
+  // "Santa's sack": a page of everything you're getting, and what's
+  // landing at your house. Off hides the page and its link.
+  santasSack: true,
 } as const
 
 export type FeatureName = keyof typeof features

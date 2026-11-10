@@ -111,6 +111,40 @@ export function useOtherPeople(): Person[] {
   return useMemo(() => data.people.filter((p) => p.id !== viewerId), [data, viewerId])
 }
 
+// Santa's sack: what you're getting for everyone, and what's landing at your house.
+export interface SackGift {
+  gift: Gift
+  // The list item it came from, if it's still on their list.
+  wish?: WishItem
+}
+
+export interface Sack {
+  // Gifts the others are shipping to your house, oldest first. Gifts for you
+  // can never be read, so none of them can show up here.
+  landing: Gift[]
+  // One group per other person, in the top bar's order: the gifts you're getting them.
+  groups: { person: Person; gifts: SackGift[] }[]
+}
+
+export function useSack(): Sack {
+  const { data, viewerId } = useSnapshot()
+  return useMemo(() => {
+    const me = viewerOf(data, viewerId)
+    const gifts = [...data.gifts].sort(oldestFirst)
+    return {
+      landing: gifts.filter((g) => g.shipTo === me.homeId && g.giverId !== me.id),
+      groups: data.people
+        .filter((p) => p.id !== me.id)
+        .map((person) => ({
+          person,
+          gifts: gifts
+            .filter((g) => g.recipientId === person.id && g.giverId === me.id)
+            .map((gift) => ({ gift, wish: data.wishes.find((w) => w.id === gift.wishItemId) })),
+        })),
+    }
+  }, [data, viewerId])
+}
+
 // ---- Writes ----
 // Each write checks it's allowed for the viewer before it goes to the
 // database, which checks again.

@@ -108,18 +108,6 @@
   white-space: nowrap;
 }
 
-/* Pop-up details */
-
-.dialogItem {
-  font-size: var(--text-lg);
-  font-weight: 700;
-}
-
-.removeButton {
-  margin-right: auto;
-  color: var(--plaid-red);
-}
-
 /* In the slim bar on narrower screens */
 @media (width < 60em) {
   .name {

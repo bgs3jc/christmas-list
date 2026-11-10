@@ -1,0 +1,43 @@
+/* The words under the sack, as on My list */
+
+.picture {
+  display: block;
+  width: 260px;
+}
+
+.title {
+  margin-top: var(--space-1);
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  line-height: 1.05;
+}
+
+.subtitle {
+  color: var(--ink-muted);
+  text-wrap: balance;
+}
+
+/* One line under a section's heading */
+.sectionNote {
+  padding: var(--space-2) var(--space-2) 0;
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+/* "Allie's page": as quiet as the Change buttons */
+.pageLink {
+  color: var(--ink-muted);
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+/* Phones and large text: no big picture, just the heading, then the lists */
+@media (width < 60em) {
+  .picture {
+    display: none;
+  }
+
+  .title {
+    font-size: var(--text-3xl);
+  }
+}

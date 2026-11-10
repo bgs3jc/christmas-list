@@ -1,4 +1,5 @@
-// Clicks through the site as Allie, then Kevin, against Firebase's local
+// Clicks through the site as Allie, then Kevin (and Brady and April for
+// Santa's sack), against Firebase's local
 // emulator: I'll be Santa, shipping (and clearing it), Not getting it, a
 // surprise gift, Overheard and Make it a gift, gold star, clearing a note,
 // the spreadsheet, and that Kevin sees none of what's about him.
@@ -177,7 +178,34 @@ const settle = (page) => page.waitForTimeout(700)
   const balm = (await docs('gifts')).find((d) => d.id === 'g-5')
   check("Kevin's note on April's gift is saved, marked as changed by Kevin", balm.fields.notes?.stringValue === 'Got the vanilla one' && balm.fields.updatedBy.stringValue === 'kevin' && balm.fields.giverId.stringValue === 'april')
 
-  check('No errors in either browser', errors.length === 0 && kErrors.length === 0)
+  // 11. Santa's sack. Brady: the kettle is under "For Allie", shipping to April's.
+  const { page: b, errors: bErrors } = await signIn(browser, 'brady@example.com')
+  await b.goto(BASE + '#/sack'); await b.getByRole('heading', { name: 'For Allie' }).waitFor(); await settle(b)
+  const forAllie = b.locator('section', { has: b.getByRole('heading', { name: 'For Allie' }) })
+  const kettle = await row(forAllie, 'Gooseneck pour-over kettle').innerText()
+  check("Sack: Brady's kettle is under For Allie, to April's, with \"Matte black\"", kettle.includes("to April's") && kettle.includes('Matte black'))
+  check('Sack: nothing ships to Brady, so no "Landing" section', (await b.getByRole('heading', { name: /Landing/ }).count()) === 0)
+
+  // April: the kettle is landing at her place.
+  const { page: ap, errors: apErrors } = await signIn(browser, 'april@example.com')
+  await ap.goto(BASE + '#/sack'); await ap.getByRole('heading', { name: 'Landing at your place' }).waitFor()
+  const landing = ap.locator('section', { has: ap.getByRole('heading', { name: 'Landing at your place' }) })
+  check('Sack: April sees the kettle landing, "From Brady, for Allie"', (await row(landing, 'Gooseneck pour-over kettle').innerText()).includes('From Brady, for Allie'))
+
+  // Kevin: no trace of gifts for him.
+  await k.goto(BASE + '#/sack'); await k.getByRole('heading', { name: 'For Allie' }).waitFor(); await settle(k)
+  check("Sack: Kevin's page has no trace of gifts for Kevin", !/Zip hoodie|Wool socks|Grill brush|For Kevin/.test(await k.locator('body').innerText()))
+
+  // Allie takes the kettle off her list: Brady's sack says so.
+  await a.goto(BASE + '#/my-list')
+  await a.getByRole('button', { name: 'Change Gooseneck pour-over kettle' }).click()
+  await a.getByRole('dialog').getByRole('button', { name: 'Take off my list' }).click()
+  await settle(a)
+  await b.getByText("No longer on Allie's list").waitFor({ timeout: 5000 }).catch(() => {})
+  check("Sack: a wish taken off the list shows \"No longer on Allie's list\"", (await row(forAllie, 'Gooseneck pour-over kettle').innerText()).includes("No longer on Allie's list"))
+  errors.push(...bErrors, ...apErrors)
+
+  check('No errors in any browser', errors.length === 0 && kErrors.length === 0)
   if (errors.length || kErrors.length) console.log(errors, kErrors)
   await browser.close()
   console.log(failures ? `${failures} FAILED` : 'ALL PASSED')

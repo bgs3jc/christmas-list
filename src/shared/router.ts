@@ -2,17 +2,19 @@
 
 import { useMemo, useSyncExternalStore } from 'react'
 
-export type Route = { name: 'home' } | { name: 'my-list' } | { name: 'shop'; personId: string }
+export type Route = { name: 'home' } | { name: 'my-list' } | { name: 'sack' } | { name: 'shop'; personId: string }
 
 export const links = {
   home: '#/',
   myList: '#/my-list',
+  sack: '#/sack',
   shop: (personId: string) => `#/shop/${personId}`,
 }
 
 function parse(hash: string): Route {
   const [page, id] = hash.replace(/^#\/?/, '').split('/')
   if (page === 'my-list') return { name: 'my-list' }
+  if (page === 'sack') return { name: 'sack' }
   if (page === 'shop' && id) return { name: 'shop', personId: id }
   return { name: 'home' }
 }

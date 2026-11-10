@@ -1,3 +1,4 @@
+import { features } from '../config/features'
 import { usePeople, useViewer } from '../data'
 import { links, type Route } from './router'
 import styles from './SiteHeader.module.css'
@@ -18,6 +19,7 @@ export function SiteHeader({ route, tone = 'dusk', wide = false }: SiteHeaderPro
   const items = [
     { href: links.home, label: 'Home', current: route.name === 'home' },
     { href: links.myList, label: 'My list', current: route.name === 'my-list' },
+    ...(features.santasSack ? [{ href: links.sack, label: "Santa's sack", current: route.name === 'sack' }] : []),
     ...others.map((p) => ({
       href: links.shop(p.id),
       label: p.name,

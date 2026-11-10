@@ -8,14 +8,17 @@ interface ListSectionProps {
   title: string
   // One button on the right of the heading, if the section needs it.
   action?: ReactNode
+  // A small picture before the heading, such as a person's globe.
+  lead?: ReactNode
   children: ReactNode
 }
 
-export function ListSection({ title, action, children }: ListSectionProps) {
+export function ListSection({ title, action, lead, children }: ListSectionProps) {
   const headingId = useId()
   return (
     <section aria-labelledby={headingId} className={styles.section}>
       <div className={styles.sectionHead}>
+        {lead}
         <h2 id={headingId} className={styles.sectionTitle}>
           {title}
         </h2>

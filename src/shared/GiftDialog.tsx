@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { addGift, removeGift, updateGift, type Gift, type GiftPlace, type Home, type Person } from '../../data'
-import { isLink, nameFromLink } from '../../shared/format'
-import { Button } from '../../shared/ui/Button'
-import { Dialog } from '../../shared/ui/Dialog'
-import { Choice, TextField } from '../../shared/ui/Form'
-import styles from './Shopping.module.css'
+import { addGift, removeGift, updateGift, type Gift, type GiftPlace, type Home, type Person } from '../data'
+import { isLink, nameFromLink } from './format'
+import { Button } from './ui/Button'
+import { Dialog } from './ui/Dialog'
+import { Choice, TextField } from './ui/Form'
+import styles from './GiftDialog.module.css'
 
+// Adding or changing a gift for someone. Shopping pages and Santa's sack both use it.
 export interface GiftDialogSetup {
   heading: string
   // Editing an existing gift...
