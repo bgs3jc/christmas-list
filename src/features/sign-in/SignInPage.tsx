@@ -1,5 +1,5 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
-import { finishSignInLink, sendSignInLink, signInWithGoogle, signOut, SignInError, type Session, type SignInProblem } from '../../data'
+import { signInWithGoogle, signInWithPassword, signOut, SignInError, type Session, type SignInProblem } from '../../data'
 import { Button } from '../../shared/ui/Button'
 import { TextField } from '../../shared/ui/Form'
 import styles from './SignIn.module.css'
@@ -8,11 +8,10 @@ import styles from './SignIn.module.css'
 // for and says stays.
 
 const problems: Record<SignInProblem, string> = {
-  'popup-blocked': 'Your browser stopped the Google window from opening. Allow pop-ups for this site, or use the email link.',
-  'bad-email': "That doesn't look like an email address. Check it and try again.",
-  'too-many': 'Too many sign-in emails today. Try again tomorrow, or sign in with Google.',
-  'link-expired': 'That link was old or already used. Send yourself a new one.',
-  'wrong-email': "That's not the email the link was sent to. Try the other one.",
+  'popup-blocked': 'Your browser stopped the Google window from opening. Allow pop-ups for this site, or use your email and the family password.',
+  // Never says which of the two is wrong.
+  'wrong-password': "That email and family password don't match. Check both and try again.",
+  'too-many': 'Too many tries. Wait a few minutes and try again.',
   failed: "That didn't work. Check your connection and try again.",
 }
 
@@ -31,7 +30,6 @@ export function SignInPage({ session }: { session: Session }) {
     )
   }
   if (session.status === 'not-family') return <NotFamily email={session.email} />
-  if (session.status === 'needs-email') return <FinishLink />
   return <SignIn />
 }
 
@@ -49,22 +47,22 @@ function Frame({ children }: { children: ReactNode }) {
 
 function SignIn() {
   const [email, setEmail] = useState('')
-  const [sentTo, setSentTo] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [busy, setBusy] = useState(false)
   const [problem, setProblem] = useState('')
 
-  async function emailLink(event: FormEvent) {
+  async function signIn(event: FormEvent) {
     event.preventDefault()
     if (busy) return
-    if (!email.trim()) return setProblem(problems['bad-email'])
+    if (!email.trim() || !password) return setProblem('Type your email and the family password.')
     setBusy(true)
     setProblem('')
     try {
-      await sendSignInLink(email)
-      setSentTo(email.trim())
+      // Once it works, the page changes to the lists by itself.
+      await signInWithPassword(email, password)
     } catch (error) {
       setProblem(messageFor(error))
-    } finally {
       setBusy(false)
     }
   }
@@ -78,83 +76,25 @@ function SignIn() {
     }
   }
 
-  if (sentTo) {
-    return (
-      <Frame>
-        <h1 className={styles.title}>Check your email</h1>
-        <p className={styles.lead}>
-          We sent a sign-in link to <strong>{sentTo}</strong>. Open it on this {deviceWord()} and you're in.
-        </p>
-        <p className={styles.hint}>It can take a minute. If it's not there, look in Junk.</p>
-        <Button variant="quiet" onClick={() => setSentTo('')}>
-          Use a different email
-        </Button>
-      </Frame>
-    )
-  }
-
   return (
     <Frame>
       <h1 className={styles.title}>Sign in to see everyone's lists</h1>
-      <form className={styles.form} onSubmit={emailLink} noValidate>
-        <TextField label="Your email" value={email} onChange={setEmail} email required />
-        <Button type="submit" variant="main">
-          {busy ? 'Sending…' : 'Email me a sign-in link'}
-        </Button>
-      </form>
-      <p className={styles.or}>or</p>
-      <Button onClick={google}>Sign in with Google</Button>
-      {problem && (
-        <p className={styles.problem} role="alert">
-          {problem}
-        </p>
-      )}
-    </Frame>
-  )
-}
-
-// Opened the link on a different device or browser than the one it was sent from.
-function FinishLink() {
-  const [email, setEmail] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [problem, setProblem] = useState('')
-  // An old or used link can't work however often she tries: offer a fresh start.
-  const [linkDead, setLinkDead] = useState(false)
-
-  async function finish(event: FormEvent) {
-    event.preventDefault()
-    if (busy) return
-    if (!email.trim()) return setProblem(problems['bad-email'])
-    setBusy(true)
-    setProblem('')
-    try {
-      await finishSignInLink(email)
-    } catch (error) {
-      setProblem(messageFor(error))
-      setLinkDead(error instanceof SignInError && error.problem === 'link-expired')
-      setBusy(false)
-    }
-  }
-
-  if (linkDead) {
-    return (
-      <Frame>
-        <h1 className={styles.title}>That link didn't work</h1>
-        <p className={styles.lead}>It was old or already used. Send yourself a new one.</p>
-        {/* The plain address, without the old link's code: the usual sign-in page. */}
-        <Button variant="main" onClick={() => window.location.assign(import.meta.env.BASE_URL)}>
-          Send a new link
-        </Button>
-      </Frame>
-    )
-  }
-
-  return (
-    <Frame>
-      <h1 className={styles.title}>Almost in</h1>
-      <p className={styles.lead}>Type the email the link was sent to.</p>
-      <form className={styles.form} onSubmit={finish} noValidate>
-        <TextField label="Your email" value={email} onChange={setEmail} email required />
+      <form className={styles.form} onSubmit={signIn} noValidate>
+        <TextField label="Your email" name="email" value={email} onChange={setEmail} email required />
+        <TextField
+          label="Family password"
+          name="password"
+          value={password}
+          onChange={setPassword}
+          password
+          shown={showPassword}
+          help="Ask Brady if you don't have it."
+          required
+        />
+        <label className={styles.show}>
+          <input type="checkbox" checked={showPassword} onChange={(e) => setShowPassword(e.target.checked)} />
+          Show password
+        </label>
         <Button type="submit" variant="main">
           {busy ? 'Signing in…' : 'Sign in'}
         </Button>
@@ -164,6 +104,8 @@ function FinishLink() {
           {problem}
         </p>
       )}
+      <p className={styles.or}>or</p>
+      <Button onClick={google}>Sign in with Google</Button>
     </Frame>
   )
 }
@@ -178,8 +120,4 @@ function NotFamily({ email }: { email: string }) {
       <Button onClick={() => void signOut()}>Sign in with a different email</Button>
     </Frame>
   )
-}
-
-function deviceWord() {
-  return /iPhone|Android/i.test(navigator.userAgent) ? 'phone' : /iPad/i.test(navigator.userAgent) ? 'iPad' : 'computer'
 }

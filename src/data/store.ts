@@ -19,7 +19,6 @@ const noFirebase = () => Promise.reject(new Error('Real sign-in is switched off'
 
 export const signIn = {
   withGoogle: firebase?.signInWithGoogle ?? noFirebase,
-  sendLink: firebase?.sendSignInLink ?? noFirebase,
-  finishLink: firebase?.finishSignInLink ?? noFirebase,
+  withPassword: firebase?.signInWithPassword ?? noFirebase,
   signOut: firebase?.signOut ?? noFirebase,
 }

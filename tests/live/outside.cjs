@@ -1,9 +1,13 @@
 // The real site and database, from outside the family: needs no admin access.
 //   node tests/live/outside.cjs
+//   FAMILY_EMAILS='april=…,allie=…,kevin=…' node tests/live/outside.cjs   (adds one check)
 // Checks: the live site loads with no errors (desktop, and April's phone at
-// larger text); the database refuses every read and write from someone not
-// signed in; and refuses an account someone makes for themselves (made, checked,
-// then deleted again). Screenshots go to $SHOTS (default: a temp folder).
+// larger text); a wrong password says so; the database refuses every read and
+// write from someone not signed in; refuses an account someone makes for
+// themselves (made, checked, then deleted again); and, with FAMILY_EMAILS,
+// that nobody can make a new account with a family email (it's taken).
+// The emails come only from the environment and are never printed.
+// Screenshots go to $SHOTS (default: a temp folder).
 
 const { chromium } = require('playwright')
 const os = require('os')
@@ -65,6 +69,16 @@ async function everyDoor(who, token) {
     check(`Making an account is refused outright (${made.json.error?.message ?? made.status})`, made.status >= 400)
   }
 
+  // Nobody can make an account with a family email: each already has one.
+  // This is what makes the password sign-in safe (see firestore.rules).
+  const family = (process.env.FAMILY_EMAILS || '').split(',').map((pair) => pair.split('=').map((x) => x.trim())).filter(([who, e]) => who && e)
+  for (const [who, familyEmail] of family) {
+    const tried = await call(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`, { method: 'POST', body: { email: familyEmail, password: `M5-${Math.random().toString(36).slice(2)}-x9`, returnSecureToken: true } })
+    check(`Making a new account with ${who}'s email is refused (it's taken)`, tried.json.error?.message === 'EMAIL_EXISTS', `${tried.status} ${tried.json.error?.message ?? 'an account was made'}`)
+    // If it ever wasn't taken, don't leave a stranger's account behind.
+    if (tried.json.idToken) await call(`https://identitytoolkit.googleapis.com/v1/accounts:delete?key=${API_KEY}`, { method: 'POST', body: { idToken: tried.json.idToken } })
+  }
+
   // ---- The site ----
   const browser = await chromium.launch()
   const looks = [
@@ -79,36 +93,29 @@ async function everyDoor(who, token) {
     page.on('console', (msg) => msg.type() === 'error' && errors.push(msg.text()))
     if (bigText) await page.addInitScript(() => document.addEventListener('DOMContentLoaded', () => (document.documentElement.style.fontSize = '120%')))
     await page.goto(SITE)
-    const ok = await page.getByRole('button', { name: 'Email me a sign-in link' }).waitFor({ timeout: 15000 }).then(() => true, () => false)
+    const signInButton = page.getByRole('button', { name: 'Sign in', exact: true })
+    const ok = await signInButton.waitFor({ timeout: 15000 }).then(() => true, () => false)
     check(`Site (${label}): the sign-in page shows`, ok)
-    check(`Site (${label}): the email box and Google button are there`, (await page.getByLabel('Your email').count()) === 1 && (await page.getByRole('button', { name: /Google/ }).count()) === 1)
+    check(`Site (${label}): email, family password and the Google button are there`, (await page.getByLabel('Your email').count()) === 1 && (await page.getByLabel('Family password').getAttribute('type').catch(() => '')) === 'password' && (await page.getByRole('button', { name: /Google/ }).count()) === 1)
     const wide = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
     check(`Site (${label}): nothing runs off the side`, wide <= 1, `${wide}px too wide`)
     await page.screenshot({ path: path.join(SHOTS, `outside-${label.replace(/\W+/g, '-')}.png`), fullPage: true })
 
-    // A sign-in link that's old or made up: says so, doesn't sign in.
+    // A made-up email and password: says so, doesn't sign in.
+    await page.getByLabel('Your email').fill('m5-test-nobody@example.com')
+    await page.getByLabel('Family password').fill('not-the-family-password')
+    await signInButton.click()
+    const said = await page.getByRole('alert').filter({ hasText: "That email and family password don't match" }).waitFor({ timeout: 15000 }).then(() => true, () => false)
+    check(`Site (${label}): a wrong email and password says they don't match, and nobody is signed in`, said && (await page.getByText('Who are you shopping for?').count()) === 0)
+    await page.screenshot({ path: path.join(SHOTS, `outside-wrong-password-${label.replace(/\W+/g, '-')}.png`), fullPage: true })
+
+    // An old sign-in link from before the family password: the sign-in page, with the code gone.
     await page.goto(`${SITE}?mode=signIn&oobCode=made-up-code&apiKey=${API_KEY}`)
-    const askEmail = await page.getByLabel('Your email').waitFor({ timeout: 10000 }).then(() => true, () => false)
-    check(`Site (${label}): a link opened on a new device asks for the email`, askEmail)
-    if (askEmail) {
-      await page.getByLabel('Your email').fill('m5-test-nobody@example.com')
-      await page.getByRole('button').filter({ hasText: /sign in|continue/i }).first().click()
-      await page.waitForTimeout(2500)
-      const body = await page.locator('body').innerText()
-      check(`Site (${label}): a bad link says what went wrong and nobody is signed in`, !/Who are you shopping for/.test(body) && /expired|used|new link|again|didn/i.test(body), body.slice(0, 200).replace(/\s+/g, ' '))
-      await page.screenshot({ path: path.join(SHOTS, `outside-bad-link-${label.replace(/\W+/g, '-')}.png`), fullPage: true })
-      // ...and gives a way out: back to the plain sign-in page, without the old code.
-      const out = page.getByRole('button', { name: 'Send a new link' })
-      const hasOut = (await out.count()) === 1
-      check(`Site (${label}): after a bad link, "Send a new link" is offered`, hasOut)
-      if (hasOut) {
-        await out.click()
-        const back = await page.getByRole('button', { name: 'Email me a sign-in link' }).waitFor({ timeout: 10000 }).then(() => true, () => false)
-        check(`Site (${label}): "Send a new link" goes back to the sign-in page, without the old code`, back && !page.url().includes('oobCode'))
-      }
-    }
-    // Firebase logs its own refusal of the made-up code as a console error; that one is expected.
-    const real = errors.filter((e) => !/invalid-action-code|INVALID_OOB_CODE|400|Couldn't finish signing in/.test(e))
+    const plain = await signInButton.waitFor({ timeout: 10000 }).then(() => true, () => false)
+    check(`Site (${label}): an old sign-in link opens the sign-in page, with its code gone from the address bar`, plain && !page.url().includes('oobCode'))
+
+    // The browser logs Firebase's refusal of the wrong password (a 400); that one is expected.
+    const real = errors.filter((e) => !/status of 400/.test(e))
     check(`Site (${label}): no errors in the browser`, real.length === 0, real.join(' | ').slice(0, 300))
     await ctx.close()
   }

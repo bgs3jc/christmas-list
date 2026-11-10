@@ -11,9 +11,15 @@ let env
 
 const family = { brady: 'brady@example.com', april: 'april@example.com', allie: 'allie@example.com', kevin: 'kevin@example.com' }
 
-// Signed in with a verified email.
+// Signed in with a verified email (Google).
 function as(email, verified = true) {
-  return env.authenticatedContext(email, { email, email_verified: verified }).firestore()
+  return env.authenticatedContext(email, { email, email_verified: verified, firebase: { sign_in_provider: 'google.com' } }).firestore()
+}
+
+// Signed in with an email and the family password. Firebase never checks a
+// password account's email, so it's unverified.
+function asPassword(email) {
+  return env.authenticatedContext(email, { email, email_verified: false, firebase: { sign_in_provider: 'password' } }).firestore()
 }
 
 const gift = (recipientId, giverId) => ({
@@ -71,9 +77,38 @@ describe('outsiders', () => {
     await assertFails(getDoc(doc(db, 'members', family.april)))
   })
 
-  test('an unverified email is not trusted', async () => {
+  test('an unverified email is not trusted, unless it is a password sign-in', async () => {
     const db = as(family.brady, false)
     await assertFails(getDocs(collection(db, 'people')))
+    await assertFails(getDoc(doc(db, 'members', family.brady)))
+  })
+
+  test('a password account with an email not on the family list sees nothing', async () => {
+    const db = asPassword('stranger@example.com')
+    await assertFails(getDocs(collection(db, 'people')))
+    await assertFails(getDocs(collection(db, 'wishes')))
+    await assertFails(getDocs(query(collection(db, 'gifts'), where('recipientId', '!=', 'nobody'))))
+    await assertFails(getDoc(doc(db, 'members', family.april)))
+    await assertFails(setDoc(doc(db, 'members', 'stranger@example.com'), { personId: 'april' }))
+  })
+})
+
+describe('the family password', () => {
+  test('a password account with a family email is family', async () => {
+    const db = asPassword(family.april)
+    await assertSucceeds(getDoc(doc(db, 'members', family.april)))
+    await assertSucceeds(getDocs(collection(db, 'people')))
+    await assertSucceeds(getDocs(collection(db, 'wishes')))
+    await assertSucceeds(getDocs(query(collection(db, 'gifts'), where('recipientId', '!=', 'april'))))
+    await assertSucceeds(setDoc(doc(db, 'gifts', 'g-new'), gift('allie', 'april')))
+  })
+
+  test('and still never sees what is about them', async () => {
+    const db = asPassword(family.april)
+    await assertFails(getDocs(collection(db, 'gifts')))
+    await assertFails(getDoc(doc(db, 'gifts', 'g-for-april')))
+    await assertFails(getDoc(doc(db, 'ideas', 'i-about-april')))
+    await assertFails(setDoc(doc(db, 'gifts', 'g-self'), gift('april', 'allie')))
   })
 })
 

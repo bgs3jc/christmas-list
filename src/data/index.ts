@@ -32,8 +32,7 @@ export function useSession(): Session {
 }
 
 export const signInWithGoogle = signIn.withGoogle
-export const sendSignInLink = signIn.sendLink
-export const finishSignInLink = signIn.finishLink
+export const signInWithPassword = signIn.withPassword
 export const signOut = signIn.signOut
 // Real sign-in is on: there's someone to sign out.
 export const canSignOut = !prototype

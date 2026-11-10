@@ -7,7 +7,8 @@ rules_version = '2';
 //
 // The family list is the `members` collection: one document per email
 // (lowercase, as the document's name) with `personId` saying who that is.
-// Brady adds people there by hand in the Firebase console. Nobody can change
+// Brady adds people there by hand in the Firebase console, always after
+// their sign-in account exists. Nobody can change
 // members, people or homes from the site.
 //
 // To publish a change: Firebase console > Firestore > Rules, paste this whole
@@ -18,8 +19,15 @@ service cloud.firestore {
 
     // ---- Who's asking ----
 
+    // Signed in with an email that's really theirs: Google checked it, or it's
+    // a family password account. A password account's email isn't checked, so
+    // it's safe only because every family email gets its account BEFORE its
+    // members entry: nobody else can make an account with that email after
+    // that (Firebase allows one account per email). See FIREBASE-SETUP.md.
     function signedIn() {
-      return request.auth != null && request.auth.token.email_verified == true;
+      return request.auth != null
+        && (request.auth.token.email_verified == true
+          || request.auth.token.firebase.sign_in_provider == 'password');
     }
 
     function memberDoc() {

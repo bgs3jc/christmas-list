@@ -1,7 +1,8 @@
 // The real database: Firebase sign-in and Firestore.
 //
-// Sign-in: Google (one click) or a link sent by email (April). Once someone is
-// signed in, their email is looked up in the `members` collection, which Brady
+// Sign-in: your email and the family password, or Google (Brady). Each
+// family email has its own password account, made before its members entry,
+// so nobody else can take that email. Once someone is signed in, their email is looked up in the `members` collection, which Brady
 // fills in by hand in the Firebase console. That says which person they are.
 // Anyone not listed there sees nothing.
 //
@@ -14,10 +15,8 @@ import {
   connectAuthEmulator,
   getAuth,
   GoogleAuthProvider,
-  isSignInWithEmailLink,
   onAuthStateChanged,
-  sendSignInLinkToEmail,
-  signInWithEmailLink,
+  signInWithEmailAndPassword,
   signInWithPopup,
   signOut as firebaseSignOut,
   type User,
@@ -56,10 +55,6 @@ export function createFirebaseStore() {
     connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true })
     connectFirestoreEmulator(db, '127.0.0.1', 8080)
   }
-
-  // Remembers which email a sign-in link was sent to, so opening the link on
-  // the same device finishes signing in without asking again.
-  const LINK_EMAIL_KEY = 'family-list-sign-in-email'
 
   let snapshot: Snapshot = { session: { status: 'loading' }, data: emptyData, viewerId: '' }
   const listeners = new Set<() => void>()
@@ -134,26 +129,12 @@ export function createFirebaseStore() {
 
   // ---- Signing in and out ----
 
-  function rememberedEmail(): string | null {
-    try {
-      return localStorage.getItem(LINK_EMAIL_KEY)
-    } catch {
-      return null
-    }
-  }
-
-  // Takes the sign-in code out of the address bar once it's been used.
-  function cleanAddress() {
-    window.history.replaceState(null, '', import.meta.env.BASE_URL + window.location.hash)
-  }
-
   // Firebase's error codes, as the sign-in page's reasons.
   function problemOf(error: unknown): SignInProblem {
     const code = (error as { code?: string }).code ?? ''
     if (code === 'auth/popup-blocked') return 'popup-blocked'
-    if (code === 'auth/invalid-email' || code === 'auth/missing-email') return 'bad-email'
-    if (code === 'auth/quota-exceeded' || code === 'auth/too-many-requests') return 'too-many'
-    if (code === 'auth/invalid-action-code' || code === 'auth/expired-action-code') return 'link-expired'
+    if (['auth/invalid-credential', 'auth/wrong-password', 'auth/user-not-found', 'auth/invalid-email', 'auth/missing-email', 'auth/missing-password', 'auth/user-disabled'].includes(code)) return 'wrong-password'
+    if (code === 'auth/too-many-requests') return 'too-many'
     return 'failed'
   }
 
@@ -169,61 +150,25 @@ export function createFirebaseStore() {
     }
   }
 
-  async function sendSignInLink(email: string): Promise<void> {
-    const address = email.trim().toLowerCase()
+  async function signInWithPassword(email: string, password: string): Promise<void> {
     try {
-      await sendSignInLinkToEmail(auth, address, {
-        // Where the link in the email opens: this site's front page.
-        url: window.location.origin + import.meta.env.BASE_URL,
-        handleCodeInApp: true,
-      })
+      await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), password)
     } catch (error) {
-      console.error("Couldn't send the sign-in email", error)
-      throw new SignInError(problemOf(error))
-    }
-    try {
-      localStorage.setItem(LINK_EMAIL_KEY, address)
-    } catch {
-      // Storage blocked: opening the link will just ask for the email again.
-    }
-  }
-
-  async function finishSignInLink(email: string): Promise<void> {
-    try {
-      await signInWithEmailLink(auth, email.trim().toLowerCase(), window.location.href)
-    } catch (error) {
-      console.error("Couldn't finish signing in from the link", error)
       const problem = problemOf(error)
-      // A different email than the link was sent to.
-      throw new SignInError(problem === 'bad-email' ? 'wrong-email' : problem)
+      // A mistyped password is normal; only log the unexpected.
+      if (problem === 'failed') console.error("Couldn't sign in", error)
+      throw new SignInError(problem)
     }
-    try {
-      localStorage.removeItem(LINK_EMAIL_KEY)
-    } catch {
-      // Nothing to clean up.
-    }
-    cleanAddress()
   }
 
   async function signOut(): Promise<void> {
     await firebaseSignOut(auth)
   }
 
-  // Arrived from the link in the email. On the device it was sent from, the
-  // email is remembered and signing in finishes by itself; anywhere else the
-  // sign-in page asks for the email first.
-  const openedLink = isSignInWithEmailLink(auth, window.location.href)
-  let finishingLink = openedLink && Boolean(rememberedEmail())
-  if (finishingLink) {
-    finishSignInLink(rememberedEmail()!)
-      .catch(() => {
-        // An old or already-used link. Start over from the sign-in page.
-        cleanAddress()
-        if (!auth.currentUser) setSession({ status: 'signed-out' })
-      })
-      .finally(() => {
-        finishingLink = false
-      })
+  // An old sign-in link from before the family password: drop its code from
+  // the address bar, so it isn't bookmarked. The sign-in page shows as usual.
+  if (window.location.search.includes('oobCode')) {
+    window.history.replaceState(null, '', import.meta.env.BASE_URL + window.location.hash)
   }
 
   onAuthStateChanged(auth, (user) => {
@@ -233,9 +178,7 @@ export function createFirebaseStore() {
     }
     stopReading?.()
     stopReading = null
-    if (finishingLink) return
-    const needsEmail = openedLink && isSignInWithEmailLink(auth, window.location.href)
-    update({ data: emptyData, viewerId: '', session: { status: needsEmail ? 'needs-email' : 'signed-out' } })
+    update({ data: emptyData, viewerId: '', session: { status: 'signed-out' } })
   })
 
   // ---- Writing ----
@@ -275,5 +218,5 @@ export function createFirebaseStore() {
     },
   }
 
-  return { backend, signInWithGoogle, sendSignInLink, finishSignInLink, signOut }
+  return { backend, signInWithGoogle, signInWithPassword, signOut }
 }

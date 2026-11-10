@@ -3,12 +3,14 @@
 //
 // TARGET=live: the real Firebase project, as whoever ran `gcloud auth login`
 //   (must be the project's owner, on a computer where gcloud works normally).
+// TARGET=live-family: the real project with no admin access; see family.cjs,
+//   which uses this file's addresses and helpers but none of its admin calls.
 // Otherwise: Firebase's local emulator (npm run dev:emulators), as its owner.
 
 const { execSync } = require('child_process')
 const crypto = require('crypto')
 
-const LIVE = process.env.TARGET === 'live'
+const LIVE = process.env.TARGET === 'live' || process.env.TARGET === 'live-family'
 const PROJECT = LIVE ? 'family-christmas-d65ce' : 'demo-family-christmas'
 const API_KEY = 'AIzaSyAbM_fXWHKdcf7PKUvB5Tt3L4f45Uewos4' // public web key, same as the site's
 const SITE = LIVE ? 'https://bgs3jc.github.io/christmas-list/' : 'http://localhost:5173/christmas-list/'
@@ -22,6 +24,9 @@ const MARK = 'TEST M5'
 // Made-up addresses: example.com never receives mail.
 const TEST_PEOPLE = ['brady', 'april', 'allie', 'kevin']
 const testEmail = (personId) => `m5-test-${personId}@example.com`
+// A new random password each run: nobody can borrow a test account (which is
+// on the family list while the test runs) from reading this code.
+const TEST_PASSWORD = `m5-${crypto.randomBytes(18).toString('base64url')}`
 
 let token = null
 function adminToken() {
@@ -140,8 +145,10 @@ async function findAccount(email) {
   return j.users?.[0] ?? null
 }
 
+// The way family accounts are made: Firebase's public sign-up, so it's an
+// email + password account whose email is unverified, like the real ones.
 async function createAccount(email) {
-  const j = await must(`${IDT}/accounts`, { method: 'POST', body: { email, emailVerified: true } })
+  const j = await must(`${AUTH}/v1/accounts:signUp?key=${API_KEY}`, { method: 'POST', auth: null, body: { email, password: TEST_PASSWORD } })
   return j.localId
 }
 
@@ -149,40 +156,37 @@ async function deleteAccount(localId) {
   return must(`${IDT}/accounts:delete`, { method: 'POST', body: { localId } })
 }
 
-// The link the sign-in email would carry, without sending the email.
-async function signInLink(email) {
-  const j = await must(`${IDT}/accounts:sendOobCode`, {
-    method: 'POST',
-    body: { requestType: 'EMAIL_SIGNIN', email, continueUrl: SITE, canHandleCodeInApp: true, returnOobLink: true },
-  })
-  let oobLink = j.oobLink
-  if (!oobLink && !LIVE) {
-    // The emulator keeps the links it would have sent.
-    const codes = await must(`http://127.0.0.1:9099/emulator/v1/projects/${PROJECT}/oobCodes`)
-    oobLink = codes.oobCodes.filter((c) => c.email === email && c.requestType === 'EMAIL_SIGNIN').pop().oobLink
-  }
-  // The email's link goes through Firebase's page first; go straight to the site with the same code.
-  const link = new URL(oobLink)
-  const target = new URL(link.searchParams.get('continueUrl') ?? SITE)
-  for (const [k, v] of link.searchParams) if (k !== 'continueUrl') target.searchParams.set(k, v)
-  return { url: target.toString(), oobCode: link.searchParams.get('oobCode') }
-}
-
 // A person's own sign-in token (what the site holds once they're signed in),
 // for asking the database things directly, under the rules.
-async function personToken(email) {
-  const { oobCode } = await signInLink(email)
-  const j = await must(`${AUTH}/v1/accounts:signInWithEmailLink?key=${API_KEY}`, {
+async function signInToken(email, password) {
+  const j = await must(`${AUTH}/v1/accounts:signInWithPassword?key=${API_KEY}`, {
     method: 'POST',
     auth: null,
-    body: { email, oobCode },
+    body: { email, password, returnSecureToken: true },
   })
   return j.idToken
 }
 
+// ---- What the site test asks for, by person ----
+// (family.cjs answers the same questions without admin access.)
+
+const FAMILY = false
+const PEOPLE = TEST_PEOPLE // who the test signs in as
+const emailOf = testEmail
+const passwordOf = () => TEST_PASSWORD
+const tokenOf = (personId) => signInToken(testEmail(personId), TEST_PASSWORD)
+const remove = (name, record) => deleteDoc(name, record.id)
+
+// Writes a record as that person, under the rules, like the site would.
+async function writeAs(personId, name, id, record) {
+  return must(`${DB}/${name}/${encodeURIComponent(id)}`, { method: 'PATCH', auth: await tokenOf(personId), body: { fields: fieldsOf(record) } })
+}
+
 module.exports = {
-  LIVE, API_KEY, AUTH, PROJECT, SITE, DB, COLLECTIONS, MARK, TEST_PEOPLE, testEmail,
-  call, must, list, snapshot, fingerprint, putDoc, deleteDoc, fieldsOf,
+  LIVE, FAMILY, API_KEY, AUTH, PROJECT, SITE, DB, COLLECTIONS, MARK, TEST_PEOPLE, testEmail,
+  call, must, plain, list, snapshot, fingerprint, putDoc, deleteDoc, fieldsOf,
   liveRules, publishRules, pointRulesAt,
-  findAccount, createAccount, deleteAccount, signInLink, personToken,
+  findAccount, createAccount, deleteAccount, signInToken,
+  PEOPLE, emailOf, passwordOf, tokenOf, writeAs, remove,
+  secretIn: () => false,
 }

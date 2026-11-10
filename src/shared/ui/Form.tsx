@@ -14,15 +14,22 @@ interface TextFieldProps {
   autoFocus?: boolean
   // A field that holds a link: a keyboard with "/" and ".com", no autocorrect.
   link?: boolean
-  // A field for your own email: the email keyboard, and the browser can fill it in.
+  // The sign-in email: the email keyboard, and password managers fill it in
+  // ("username" is the value they look for).
   email?: boolean
+  // The sign-in password: hidden unless `shown`, and password managers save it.
+  password?: boolean
+  shown?: boolean
+  // A fixed name, so the browser recognizes the field next time.
+  name?: string
 }
 
-export function TextField({ label, value, onChange, help, placeholder, multiline, rows = 2, narrow, required, autoFocus, link, email }: TextFieldProps) {
+export function TextField({ label, value, onChange, help, placeholder, multiline, rows = 2, narrow, required, autoFocus, link, email, password, shown, name }: TextFieldProps) {
   const id = useId()
   const helpId = `${id}-help`
   const shared = {
     id,
+    name,
     value,
     placeholder,
     required,
@@ -31,7 +38,8 @@ export function TextField({ label, value, onChange, help, placeholder, multiline
     'aria-describedby': help ? helpId : undefined,
     className: styles.input,
     ...(link && { inputMode: 'url' as const, autoCapitalize: 'off', autoCorrect: 'off', spellCheck: false }),
-    ...(email && { autoComplete: 'email', autoCapitalize: 'off', autoCorrect: 'off', spellCheck: false }),
+    ...(email && { autoComplete: 'username', autoCapitalize: 'off', autoCorrect: 'off', spellCheck: false }),
+    ...(password && { autoComplete: 'current-password', autoCapitalize: 'off', autoCorrect: 'off', spellCheck: false }),
   }
   return (
     <div className={narrow ? styles.narrow : undefined}>
@@ -41,7 +49,7 @@ export function TextField({ label, value, onChange, help, placeholder, multiline
       {multiline ? (
         <textarea {...shared} rows={rows} onChange={(e) => onChange(e.target.value)} />
       ) : (
-        <input {...shared} type={email ? 'email' : 'text'} onChange={(e) => onChange(e.target.value)} />
+        <input {...shared} type={email ? 'email' : password && !shown ? 'password' : 'text'} onChange={(e) => onChange(e.target.value)} />
       )}
       {help && (
         <p id={helpId} className={styles.help}>

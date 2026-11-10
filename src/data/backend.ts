@@ -9,8 +9,6 @@ export type Session =
   // Checking who's signed in, or loading the family's lists.
   | { status: 'loading' }
   | { status: 'signed-out' }
-  // Opened a sign-in link on a device that doesn't know which email it was for.
-  | { status: 'needs-email' }
   // Signed in, but this email isn't on the family list.
   | { status: 'not-family'; email: string }
   | { status: 'ready' }
@@ -45,10 +43,8 @@ export const emptyData: AppData = { people: [], homes: [], wishes: [], gifts: []
 // Why signing in didn't work, for the sign-in page to explain.
 export type SignInProblem =
   | 'popup-blocked' // the browser blocked Google's window
-  | 'bad-email' // not an email address
-  | 'too-many' // too many sign-in emails today
-  | 'link-expired' // an old or already-used link
-  | 'wrong-email' // not the email the link was sent to
+  | 'wrong-password' // the email and family password don't match (never says which)
+  | 'too-many' // too many wrong tries; Firebase makes you wait
   | 'failed' // anything else, usually the connection
 
 export class SignInError extends Error {

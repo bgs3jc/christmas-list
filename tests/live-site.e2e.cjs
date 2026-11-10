@@ -4,17 +4,21 @@
 // the database directly with their own sign-in. Then it cleans up after
 // itself and checks the database matches how it started.
 //
-// Two places to run it:
+// Three places to run it:
 //   Local emulator (sample data):  npm run dev:emulators   (in the background)
 //                                   node tests/live-site.e2e.cjs
-//   The real site and database:    gcloud auth login      (as the project owner)
+//   The real site, as the family:  TARGET=live-family FAMILY_PASSWORD=… \
+//                                   FAMILY_EMAILS='april=…,allie=…,kevin=…' node tests/live-site.e2e.cjs
+//     Signs in as April, Allie and Kevin with the family password; no admin
+//     access, no test accounts. Brady (Google) is only shopped for. See live/family.cjs.
+//   The real site, as the owner:   gcloud auth login      (as the project owner)
 //                                   TARGET=live node tests/live-site.e2e.cjs
 // If a run is cut off, `node tests/live-site.e2e.cjs cleanup` (with the same
-// TARGET) removes what it left behind.
+// TARGET and settings) removes what it left behind.
 //
 // Safe on the real database: every record it makes starts with "TEST M5",
 // and cleanup only deletes records that weren't there before AND carry that
-// mark, plus the four m5-test-…@example.com members entries and accounts.
+// mark, plus (owner runs) the four m5-test-…@example.com members entries and accounts.
 // Anything about you that it reads is never printed: failures say "a real
 // record", not what it is. Snapshots and screenshots go to a temp folder
 // ($SHOTS), never the repo, because they hold the family's lists.
@@ -23,14 +27,24 @@ const { chromium } = require('playwright')
 const fs = require('fs')
 const os = require('os')
 const path = require('path')
-const A = require('./live/admin.cjs')
+const A = require(/-family$/.test(process.env.TARGET ?? '') ? './live/family.cjs' : './live/admin.cjs')
 
 const OUT = process.env.SHOTS || fs.mkdtempSync(path.join(os.tmpdir(), 'family-list-e2e-'))
 fs.mkdirSync(OUT, { recursive: true })
 const NAMES = { brady: 'Brady', april: 'April', allie: 'Allie', kevin: 'Kevin' }
-const PEOPLE = Object.keys(NAMES)
-const LINK_EMAIL_KEY = 'family-list-sign-in-email'
 const T = (text) => `${A.MARK} ${text}`
+// Everyone, and who the test signs in as (all four, or April, Allie and Kevin).
+const ALL = Object.keys(NAMES)
+const PEOPLE = A.PEOPLE
+// Who plays which part. Brady's parts go to Kevin and April when Brady can't sign in.
+// shipper: a surprise for shipFor, shipped to April's, then claims Allie's wish
+//   and is asked about shipping. secondSanta: claims Allie's wish too.
+// ideaOf: whose list idea April puts a stocking gift under.
+const R = A.FAMILY
+  ? { shipper: 'kevin', shipFor: 'allie', secondSanta: 'april', ideaOf: 'kevin' }
+  : { shipper: 'brady', shipFor: 'kevin', secondSanta: 'kevin', ideaOf: 'brady' }
+const SHIPPED = T(`surprise for ${NAMES[R.shipFor]} from ${NAMES[R.shipper]}`)
+const IDEA_GIFT = T(`gift for ${NAMES[R.ideaOf]}'s idea from April`)
 
 // ---- Reporting ----
 
@@ -42,6 +56,9 @@ async function check(label, ok, page, detail = '') {
   failures++
   failed.push(label)
   console.log(`FAIL  ${label}${detail ? `  (${detail})` : ''}`)
+  // Never a picture of a typed email or password, or a page showing one.
+  if (page) await page.evaluate(() => document.querySelectorAll('input[type=email], input[name=password]').forEach((i) => (i.value = ''))).catch(() => {})
+  if (page && A.secretIn(await page.locator('body').innerText().catch(() => ''))) page = null
   if (page) {
     const file = path.join(OUT, `FAIL-${String(failures).padStart(2, '0')}-${label.replace(/[^\w]+/g, '-').slice(0, 60)}.png`)
     await page.screenshot({ path: file, fullPage: true }).catch(() => {})
@@ -79,10 +96,10 @@ async function findGift(title, extra = () => true) {
   return eventually(async () => (await A.list('gifts')).find((g) => g.data.title === title && extra(g)))
 }
 
-// ---- Signing in, the way the email link does ----
+// ---- Signing in: email and the family password ----
 
 async function signIn(browser, personId) {
-  const email = A.testEmail(personId)
+  const email = A.emailOf(personId)
   const phone = personId === 'april'
   // April: an iPhone width with her text size turned up.
   const ctx = await browser.newContext({
@@ -97,24 +114,30 @@ async function signIn(browser, personId) {
   if (phone) await page.addInitScript(() => document.addEventListener('DOMContentLoaded', () => (document.documentElement.style.fontSize = '120%')))
   page.person = personId
 
-  await step(`${NAMES[personId]} signs in from the email link`, page, async () => {
-    const { url } = await A.signInLink(email)
-    // Brady and April open the link where they asked for it (the site
-    // remembers the email); Allie and Kevin on another device (asked to type it).
-    const sameDevice = personId === 'brady' || personId === 'april'
-    if (sameDevice) {
-      await page.goto(A.SITE)
-      await page.evaluate(([k, v]) => localStorage.setItem(k, v), [LINK_EMAIL_KEY, email])
+  await step(`${NAMES[personId]} signs in with email and the family password`, page, async () => {
+    await page.goto(A.SITE)
+    await page.getByLabel('Your email').fill(email)
+    const signInButton = page.getByRole('button', { name: 'Sign in', exact: true })
+    if (personId === 'april') {
+      // One wrong try first: says so, without saying which part is wrong.
+      await page.getByLabel('Family password').fill('not-the-family-password')
+      await signInButton.click()
+      const said = await page.getByRole('alert').filter({ hasText: "That email and family password don't match" }).waitFor({ timeout: 15000 }).then(() => true, () => false)
+      await check('April: a wrong password says the email and password don\'t match, and nobody is signed in', said && (await page.getByText('Who are you shopping for?').count()) === 0, page)
+      // Show password shows what she typed.
+      await page.getByLabel('Show password').check()
+      await check('April: "Show password" shows it', (await page.getByLabel('Family password').getAttribute('type')) === 'text', page)
     }
-    await page.goto(url)
-    if (!sameDevice) {
-      await page.getByRole('heading', { name: 'Almost in' }).waitFor({ timeout: 15000 })
-      await page.getByLabel('Your email').fill(email)
-      await page.getByRole('button', { name: 'Sign in' }).click()
-    }
+    await page.getByLabel('Family password').fill(A.passwordOf(personId))
+    await signInButton.click()
     const ok = await page.getByText('Who are you shopping for?').waitFor({ timeout: 20000 }).then(() => true, () => false)
     await check(`${NAMES[personId]}: signed in, Home shows`, ok, page)
-    await check(`${NAMES[personId]}: the sign-in code is gone from the address bar`, !page.url().includes('oobCode'), page)
+    // Typed once per device: still signed in after closing and reopening the site.
+    const again = await ctx.newPage()
+    await again.goto(A.SITE)
+    const kept = await again.getByText('Who are you shopping for?').waitFor({ timeout: 20000 }).then(() => true, () => false)
+    await again.close()
+    await check(`${NAMES[personId]}: still signed in when the site is opened again`, kept, page)
   })
   return page
 }
@@ -165,12 +188,12 @@ const queryRefused = (r) => refused(r) || (Array.isArray(r.json) && r.json.some(
   fs.writeFileSync(path.join(OUT, 'snapshot-before.json'), JSON.stringify(before, null, 1))
   console.log('\nBefore:')
   for (const name of A.COLLECTIONS) console.log(`  ${name.padEnd(8)} ${String(before[name].length).padStart(3)} records  ${A.fingerprint(before[name])}`)
-  const leftovers = ['wishes', 'gifts', 'ideas'].reduce((n, name) => n + before[name].filter((r) => marked(name, r)).length, 0) + before.members.filter(testMember).length
+  const leftovers = ['wishes', 'gifts', 'ideas'].reduce((n, name) => n + before[name].filter((r) => marked(name, r)).length, 0) + (before.members ?? []).filter(testMember).length
   if (leftovers) {
     console.log(`\nStopping: ${leftovers} records from an earlier test run are still there. Run with "cleanup" first.`)
     process.exit(1)
   }
-  for (const p of PEOPLE) {
+  for (const p of ALL) {
     if (!before.people.some((r) => r.id === p)) {
       console.log(`\nStopping: there's no people/${p} record to test as.`)
       process.exit(1)
@@ -189,13 +212,18 @@ const queryRefused = (r) => refused(r) || (Array.isArray(r.json) && r.json.some(
     ].filter((s) => typeof s === 'string' && s.trim().length >= 6)
   }
 
-  // ---- Temporary accounts and family-list entries ----
-  console.log('\n-- Making the four test accounts and members entries')
-  for (const p of PEOPLE) {
-    const email = A.testEmail(p)
-    if (!(await A.findAccount(email))) await A.createAccount(email)
-    await A.putDoc('members', email, { personId: p })
-    console.log(`  ${email} -> ${p}`)
+  // ---- Temporary accounts and family-list entries (not as the family) ----
+  // Account first, then the members entry: the order the real ones are made in.
+  if (!A.FAMILY) {
+    console.log('\n-- Making the four test accounts and members entries')
+    for (const p of PEOPLE) {
+      const email = A.testEmail(p)
+      const old = await A.findAccount(email)
+      if (old) await A.deleteAccount(old.localId)
+      await A.createAccount(email)
+      await A.putDoc('members', email, { personId: p })
+      console.log(`  ${email} -> ${p}`)
+    }
   }
 
   const browser = await chromium.launch()
@@ -215,7 +243,9 @@ const queryRefused = (r) => refused(r) || (Array.isArray(r.json) && r.json.some(
 async function run(browser, realSecrets) {
   const page = {}
   for (const p of PEOPLE) page[p] = await signIn(browser, p)
-  const { brady: b, april: ap, allie: a, kevin: k } = page
+  const { april: ap, allie: a } = page
+  const shipper = page[R.shipper]
+  const second = page[R.secondSanta]
 
   // ---- 1. My list, as everyone ----
   for (const p of PEOPLE) {
@@ -343,53 +373,58 @@ async function run(browser, realSecrets) {
     return i
   }
 
-  await step('Brady: a surprise for Kevin shipped to April\'s, then a claim gets the shipping question', b, async () => {
-    await surprise(b, 'brady', 'kevin', T('surprise for Kevin from Brady'), { shipTo: "To April's" })
-    const s = await findGift(T('surprise for Kevin from Brady'), (g) => g.data.shipTo === 'april')
-    await check("...shipping to April's", Boolean(s), b)
+  const S = NAMES[R.shipper]
+  await step(`${S}: a surprise for ${NAMES[R.shipFor]} shipped to April's, then a claim gets the shipping question`, shipper, async () => {
+    await surprise(shipper, R.shipper, R.shipFor, SHIPPED, { shipTo: "To April's" })
+    const s = await findGift(SHIPPED, (g) => g.data.shipTo === 'april')
+    await check("...shipping to April's", Boolean(s), shipper)
 
-    // Brady has shipped before, so I'll be Santa asks.
-    await go(b, '#/shop/allie', 'Allie')
+    // Shipped before, so I'll be Santa asks.
+    await go(shipper, '#/shop/allie', 'Allie')
     const allieWish = T("Allie's wish")
-    await row(b, allieWish).getByRole('button', { name: "I'll be Santa" }).click()
-    const asked = await row(b, allieWish).getByText(/Shipping it to .+\?/).waitFor({ timeout: 8000 }).then(() => true, () => false)
-    await check("After I'll be Santa, Brady is asked \"Shipping it to …?\"", asked, b)
+    await row(shipper, allieWish).getByRole('button', { name: "I'll be Santa" }).click()
+    const asked = await row(shipper, allieWish).getByText(/Shipping it to .+\?/).waitFor({ timeout: 8000 }).then(() => true, () => false)
+    await check(`After I'll be Santa, ${S} is asked "Shipping it to …?"`, asked, shipper)
     if (asked) {
-      await row(b, allieWish).getByRole('button', { name: 'Yes' }).click()
-      await row(b, allieWish).getByText(/to .+'s/).first().waitFor()
-      const g = await findGift(allieWish, (g) => g.data.giverId === 'brady' && Boolean(g.data.shipTo))
-      await check('Yes saves the shipping', Boolean(g), b)
-      await check('...and the question goes away', !(await row(b, allieWish).innerText()).includes('Shipping it to'), b)
+      await row(shipper, allieWish).getByRole('button', { name: 'Yes' }).click()
+      await row(shipper, allieWish).getByText(/to .+'s/).first().waitFor()
+      const g = await findGift(allieWish, (g) => g.data.giverId === R.shipper && Boolean(g.data.shipTo))
+      await check('Yes saves the shipping', Boolean(g), shipper)
+      await check('...and the question goes away', !(await row(shipper, allieWish).innerText()).includes('Shipping it to'), shipper)
     }
-    await overheard(b, 'brady', 'allie', T('overheard about Allie'))
+    await overheard(shipper, R.shipper, 'allie', T('overheard about Allie'))
   })
 
-  await step('Kevin: claims the same wish (two Santas), and a note about Brady', k, async () => {
-    await go(k, '#/shop/allie', 'Allie')
+  const K = NAMES[R.secondSanta]
+  await step(`${K}: claims the same wish (two Santas), and a note about Brady`, second, async () => {
+    await go(second, '#/shop/allie', 'Allie')
     const allieWish = T("Allie's wish")
-    const shown = await row(k, allieWish).innerText()
-    await check("Kevin sees Brady already has Allie's wish", shown.includes('Brady') && shown.includes("Santa's got it"), k)
-    // Two people at the same moment: written straight in, as if Kevin's tap crossed with Brady's.
+    const shown = await row(second, allieWish).innerText()
+    await check(`${K} sees ${S} already has Allie's wish`, shown.includes(S) && shown.includes("Santa's got it"), second)
+    // Two people at the same moment: written straight in (as them, under the
+    // rules), as if their tap crossed with the first Santa's.
     const wish = (await A.list('wishes')).find((w) => w.data.title === allieWish)
     const at = new Date().toISOString()
-    await A.putDoc('gifts', 'm5-test-two-santas', { recipientId: 'allie', giverId: 'kevin', title: allieWish, wishItemId: wish.id, place: 'tree', createdAt: at, updatedAt: at, updatedBy: 'kevin' })
-    await settle(k)
+    await A.writeAs(R.secondSanta, 'gifts', 'm5-test-two-santas', { recipientId: 'allie', giverId: R.secondSanta, title: allieWish, wishItemId: wish.id, place: 'tree', createdAt: at, updatedAt: at, updatedBy: R.secondSanta })
+    await settle(second)
     const both = await eventually(async () => {
-      const t = await row(k, allieWish).first().innerText()
-      // Kevin sees himself as "You".
-      return t.includes('Brady') && /\bYou\b/.test(t) && t.includes('Two Santas on this one') && t
+      const t = await row(second, allieWish).first().innerText()
+      // They see themselves as "You".
+      return t.includes(S) && /\bYou\b/.test(t) && t.includes('Two Santas on this one') && t
     })
-    await check('Two Santas on one wish: both names show, with the note to sort it out', Boolean(both), k)
+    await check('Two Santas on one wish: both names show, with the note to sort it out', Boolean(both), second)
 
     // Kevin's claim on April's wish, no shipping question for someone who never ships.
-    await go(k, '#/shop/april', 'April')
-    const aprilWish = T("April's wish")
-    await row(k, aprilWish).getByRole('button', { name: "I'll be Santa" }).click()
-    await row(k, aprilWish).getByText("Santa's got it").waitFor()
-    await settle(k)
-    const kevinShips = (await A.list('gifts')).some((x) => x.data.giverId === 'kevin' && x.data.shipTo)
-    if (!kevinShips) await check('Kevin, who never ships, is not asked about shipping', !(await row(k, aprilWish).innerText()).includes('Shipping it to'), k)
-    await overheard(k, 'kevin', 'brady', T('overheard about Brady'))
+    if (R.secondSanta === 'kevin') {
+      await go(second, '#/shop/april', 'April')
+      const aprilWish = T("April's wish")
+      await row(second, aprilWish).getByRole('button', { name: "I'll be Santa" }).click()
+      await row(second, aprilWish).getByText("Santa's got it").waitFor()
+      await settle(second)
+      const kevinShips = (await A.list('gifts')).some((x) => x.data.giverId === 'kevin' && x.data.shipTo)
+      if (!kevinShips) await check('Kevin, who never ships, is not asked about shipping', !(await row(second, aprilWish).innerText()).includes('Shipping it to'), second)
+    }
+    await overheard(second, R.secondSanta, 'brady', T('overheard about Brady'))
   })
 
   await step('Allie: a surprise for April and one for Kevin; a note about April made into a gift', a, async () => {
@@ -406,31 +441,32 @@ async function run(browser, realSecrets) {
     await check('...and the note leaves Overheard', !overheardText.includes(T('overheard about April')), a)
   })
 
-  await step("April (phone): a stocking gift under Brady's idea, a surprise, a note, Change and Take it off", ap, async () => {
-    await go(ap, '#/shop/brady', 'Brady')
-    await noSideScroll(ap, "Brady's page")
-    const idea = T("Brady's idea")
+  await step(`April (phone): a stocking gift under ${NAMES[R.ideaOf]}'s idea, a surprise, a note, Change and Take it off`, ap, async () => {
+    await go(ap, `#/shop/${R.ideaOf}`, NAMES[R.ideaOf])
+    await noSideScroll(ap, `${NAMES[R.ideaOf]}'s page`)
+    const idea = T(`${NAMES[R.ideaOf]}'s idea`)
     await row(ap, idea).getByRole('button', { name: 'Add a gift' }).click()
-    await dialog(ap).getByLabel('Link, or what it is').fill(T('gift for Brady\'s idea from April'))
+    await dialog(ap).getByLabel('Link, or what it is').fill(IDEA_GIFT)
     await dialog(ap).getByRole('button', { name: 'Stocking' }).click()
     await dialog(ap).getByRole('button', { name: 'Save' }).click()
-    await row(ap, T('gift for Brady\'s idea from April')).first().waitFor()
-    const g = await findGift(T('gift for Brady\'s idea from April'))
+    await row(ap, IDEA_GIFT).first().waitFor()
+    const g = await findGift(IDEA_GIFT)
     await check('April: a gift under an idea is saved, in the stocking, linked to the idea', g?.data.place === 'stocking' && Boolean(g?.data.wishItemId), ap)
     await surprise(ap, 'april', 'brady', T('surprise for Brady from April'))
     await overheard(ap, 'april', 'kevin', T('overheard about Kevin'))
     await noSideScroll(ap, "Kevin's page")
 
-    // Someone else's gift: Change a note on Brady's, take Allie's off.
-    const brady = T('surprise for Kevin from Brady')
-    await row(ap, brady).first().getByRole('button', { name: /Change/ }).click()
+    // Someone else's gift: Change a note on the shipper's, take Allie's off.
+    await go(ap, `#/shop/${R.shipFor}`, NAMES[R.shipFor])
+    await row(ap, SHIPPED).first().getByRole('button', { name: /Change/ }).click()
     await check("Someone else's gift says Take it off, not Not getting it", (await dialog(ap).getByRole('button', { name: 'Take it off' }).count()) === 1, ap)
     await dialog(ap).getByLabel('Notes for the family').fill(T('note from April'))
     await dialog(ap).getByRole('button', { name: 'Save' }).click()
-    await row(ap, brady).first().getByText(T('note from April')).waitFor()
-    const changed = await findGift(brady, (x) => x.data.notes === T('note from April'))
-    await check("April's note on Brady's gift is saved, marked as changed by April, still Brady's", changed?.data.updatedBy === 'april' && changed?.data.giverId === 'brady', ap)
+    await row(ap, SHIPPED).first().getByText(T('note from April')).waitFor()
+    const changed = await findGift(SHIPPED, (x) => x.data.notes === T('note from April'))
+    await check(`April's note on ${S}'s gift is saved, marked as changed by April, still ${S}'s`, changed?.data.updatedBy === 'april' && changed?.data.giverId === R.shipper, ap)
 
+    await go(ap, '#/shop/kevin', 'Kevin')
     await row(ap, T('surprise for Kevin from Allie')).first().getByRole('button', { name: /Change/ }).click()
     await dialog(ap).getByRole('button', { name: 'Take it off' }).click()
     await settle(ap)
@@ -438,25 +474,28 @@ async function run(browser, realSecrets) {
   })
 
   // ---- 5. Santa's sack ----
-  await step("Santa's sack, as everyone", b, async () => {
-    await go(b, '#/sack', "Santa's sack")
-    const forAllie = b.locator('section', { has: b.getByRole('heading', { name: 'For Allie' }) })
-    await check("Brady's sack: Allie's wish under For Allie, with where it ships", /to .+'s/.test(await row(forAllie, T("Allie's wish")).first().innerText().catch(() => '')), b)
-    const forKevin = b.locator('section', { has: b.getByRole('heading', { name: 'For Kevin' }) })
-    await check("Brady's sack: his surprise for Kevin, to April's", (await row(forKevin, T('surprise for Kevin from Brady')).first().innerText().catch(() => '')).includes("to April's"), b)
+  await step("Santa's sack, as everyone", shipper, async () => {
+    const section = (pg, name) => pg.locator('section', { has: pg.getByRole('heading', { name }) })
+    await go(shipper, '#/sack', "Santa's sack")
+    await check(`${S}'s sack: Allie's wish under For Allie, with where it ships`, /to .+'s/.test(await row(section(shipper, 'For Allie'), T("Allie's wish")).first().innerText().catch(() => '')), shipper)
+    await check(`${S}'s sack: the surprise for ${NAMES[R.shipFor]}, to April's`, (await row(section(shipper, `For ${NAMES[R.shipFor]}`), SHIPPED).first().innerText().catch(() => '')).includes("to April's"), shipper)
 
     await go(ap, '#/sack', "Santa's sack")
     await noSideScroll(ap, "Santa's sack")
-    const landing = ap.locator('section', { has: ap.getByRole('heading', { name: 'Landing at your place' }) })
-    await check('April\'s sack: Brady\'s surprise is "Landing at your place", "From Brady, for Kevin"', (await row(landing, T('surprise for Kevin from Brady')).first().innerText().catch(() => '')).includes('From Brady, for Kevin'), ap)
-    const forBrady = ap.locator('section', { has: ap.getByRole('heading', { name: 'For Brady' }) })
-    await check("April's sack: her two gifts for Brady", (await forBrady.innerText().catch(() => '')).includes(T('surprise for Brady from April')) && (await forBrady.innerText().catch(() => '')).includes('stocking'), ap)
+    const from = `From ${S}, for ${NAMES[R.shipFor]}`
+    await check(`April's sack: ${S}'s surprise is "Landing at your place", "${from}"`, (await row(section(ap, 'Landing at your place'), SHIPPED).first().innerText().catch(() => '')).includes(from), ap)
+    const forIdea = await section(ap, `For ${NAMES[R.ideaOf]}`).innerText().catch(() => '')
+    await check(`April's sack: her stocking gift for ${NAMES[R.ideaOf]}`, forIdea.includes(IDEA_GIFT) && forIdea.includes('stocking'), ap)
+    await check("April's sack: her surprise for Brady", (await section(ap, 'For Brady').innerText().catch(() => '')).includes(T('surprise for Brady from April')), ap)
 
+    const giving = {
+      allie: [T("Kevin's wish"), T('surprise for April from Allie'), T('gift for April from a note')],
+      kevin: [T("Allie's wish"), A.FAMILY ? SHIPPED : T("April's wish")],
+    }
     for (const p of ['allie', 'kevin']) {
       await go(page[p], '#/sack', "Santa's sack")
       const text = await page[p].locator('main').innerText()
-      const giving = { allie: [T("Kevin's wish"), T('surprise for April from Allie'), T('gift for April from a note')], kevin: [T("Allie's wish"), T("April's wish")] }[p]
-      await check(`${NAMES[p]}'s sack lists what ${NAMES[p]} is getting people`, giving.every((t) => text.includes(t)), page[p])
+      await check(`${NAMES[p]}'s sack lists what ${NAMES[p]} is getting people`, giving[p].every((t) => text.includes(t)), page[p])
     }
 
     // Allie takes her wish off her list: Brady's sack says so.
@@ -464,9 +503,9 @@ async function run(browser, realSecrets) {
     await a.getByRole('button', { name: `Change ${T("Allie's wish")}` }).click()
     await dialog(a).getByRole('button', { name: 'Take off my list' }).click()
     await settle(a)
-    await go(b, '#/sack', "Santa's sack")
-    const gone = await b.getByText("No longer on Allie's list").first().waitFor({ timeout: 10000 }).then(() => true, () => false)
-    await check('Brady\'s sack: a wish taken off the list shows "No longer on Allie\'s list"', gone, b)
+    await go(shipper, '#/sack', "Santa's sack")
+    const gone = await shipper.getByText("No longer on Allie's list").first().waitFor({ timeout: 10000 }).then(() => true, () => false)
+    await check(`${S}'s sack: a wish taken off the list shows "No longer on Allie's list"`, gone, shipper)
   })
 
   // ---- 6. Spreadsheets ----
@@ -478,7 +517,7 @@ async function run(browser, realSecrets) {
     })
   }
   await check("Allie's spreadsheet has her claim on Kevin's wish and her surprise for April", (sheets.allie ?? '').includes(T("Kevin's wish")) && (sheets.allie ?? '').includes(T('surprise for April from Allie')))
-  await check("April's spreadsheet has her stocking gift for Brady", (sheets.april ?? '').includes(T("gift for Brady's idea from April")))
+  await check(`April's spreadsheet has her stocking gift for ${NAMES[R.ideaOf]}`, (sheets.april ?? '').includes(IDEA_GIFT))
 
   // ---- 7. Nobody sees anything about themselves ----
   const all = { gifts: await A.list('gifts'), ideas: await A.list('ideas'), wishes: await A.list('wishes') }
@@ -494,7 +533,7 @@ async function run(browser, realSecrets) {
       await check(`(there are test gifts or notes about ${NAMES[p]} to look for: ${testSecrets.length})`, testSecrets.length > 0)
 
       const pages = {}
-      for (const hash of ['', '#/my-list', ...PEOPLE.map((o) => `#/shop/${o}`), '#/sack']) {
+      for (const hash of ['', '#/my-list', ...ALL.map((o) => `#/shop/${o}`), '#/sack']) {
         await go(pg, hash)
         pages[hash || 'Home'] = await pg.locator('body').innerText()
       }
@@ -516,7 +555,7 @@ async function run(browser, realSecrets) {
   const others = (p) => PEOPLE.filter((o) => o !== p)
   for (const p of PEOPLE) {
     await step(`${NAMES[p]}: the database itself refuses what's about ${NAMES[p]}`, null, async () => {
-      const token = await A.personToken(A.testEmail(p))
+      const token = await A.tokenOf(p)
       const name = NAMES[p]
       const giftAbout = all.gifts.find((g) => g.data.recipientId === p && marked('gifts', g))
       const ideaAbout = all.ideas.find((i) => i.data.aboutId === p && marked('ideas', i))
@@ -533,8 +572,8 @@ async function run(browser, realSecrets) {
       if (giftAbout) await check(`${name}: opening a gift for ${name} by its address is refused`, refused(await asPerson(token, 'GET', `${A.DB}/gifts/${giftAbout.id}`)))
       if (ideaAbout) await check(`${name}: opening a note about ${name} by its address is refused`, refused(await asPerson(token, 'GET', `${A.DB}/ideas/${ideaAbout.id}`)))
       if (giftAbout) await check(`${name}: deleting a gift for ${name} is refused`, refused(await asPerson(token, 'DELETE', `${A.DB}/gifts/${giftAbout.id}`)))
-      await check(`${name}: reading their own members entry works`, (await asPerson(token, 'GET', `${A.DB}/members/${encodeURIComponent(A.testEmail(p))}`)).status === 200)
-      await check(`${name}: reading someone else's members entry is refused`, refused(await asPerson(token, 'GET', `${A.DB}/members/${encodeURIComponent(A.testEmail(others(p)[0]))}`)))
+      await check(`${name}: reading their own members entry works`, (await asPerson(token, 'GET', `${A.DB}/members/${encodeURIComponent(A.emailOf(p))}`)).status === 200)
+      await check(`${name}: reading someone else's members entry is refused`, refused(await asPerson(token, 'GET', `${A.DB}/members/${encodeURIComponent(A.emailOf(others(p)[0]))}`)))
       await check(`${name}: adding a members entry is refused`, refused(await asPerson(token, 'POST', `${A.DB}/members?documentId=m5-test-intruder@example.com`, { fields: A.fieldsOf({ personId: p }) })))
       await check(`${name}: changing people is refused`, refused(await asPerson(token, 'PATCH', `${A.DB}/people/${p}?updateMask.fieldPaths=santasList`, { fields: A.fieldsOf({ santasList: 'nice' }) })))
       await check(`${name}: saving a gift to themselves is refused`, refused(await asPerson(token, 'POST', `${A.DB}/gifts?documentId=m5-test-self-${p}`, giftFor(p))))
@@ -552,6 +591,9 @@ async function run(browser, realSecrets) {
   for (const p of PEOPLE) {
     // The emulator's warning and Firestore's own retry chatter aren't the site's errors.
     const errors = page[p].errors.filter((e) => !/emulator|WebChannelConnection|transport errored/i.test(e))
+    // April's one wrong password on purpose: the browser logs Firebase's 400 for it.
+    const wrongTry = p === 'april' ? errors.findIndex((e) => /status of 400/.test(e)) : -1
+    if (wrongTry >= 0) errors.splice(wrongTry, 1)
     await check(`${NAMES[p]}: no errors in the browser`, errors.length === 0, null, errors.join(' | ').slice(0, 300))
   }
 
@@ -570,11 +612,21 @@ async function cleanup(before) {
   for (const name of ['gifts', 'ideas', 'wishes']) {
     for (const r of await A.list(name)) {
       if (marked(name, r) && isNew(name, r)) {
-        await A.deleteDoc(name, r.id)
+        await A.remove(name, r)
         removed++
       }
     }
   }
+  if (A.FAMILY) {
+    console.log(`  deleted ${removed} test records`)
+  } else {
+    await cleanupTestPeople(removed)
+  }
+  if (before) await compareWithBefore(before)
+}
+
+// Owner runs only: the four test members entries and accounts.
+async function cleanupTestPeople(removed) {
   for (const r of await A.list('members')) {
     if (testMember(r)) {
       await A.deleteDoc('members', r.id)
@@ -593,8 +645,9 @@ async function cleanup(before) {
   for (const p of PEOPLE) {
     await check(`Test account for ${p} is gone`, !(await A.findAccount(A.testEmail(p))))
   }
-  if (!before) return
+}
 
+async function compareWithBefore(before) {
   const after = await A.snapshot()
   fs.writeFileSync(path.join(OUT, 'snapshot-after.json'), JSON.stringify(after, null, 1))
   console.log('\nAfter (should match Before):')

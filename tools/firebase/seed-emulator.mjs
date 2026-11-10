@@ -1,8 +1,9 @@
 // Fills Firebase's local emulator with the prototype's made-up sample data, for trying the
 // site with real sign-in on your own machine (npm run dev:emulators).
 // Never touches the real database: the emulator's "demo-" project is local.
-// Sign in on the site with any of the example.com emails below using
-// "Email me a sign-in link"; the emulator prints the link in its log.
+// Sign in on the site with any of the example.com emails below and the
+// emulator's family password, "emulator-family-password" (made up; the real
+// one is never in the code).
 
 import { initializeTestEnvironment } from '@firebase/rules-unit-testing'
 import { doc, setDoc } from 'firebase/firestore'
@@ -73,4 +74,17 @@ await env.withSecurityRulesDisabled(async (context) => {
   }
 })
 await env.cleanup()
-console.log('Emulator filled with sample family data.')
+
+// A password account for each, the way the real ones are made: account first,
+// then the members entry (here, both before anyone signs in).
+const AUTH = 'http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1'
+for (const email of Object.keys(records.members)) {
+  const r = await fetch(`${AUTH}/accounts:signUp?key=emulator`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password: 'emulator-family-password' }),
+  })
+  const j = await r.json()
+  if (!r.ok && j.error?.message !== 'EMAIL_EXISTS') throw new Error(`Couldn't make ${email}'s account: ${j.error?.message}`)
+}
+console.log('Emulator filled with sample family data and sign-in accounts.')

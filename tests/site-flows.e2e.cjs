@@ -11,7 +11,8 @@
 
 const { chromium } = require('playwright')
 const BASE = 'http://localhost:5173/christmas-list/'
-const OOB = 'http://127.0.0.1:9099/emulator/v1/projects/demo-family-christmas/oobCodes'
+// The emulator's made-up family password (tools/firebase/seed-emulator.mjs).
+const PASSWORD = 'emulator-family-password'
 const DB = 'http://127.0.0.1:8080/v1/projects/demo-family-christmas/databases/(default)/documents'
 let failures = 0
 const check = (label, ok) => { console.log(`${ok ? 'PASS' : 'FAIL'}  ${label}`); if (!ok) failures++ }
@@ -39,13 +40,8 @@ async function signIn(browser, email) {
   page.on('dialog', (d) => d.accept())
   await page.goto(BASE)
   await page.getByLabel('Your email').fill(email)
-  await page.getByRole('button', { name: 'Email me a sign-in link' }).click()
-  await page.getByText('Check your email').waitFor()
-  const { oobCodes } = await (await fetch(OOB)).json()
-  const link = new URL(oobCodes.filter((c) => c.email === email).pop().oobLink)
-  const target = new URL(link.searchParams.get('continueUrl'))
-  for (const [k, v] of link.searchParams) if (k !== 'continueUrl') target.searchParams.set(k, v)
-  await page.goto(target.toString())
+  await page.getByLabel('Family password').fill(PASSWORD)
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click()
   await page.getByText('Who are you shopping for?').waitFor({ timeout: 15000 })
   return { page, errors }
 }
