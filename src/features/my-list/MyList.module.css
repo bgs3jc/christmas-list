@@ -82,7 +82,8 @@
   justify-content: center;
   gap: var(--space-2);
   min-height: 104px;
-  padding: var(--space-4) var(--space-5);
+  /* Slim sides, so "Gimme, gimme, gimme" fits one line on a phone with larger text */
+  padding: var(--space-4);
   /* Invisible, except in high-contrast modes, where it keeps the block's edge */
   border: 2px solid transparent;
   border-radius: var(--radius-sm);
