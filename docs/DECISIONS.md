@@ -143,3 +143,12 @@ Newest at the bottom. Each entry: what we decided, and why.
 - **"New since you looked" markers.** The 2026-10-26 decision stands. The one costly case, a wish removed after you claimed it, shows in Santa's sack.
 - **Prices and link auto-fill.** The price is one click away on the link; auto-fill needs a separate service that Amazon blocks. Cut, not parked.
 - **A password for April now.** Stays the fallback (see the sign-in entry above), with one more reason to watch: Safari on iPhone clears a site's saved sign-in after about a week without a visit.
+
+**2026-11-10: Building the pre-launch plan: small calls made on the way.** All seven steps are built as specified; these are the details the plan left open.
+- **Two Santas on one wish:** the names stack, one per line, each with its own Change. Each gift's note shows under the wish, and "to April's" shows once even if both ship there.
+- **Santa's sack is switched on** (`santasSack: true`), since the site isn't launched yet. Its globe sits beside each "For <Name>" heading through a new `lead` slot on `ListSection`. Under 960px the sack picture is left out, as the plan says, and the heading and its line sit centered, as on My list.
+- **The gift pop-up lives in `src/shared/GiftDialog.tsx`** with its own small style file, so shopping pages and Santa's sack share it.
+- **"Shipping it to April's?"** goes away once the gift has shipping, however it was set (Yes, or the pop-up). "Most recent" means the gift added most recently.
+- **Pasted spreadsheet rows:** a header row is skipped only when it's the first line and has tabs; cells are trimmed, and a row that's only a link is named from the link.
+- **Step 7:** `--plaid-red-shadow` is no longer used (Home's button lost its shadow); kept in the theme so the change is one line to undo.
+- **Review screenshots** are now taken by `tools/review/take-screenshots.cjs`, so the next retake is one command.

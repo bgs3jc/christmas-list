@@ -14,90 +14,37 @@ Update this at the end of every session. Keep it short.
 - **What the site does:**
   - **Home:** a screen print of Mom's house at dusk on Christmas Eve (flat inks, colored shadows), Santa's sleigh in a red hat flying behind the oak and chimney, "Add to my list", a snow globe per person, and "Download everything as a spreadsheet".
   - **My list:** "Gimme, gimme, gimme" (paste one link or many) and "An idea…" (a store, a brand or a hobby). Gold star your favorites. No prices, no claims shown.
-  - **Shopping for [person]:** their list, then "Surprises & stockings", then "Overheard". A wish shows "Needs Santa" or "Santa's got it"; "I'll be Santa" covers it in one tap, and "You · Change" in the row undoes it. Notes and links show under every name; rows don't open. Gifts have no status and no price. A gift can have a link, notes for the family, and "to April's" if it ships somewhere (houses, not people: Allie and Kevin share one).
+  - **Shopping for [person]:** their list, then "Surprises & stockings", then "Overheard". A wish shows "Needs Santa" or "Santa's got it"; "I'll be Santa" covers it in one tap (and asks about shipping if you usually ship), and "Change" after any giver's name changes or undoes it. Notes and links show under every name; rows don't open. Gifts have no status and no price. A gift can have a link, notes for the family, and "to April's" if it ships somewhere (houses, not people: Allie and Kevin share one).
   - **Overheard:** one line per note, with "Make it a gift", which moves the note into the gift.
+  - **Santa's sack:** everything you're getting, by person, and the boxes others are shipping to your house.
 - **Design:** the house print on Home; a dusk band and the person's globe on every other page; quiet paper rows. One type scale and weight rules in `DESIGN.md`. Mockups on the canvas linked there (round 8 is current).
 - **How the house print was made** (for future scenes, like personal globes): ChatGPT drew it from street photos plus the artist's prints; a local script reduced it to 16 flat inks, traced it to vectors and built a sky mask for the sleigh. See the 2026-10-28 entries in `DECISIONS.md`.
 - **Design round 8 (2026-10-29):** the print now carries through: a dusk band on every page, the person's globe on a shelf beside the list (it follows you on shopping pages and catches each new gift), flat ink blocks for adding, a printed gift tag for Santa's list. See `DECISIONS.md`.
 - **UX review (2026-10-29):** ten findings, all approved and built: rows show everything, undo in the row, phone rows wrap, one add-pop-up pattern, Overheard notes move into gifts, contrast, short Amazon links, feedback when adding. Details in `DECISIONS.md`.
 - **Modern web pass (2026-10-29):** checked against Google Chrome's Modern Web Guidance. Layout follows the phone's text size, pop-ups don't close on a stray click, Save buttons are never greyed out, reduced motion per animation. Details in `DECISIONS.md`.
-- **Pre-launch review (2026-11-10):** what would make December clearly better than the spreadsheets. Brady kept seven items (the build plan below) and turned down the rest, including anything for wrapping night; both lists are in `DECISIONS.md`. The new page's mockup is Round 9 on the canvas. Nothing is built yet.
+- **Pre-launch review (2026-11-10):** what would make December clearly better than the spreadsheets. Brady kept seven items and turned down the rest, including anything for wrapping night; both lists are in `DECISIONS.md`. **All seven are built** (see "Pre-launch build" below).
 - **Lessons:** Brady's click-through finds what self-testing doesn't (bookkeeping nobody would keep up). Default to fewer states and fewer fields. When a fix is clear, build it. Mockups show only two widths: check the in-between widths (tablets, large text) before building. Brady prefers one row of choices over stacked blocks.
 
 ## Next steps
 
 1. **M5, open:** the stricter rules (only real people, only known fields) are written and tested but **not published**: the live project still runs the M4 rules. Checked on the real site so far: the database refuses outsiders and self-made accounts. Brady won't do manual testing, so the plan is a one-time `gcloud auth login` in a session, letting Claude publish rules and test the real project as each person with temporary test accounts (deleted after). Not yet approved by Brady.
 2. **Then:** Brady names what else must work before the family starts. Launch (M6) only when Brady says it's finished. At launch, April bookmarks the site in Safari, not "Add to Home Screen" (BACKLOG).
-3. **Next, in a new chat:** the build plan below (from the 2026-11-10 pre-launch review). It doesn't depend on M5 and changes no database rules. Start with: "Read CLAUDE.md and docs/STATUS.md, then build the plan in STATUS, in order."
+3. **Brady: try the pre-launch build on the live site** (Santa's sack in the top bar; before/after of the new corners in the chat). Each look change in step 7 is one line to undo if it's not right.
 4. Brady's personal snow globe still needs a scene. Recipe: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass. The scripts and how to run them are in `tools/print-pass/`.
 5. **Watch once launched:** whether April manages the email link; if not, an email-and-password option is a small job (see DECISIONS, 2026-11-10).
 
-## Build plan (2026-11-10 pre-launch review)
+## Pre-launch build (done 2026-11-10)
 
-Brady approved all seven steps. Build them in this order, one commit each, straight to `main`. Why each exists is in `DECISIONS.md` (2026-11-10 review entries). Mockup for step 4: Round 9 on the canvas in `DESIGN.md`, boards "A · Santa's sack" (desktop, Brady) and "April's phone".
+All seven steps from the pre-launch review are built and live, one commit each. Details and small calls made on the way: `DECISIONS.md` (2026-11-10 entries).
+1. **Two people on one wish:** both names show in the row, with "Two Santas on this one. One of you can tap Change, then Not getting it." The spreadsheet gets a row for each extra gift.
+2. **Change anyone's gift:** every giver's name has Change. On someone else's gift the remove button reads "Take it off" and asks you to check with them first.
+3. **List gifts can go in the stocking:** the pop-up asks "Where does it go?" for every gift; rows and the spreadsheet say "stocking".
+4. **Santa's sack** (`#/sack`, flag `santasSack`, on): what you're getting, by person, with sizes, links and where each ships; "Landing at your place" first when boxes are headed to your house; "No longer on <Name>'s list" when a wish you claimed is taken off.
+5. **Shipping in the same step as claiming:** after "I'll be Santa", people who have shipped before are asked "Shipping it to <House>?" with one Yes. Kevin, Allie and April (who order to their own houses) are never asked.
+6. **Paste from a spreadsheet:** rows copied from a sheet paste into "Gimme, gimme, gimme"; a header row is skipped.
+7. **Hard edges:** square-ish corners, an ink edge on pop-ups instead of a soft shadow, a flat "Add to my list", no hover lift. Before/after screenshots were shown in the chat.
 
-**Rules for the whole plan**
-- No change to `firestore.rules` or to the shapes in `src/data/types.ts`. If a step seems to need one, stop and ask Brady.
-- Steps 1–3 must stay tiny: only the files named. If one grows past that, stop and say so.
-- No new illustrations drawn in code, beyond the one sack picture already in `docs/design/`. No pills, cards, shadows or gradients on anything new. Reuse `Shelf`, `ListSection`, `Rows`, `Row`, `TitleNote`, `NoteLine`, `Button`, `SnowGlobe`.
-- Run user-facing words through the writing-quality skill. Keep the wording given here unless it reads wrong on the page.
-- After every step: `npm run build`, then `npm run dev:emulators` in the background and `node tests/site-flows.e2e.cjs`. Add the checks named in each step to that file (it runs as Allie, then Kevin; add an April sign-in where a step needs one: `april@example.com`). `npm run test:rules` must still pass at the end, unchanged.
-- At the end: retake the review screenshots (`docs/review/`), add `12-sack` (Brady, desktop) and `13-phone-april-sack`, update this file, `DECISIONS.md` and `DESIGN.md`, and tell Brady in plain words what changed.
-
-**Step 1 (tiny). Two people on one wish both show.** File: `src/features/shopping/ShoppingPage.tsx` (and `src/features/export/toSpreadsheet.ts`).
-- Today a "Gimme" wish row shows only `under[0]`; a second gift on the same wish is saved but invisible.
-- When `under.length > 1` on a `specific` wish: show every giver in the row's aside (each through the existing `giver()`), and one note line under the title: "Two Santas on this one. One of you can tap Change, then Not getting it."
-- Spreadsheet: add a row for each extra gift, as idea wishes already do.
-- Test: with the emulator's REST address already in the test file, add a second gift for `w-allie-1` from another giver; check both names and the note show on Allie's page for Kevin, and that Allie's own list shows nothing new.
-
-**Step 2 (tiny). Change anyone's gift.** Files: `ShoppingPage.tsx`, `GiftDialog.tsx`.
-- `giver()` shows "Change" after every giver's name, not only "You". The rules and `canChangeGift` already allow it.
-- In the pop-up, when the gift isn't yours, the remove button reads "Take it off" and the confirm reads: `Take off "<title>"? It's <Name>'s gift, so check with them first.`
-- Test: as Kevin, change the note on April's "Lip balm trio" for Allie; check the note is saved and `updatedBy` is `kevin`.
-
-**Step 3 (tiny). A gift from someone's list can go in the stocking.** Files: `GiftDialog.tsx`, `ShoppingPage.tsx`, `toSpreadsheet.ts`.
-- Show "Where does it go?" for list gifts too (remove the `!setup.fromList` condition and the `setup.fromList ? 'tree' : place` override). "I'll be Santa" still saves `tree` in one tap.
-- Show `· stocking` after the name on list rows and on gifts under an idea, as surprise rows already do.
-- Spreadsheet: for a stocking gift from the list, the Section reads "List (stocking)".
-- Test: as Allie, claim Kevin's "Wireless earbuds", then Change, Stocking, Save; check `place` is `stocking` and the row says "stocking".
-
-**Step 4 (medium). "Santa's sack": what you're getting, and what's landing at your house.** Behind a new flag `santasSack` in `src/config/features.ts`.
-- Route `#/sack` (`src/shared/router.ts`), page in `src/features/sack/SackPage.tsx`, link "Santa's sack" in `SiteHeader` right after "My list".
-- `GiftDialog` moves from `src/features/shopping/` to `src/shared/` (with the styles it uses), because features may not import each other's files. No behavior change.
-- Data, in `src/data/index.ts`, one hook `useSack()`:
-  - `landing`: gifts where `shipTo` is your house and the giver isn't you, oldest first. (Gifts for you are never readable, so none can appear.)
-  - `groups`: one per other person, in the top bar's order, each with the gifts where you're the giver, oldest first, and each gift's wish if it still exists.
-- Layout: `Shelf`, as on My list, but with the sack picture in place of a globe (your own globe belongs to My list). The picture is `docs/design/santas-sack.svg`, approved by Brady: move it into `src/features/sack/` as a small component, keep every shape exactly as drawn, and swap each fill for its theme token (all its colors are already in `theme.css`; add a token only if one is missing). No animation. Under it: the heading "Santa's sack" and the line "Everything you're getting, for everyone, and where it's headed."
-- Section order: "Landing at your place" comes first when it has gifts and is left out completely when it has none. Then "For <Name>" for each person, always shown.
-- "Landing at your place": line under the heading "Boxes the others are shipping to you." Each row: the gift's name, then under it "From <Giver>, for <Recipient>". No buttons.
-- "For <Name>": a small `SnowGlobe` (size 56, their scene, no gifts) beside the heading, and a quiet link "<Name>'s page" to their shopping page. Each row:
-  - Title, then `· stocking` and `· to <House>` as on shopping pages.
-  - Under it, in this order where they exist: `For "<idea wish title>"` when the wish is an idea; the wish's notes; your own gift notes; the store link (the gift's link, else the wish's).
-  - If the gift has a `wishItemId` but the wish is gone: plain text "No longer on <Name>'s list". Text, not a pill.
-  - "Change" opens `GiftDialog` for that gift.
-  - No gifts for someone: "Nothing yet." and a link "See <Name>'s list".
-- Phones and large text (under 960px): no large picture, as shopping pages drop the big globe; the heading, then the sections. Rows wrap like the shopping rows. Check at 390px with larger text, and at the in-between widths (700–1000px).
-- Tests: as Brady (sign in `brady@example.com`): "Gooseneck pour-over kettle" is under "For Allie" with "to April's" and "Matte black"; no "Landing" heading. As April: "Landing at your place" lists the kettle as "From Brady, for Allie". As Kevin: the page has no trace of gifts for Kevin. Then, as Allie, take "Gooseneck pour-over kettle" off her list and check Brady's sack says "No longer on Allie's list".
-
-**Step 5 (small). Shipping in the same step as claiming.** Files: `src/data/index.ts`, `ShoppingPage.tsx`.
-- Shipping is mostly Brady's: the others order to their own house. So the site only asks people who have shipped before.
-- New helper `usualShipTo(recipient)`: the `shipTo` of your most recent gift that has one and isn't the recipient's house, preferring gifts for people in the recipient's house, else any. Nothing stored anywhere new.
-- Right after "I'll be Santa", if `usualShipTo` gives a house, the row shows under the name: "Shipping it to <House>?" with one quiet button "Yes". Yes saves `shipTo`. The question goes away on Yes, on leaving the page, or when another row is claimed. No "No" button.
-- Never preselect shipping inside the pop-up.
-- Tests: as Brady (who has shipped gifts in the sample data), claim Allie's "Platform clogs": the question names "April's"; Yes saves `shipTo: april`. As Kevin (no shipped gifts), claim something: no question.
-
-**Step 6 (small). Paste rows copied from a spreadsheet.** File: `src/features/my-list/parsePaste.ts` only.
-- A line with tabs is a spreadsheet row: split on tabs, drop empty cells. The link is the first cell that is a link; the name is the first cell that isn't; every other cell joins the note with ", ".
-- Skip a first line whose cells are all header words (item, name, gift, what, link, url, price, notes, note, size, color, store).
-- Lines without tabs behave exactly as today.
-- Test: paste three tabbed rows (one header, one with a link, one without) into "Gimme, gimme, gimme"; check two wishes with the right names, links and notes.
-
-**Step 7 (small, CSS only). Take the last generic-web-app looks out.** From a review of every page for template-looking design. The print's language is flat ink and hard edges; these are the pieces that don't speak it. Show Brady before and after screenshots; each is one line to undo.
-- Pop-ups: no soft drop shadow (`--shadow-dialog: none`), a 1.5px ink edge, and square-ish corners (`--radius-lg: 6px`).
-- Buttons and text boxes: `--radius-md: 4px`, matching My list's ink blocks.
-- Status pills ("Needs Santa", "Santa's got it") and the "Give it a gold star" button: `border-radius: var(--radius-sm)` instead of fully round.
-- Home: "Add to my list" becomes a flat block (`--radius-sm`, no bottom shadow), and the globes no longer lift on hover.
-- The sign-in page picks up the same corners through the tokens; nothing else about it changes (its design round is parked). No wording changes: the review found none needed.
+Checked: the site click-through (`tests/site-flows.e2e.cjs`, now 35 checks, as Allie, Kevin, Brady and April) and the 20 rule checks pass; no change to `firestore.rules` or the data shapes, so nothing to publish. Review screenshots retaken, with `12-sack` and `13-phone-april-sack`.
 
 ## Milestones to v1
 
