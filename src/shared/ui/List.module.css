@@ -98,6 +98,18 @@
   overflow-wrap: anywhere;
 }
 
+/* Things that belong to the row (gifts under an idea): under the name,
+   reaching the row's right edge so their buttons line up with other rows'. */
+.under {
+  grid-row: 2;
+  grid-column: 2 / -1;
+  min-width: 0;
+}
+
+.noStatus .under {
+  grid-column: 1 / -1;
+}
+
 .aside {
   grid-area: aside;
   display: flex;
@@ -120,6 +132,7 @@
 @container (width < 36rem) {
   .row {
     grid-template-columns: auto minmax(0, 1fr);
+    /* The status stays right under the name; gifts under an idea follow it. */
     grid-template-areas:
       'main main'
       'status aside';
@@ -129,6 +142,15 @@
   .noStatus {
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas: 'main aside';
+  }
+
+  .under {
+    grid-row: 3;
+    grid-column: 1 / -1;
+  }
+
+  .noStatus .under {
+    grid-row: 2;
   }
 
   .status {

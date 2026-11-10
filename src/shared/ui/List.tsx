@@ -68,9 +68,9 @@ export function Row({ status, title, notes, aside, children, highlight }: RowPro
       <div className={styles.main}>
         <div className={styles.title}>{title}</div>
         {notes}
-        {children}
       </div>
       {aside && <div className={styles.aside}>{aside}</div>}
+      {children && <div className={styles.under}>{children}</div>}
     </li>
   )
 }

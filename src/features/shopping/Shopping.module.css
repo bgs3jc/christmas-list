@@ -34,7 +34,7 @@
 /* Gifts under an idea, under its name */
 
 .underIdea {
-  margin: var(--space-2) 0 var(--space-1);
+  margin: var(--space-1) 0;
   padding: 0 0 0 var(--space-3);
   border-left: 2px solid var(--line);
   list-style: none;
