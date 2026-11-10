@@ -27,7 +27,7 @@ export function toSpreadsheet(views: ShoppingView[], people: Person[], homes: Ho
       const claimed = wish.kind === 'specific' ? under[0] : undefined
       if (claimed) {
         const notes = [wish.notes, claimed.notes].filter(Boolean).join(' / ')
-        rows.push([person.name, section, wish.title, statusLabels.covered, nameOf(claimed.giverId), homeOf(claimed.shipTo), notes, wish.link ?? claimed.link])
+        rows.push([person.name, claimed.place === 'stocking' ? 'List (stocking)' : section, wish.title, statusLabels.covered, nameOf(claimed.giverId), homeOf(claimed.shipTo), notes, wish.link ?? claimed.link])
         for (const extra of under.slice(1)) rows.push(giftRow(`  for "${wish.title}"`, extra))
         continue
       }

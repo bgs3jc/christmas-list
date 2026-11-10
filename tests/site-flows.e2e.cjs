@@ -82,6 +82,16 @@ const settle = (page) => page.waitForTimeout(700)
   check('"Not shipping" clears the saved shipping', g && !('shipTo' in g.fields))
   check('...and the row no longer says "to April\'s"', !(await row(a, 'Wireless earbuds').innerText()).includes("to April's"))
 
+  // 3b. A gift from the list can go in the stocking.
+  await row(a, 'Wireless earbuds').getByRole('button', { name: /Change/ }).click()
+  await a.getByRole('dialog').getByRole('button', { name: 'Stocking' }).click()
+  await a.getByRole('dialog').getByRole('button', { name: 'Save' }).click()
+  await row(a, 'Wireless earbuds').getByText(/stocking/).waitFor()
+  await settle(a)
+  g = (await docs('gifts')).find((d) => d.id === g.id)
+  check('A list gift can go in the stocking', g.fields.place.stringValue === 'stocking')
+  check('...and the row says "stocking"', (await row(a, 'Wireless earbuds').innerText()).includes('stocking'))
+
   // 4. Not getting it after all.
   await row(a, 'Wireless earbuds').getByRole('button', { name: /Change/ }).click()
   await a.getByRole('dialog').getByRole('button', { name: 'Not getting it' }).click()

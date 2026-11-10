@@ -14,7 +14,7 @@ export interface GiftDialogSetup {
   title?: string
   notes?: string
   wishItemId?: string
-  // A gift claimed from the list keeps the list's name, and always goes under the tree.
+  // A gift claimed from the list keeps the list's name.
   fromList?: boolean
   onSaved?: () => void
 }
@@ -67,7 +67,7 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
       title: title.trim(),
       link: (gift ? link : entryIsLink ? entry : '').trim() || undefined,
       giverId,
-      place: setup.fromList ? 'tree' : place,
+      place,
       notes: notes.trim() || undefined,
       shipTo: shipTo === NOT_SHIPPING ? undefined : shipTo,
     } as const
@@ -143,7 +143,7 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
         </>
       )}
       <Choice legend="Who's getting it?" options={others.map((p) => ({ value: p.id, label: nameFor(p) }))} value={giverId} onChange={setGiverId} />
-      {!setup.fromList && <Choice legend="Where does it go?" options={placeOptions} value={place} onChange={setPlace} />}
+      <Choice legend="Where does it go?" options={placeOptions} value={place} onChange={setPlace} />
       <Choice legend="Shipping somewhere?" options={shipOptions} value={shipTo} onChange={setShipTo} />
       <TextField label="Notes for the family" value={notes} onChange={setNotes} multiline help={`${recipient.name} never sees this.`} />
     </Dialog>

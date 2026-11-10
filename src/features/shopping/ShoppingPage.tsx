@@ -144,6 +144,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                             <div className={styles.underIdeaText}>
                               <span className={styles.underIdeaTitle}>
                                 {gift.title}
+                                {gift.place === 'stocking' && <TitleNote>stocking</TitleNote>}
                                 {shipNote(gift)}
                               </span>
                               <NoteLine parts={[familyNote(gift), linkTo(gift.link)]} />
@@ -173,6 +174,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
                   title={
                     <>
                       {wishTitle(wish)}
+                      {under.some((g) => g.place === 'stocking') && <TitleNote>stocking</TitleNote>}
                       {shipsTo.map((home) => (
                         <TitleNote key={home}>to {houseOf(home!)}</TitleNote>
                       ))}
