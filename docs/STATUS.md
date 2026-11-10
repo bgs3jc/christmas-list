@@ -39,7 +39,7 @@ Brady approved all seven steps. Build them in this order, one commit each, strai
 **Rules for the whole plan**
 - No change to `firestore.rules` or to the shapes in `src/data/types.ts`. If a step seems to need one, stop and ask Brady.
 - Steps 1–3 must stay tiny: only the files named. If one grows past that, stop and say so.
-- No new illustrations drawn in code (hand-written SVG never matched the print). No pills, cards, shadows or gradients on anything new. Reuse `ListSection`, `Rows`, `Row`, `TitleNote`, `NoteLine`, `Button`, `SnowGlobe`.
+- No new illustrations drawn in code, beyond the one sack picture already in `docs/design/`. No pills, cards, shadows or gradients on anything new. Reuse `Shelf`, `ListSection`, `Rows`, `Row`, `TitleNote`, `NoteLine`, `Button`, `SnowGlobe`.
 - Run user-facing words through the writing-quality skill. Keep the wording given here unless it reads wrong on the page.
 - After every step: `npm run build`, then `npm run dev:emulators` in the background and `node tests/site-flows.e2e.cjs`. Add the checks named in each step to that file (it runs as Allie, then Kevin; add an April sign-in where a step needs one: `april@example.com`). `npm run test:rules` must still pass at the end, unchanged.
 - At the end: retake the review screenshots (`docs/review/`), add `12-sack` (Brady, desktop) and `13-phone-april-sack`, update this file, `DECISIONS.md` and `DESIGN.md`, and tell Brady in plain words what changed.
@@ -67,7 +67,7 @@ Brady approved all seven steps. Build them in this order, one commit each, strai
 - Data, in `src/data/index.ts`, one hook `useSack()`:
   - `landing`: gifts where `shipTo` is your house and the giver isn't you, oldest first. (Gifts for you are never readable, so none can appear.)
   - `groups`: one per other person, in the top bar's order, each with the gifts where you're the giver, oldest first, and each gift's wish if it still exists.
-- Layout: one column, no `Shelf` and no large globe (your own globe belongs to My list; using it here would make the two pages look alike). Under the dusk band: the heading "Santa's sack" in the display font, the line "Everything you're getting, for everyone, and where it's headed.", then the sections, in a column about 820px wide. The page's illustrations are the small globes beside each person's heading.
+- Layout: `Shelf`, as on My list, but with the sack picture in place of a globe (your own globe belongs to My list). The picture is `docs/design/santas-sack.svg`, approved by Brady: move it into `src/features/sack/` as a small component, keep every shape exactly as drawn, and swap each fill for its theme token (all its colors are already in `theme.css`; add a token only if one is missing). No animation. Under it: the heading "Santa's sack" and the line "Everything you're getting, for everyone, and where it's headed."
 - Section order: "Landing at your place" comes first when it has gifts and is left out completely when it has none. Then "For <Name>" for each person, always shown.
 - "Landing at your place": line under the heading "Boxes the others are shipping to you." Each row: the gift's name, then under it "From <Giver>, for <Recipient>". No buttons.
 - "For <Name>": a small `SnowGlobe` (size 56, their scene, no gifts) beside the heading, and a quiet link "<Name>'s page" to their shopping page. Each row:
@@ -76,7 +76,7 @@ Brady approved all seven steps. Build them in this order, one commit each, strai
   - If the gift has a `wishItemId` but the wish is gone: plain text "No longer on <Name>'s list". Text, not a pill.
   - "Change" opens `GiftDialog` for that gift.
   - No gifts for someone: "Nothing yet." and a link "See <Name>'s list".
-- Phones and large text: the same single column. Rows wrap like the shopping rows. Check at 390px with larger text, and at the in-between widths (700–1000px).
+- Phones and large text (under 960px): no large picture, as shopping pages drop the big globe; the heading, then the sections. Rows wrap like the shopping rows. Check at 390px with larger text, and at the in-between widths (700–1000px).
 - Tests: as Brady (sign in `brady@example.com`): "Gooseneck pour-over kettle" is under "For Allie" with "to April's" and "Matte black"; no "Landing" heading. As April: "Landing at your place" lists the kettle as "From Brady, for Allie". As Kevin: the page has no trace of gifts for Kevin. Then, as Allie, take "Gooseneck pour-over kettle" off her list and check Brady's sack says "No longer on Allie's list".
 
 **Step 5 (small). Shipping in the same step as claiming.** Files: `src/data/index.ts`, `ShoppingPage.tsx`.

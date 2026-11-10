@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 250" role="img" aria-label="Santa's sack, full of presents">
+  <!-- Flat inks from the house print. In the app, swap each fill for its theme token. -->
+  <path d="M16 237 Q110 221 204 237 Q110 250 16 237 Z" fill="#C9C0F2"/>
+  <!-- Presents -->
+  <rect x="52" y="58" width="44" height="56" fill="#FCB144"/>
+  <rect x="83" y="58" width="13" height="56" fill="#9C6B22"/>
+  <rect x="64" y="58" width="9" height="56" fill="#FF513D"/>
+  <path d="M68 58c-4-12-18-11-15-3 2 4 10 3 15 3zM69 58c4-12 18-11 15-3-2 4-10 3-15 3z" fill="#FF513D"/>
+  <rect x="94" y="28" width="48" height="86" fill="#0039C4"/>
+  <rect x="127" y="28" width="15" height="86" fill="#002979"/>
+  <rect x="107" y="28" width="10" height="86" fill="#FEE5D5"/>
+  <path d="M91 29q0-7 8-7h38q8 0 8 7v4q-7 6-13.5 0-6.500 6-13.500 0-6.500 6-13.500 0-6.500 5-13.500 0z" fill="#FEE5D5"/>
+  <rect x="140" y="70" width="30" height="44" fill="#2F5D46"/>
+  <rect x="161" y="70" width="9" height="44" fill="#08222F"/>
+  <rect x="148" y="70" width="7" height="44" fill="#FCB144"/>
+  <path d="M138 71q0-6 6-6h22q6 0 6 6v3q-5.500 5-11.500 0-5.500 5-11 0-5.500 5-11.500 0z" fill="#FEE5D5"/>
+  <!-- The sack: narrow at the neck, slumped wide at the bottom -->
+  <path d="M50 112 C40 136 8 168 16 206 C20 226 34 233 52 233 H170 C188 233 201 225 205 206 C212 168 180 136 170 112 Z" fill="#79092C"/>
+  <path d="M50 112 C40 136 8 168 16 206 C20 226 34 233 52 233 H66 C34 214 40 160 70 112 Z" fill="#A82A30"/>
+  <path d="M142 112 H170 C180 136 212 168 205 206 C201 225 188 233 170 233 H150 C186 208 172 150 142 112 Z" fill="#1E1448"/>
+  <path d="M100 124 C94 150 104 170 94 198 C111 172 107 148 109 124 Z" fill="#1E1448"/>
+  <!-- A soft cuff, like snow on the print's bushes -->
+  <path d="M42 100 H178 q8 0 8 8 v8 q-9.500 9 -19 0 q-9.500 9 -19 0 q-9.500 9 -19 0 q-9.500 9 -19 0 q-9.500 9 -19 0 q-9.500 9 -19 0 q-9.500 9 -19 0 q-9.500 9 -19 0 v-8 q0 -8 8 -8 z" fill="#FEE5D5"/>
+  <path d="M148 100 H178 q8 0 8 8 v8 q-9.500 9 -19 0 q-9.500 9 -19 0 z" fill="#839AFF"/>
+  <!-- A gift tag on a gold string -->
+  <path d="M62 122 C52 138 36 152 40 170" fill="none" stroke="#FCB144" stroke-width="2.5"/>
+  <path d="M27 172 l15 -9 l23 31 l-19 15 z" fill="#2F5D46"/>
+  <circle cx="41" cy="174" r="3.2" fill="#FEE5D5"/>
+</svg>
