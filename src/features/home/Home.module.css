@@ -279,7 +279,7 @@
 .page {
   max-width: var(--page-width);
   margin: 0 auto;
-  padding: var(--space-2) var(--space-8) var(--space-16);
+  padding: var(--space-8) var(--space-8) var(--space-16);
 }
 
 .shoppingFor {
@@ -322,11 +322,6 @@
   line-height: 1.1;
 }
 
-.personLink:hover .download {
-  margin-top: var(--space-10);
-  text-align: center;
-}
-
 .personName {
   text-decoration: underline;
   text-decoration-color: var(--plaid-red);
@@ -358,7 +353,7 @@
   }
 
   .page {
-    padding: var(--space-2) var(--space-4) var(--space-12);
+    padding: var(--space-8) var(--space-4) var(--space-12);
   }
 }
 
