@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { features } from '../../config/features'
-import { useMyList, type WishItem, type WishKind } from '../../data'
-import { santasListLabels } from '../../shared/format'
+import { useMyList, useOtherPeople, type WishItem, type WishKind } from '../../data'
+import { joinNames, santasListLabels } from '../../shared/format'
 import { LightbulbIcon, PresentIcon } from '../../shared/icons'
 import { SnowGlobe } from '../../shared/SnowGlobe'
 import { EmptyRow, ListSection, Rows } from '../../shared/ui/List'
@@ -14,6 +14,8 @@ type OpenDialog = { kind: WishKind; item?: WishItem } | null
 
 export function MyListPage() {
   const { me, wishes } = useMyList()
+  const others = useOtherPeople()
+  const family = joinNames(others.map((p) => p.name))
   const [dialog, setDialog] = useState<OpenDialog>(null)
   const close = () => setDialog(null)
   // Just added: pointed out for a few seconds, since new things go to the bottom.
@@ -31,7 +33,7 @@ export function MyListPage() {
         <>
           <SnowGlobe size={260} scene={me.globeScene} />
           <h1 className={styles.title}>My list</h1>
-          <p className={styles.subtitle}>Everyone shops from this. Nobody will tell you what's been taken.</p>
+          <p className={styles.subtitle}>{family} {others.length === 1 ? 'shops' : 'shop'} from this. None of them will tell you what's been taken.</p>
           {features.santasList && me.santasList && (
             // A printed gift tag on a gold string
             <p className={styles.santaTag}>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useHomes, usePeople, useSack, useViewer, type Gift, type Person } from '../../data'
-import { storeFromLink } from '../../shared/format'
+import { joinNames, storeFromLink } from '../../shared/format'
 import { GiftDialog } from '../../shared/GiftDialog'
 import { links } from '../../shared/router'
 import { SnowGlobe } from '../../shared/SnowGlobe'
@@ -36,13 +36,13 @@ export function SackPage() {
             <SantasSack />
           </span>
           <h1 className={styles.title}>Santa's sack</h1>
-          <p className={styles.subtitle}>Everything you're getting, for everyone, and where it's headed.</p>
+          <p className={styles.subtitle}>Your gifts for {joinNames(groups.map((g) => g.person.name))}, and where they're shipping.</p>
         </>
       }
     >
       {landing.length > 0 && (
         <ListSection title="Landing at your place">
-          <p className={styles.sectionNote}>Boxes the others are shipping to you.</p>
+          <p className={styles.sectionNote}>Boxes the family is shipping to your house.</p>
           <Rows>
             {landing.map((gift) => (
               <Row

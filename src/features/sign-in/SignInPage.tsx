@@ -78,7 +78,7 @@ function SignIn() {
 
   return (
     <Frame>
-      <h1 className={styles.title}>Sign in to see everyone's lists</h1>
+      <h1 className={styles.title}>Sign in to see the family's lists</h1>
       <form className={styles.form} onSubmit={signIn} noValidate>
         <TextField label="Your email" name="email" value={email} onChange={setEmail} email required />
         <TextField

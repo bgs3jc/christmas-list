@@ -46,6 +46,12 @@ export const isLink = (text: string) => /^https?:\/\/\S+$/i.test(text.trim())
 
 const MAX_NAME_WORDS = 6
 
+// Names as a person would say them: "Allie", "Allie and Kevin", "April, Allie and Kevin".
+export function joinNames(names: string[]): string {
+  if (names.length < 2) return names.join('')
+  return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`
+}
+
 export const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1)
 
 // Most shops put the product name in the link: ".../rite-in-the-rain-notebook/123".
