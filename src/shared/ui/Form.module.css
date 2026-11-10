@@ -17,6 +17,16 @@
   resize: vertical;
 }
 
+/* Boxes for longer text. As a block, the hint under one sits as close as
+   under a one-line box. Where the browser can, the box grows with what's
+   typed or pasted (a list of links), up to about six lines. */
+textarea.input {
+  display: block;
+  field-sizing: content;
+  min-height: 4.25rem;
+  max-height: 10.5rem;
+}
+
 .input:focus-visible {
   outline: 3px solid var(--night);
   outline-offset: 0;
