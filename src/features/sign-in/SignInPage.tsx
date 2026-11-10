@@ -118,6 +118,8 @@ function FinishLink() {
   const [email, setEmail] = useState('')
   const [busy, setBusy] = useState(false)
   const [problem, setProblem] = useState('')
+  // An old or used link can't work however often she tries: offer a fresh start.
+  const [linkDead, setLinkDead] = useState(false)
 
   async function finish(event: FormEvent) {
     event.preventDefault()
@@ -129,8 +131,22 @@ function FinishLink() {
       await finishSignInLink(email)
     } catch (error) {
       setProblem(messageFor(error))
+      setLinkDead(error instanceof SignInError && error.problem === 'link-expired')
       setBusy(false)
     }
+  }
+
+  if (linkDead) {
+    return (
+      <Frame>
+        <h1 className={styles.title}>That link didn't work</h1>
+        <p className={styles.lead}>It was old or already used. Send yourself a new one.</p>
+        {/* The plain address, without the old link's code: the usual sign-in page. */}
+        <Button variant="main" onClick={() => window.location.assign(import.meta.env.BASE_URL)}>
+          Send a new link
+        </Button>
+      </Frame>
+    )
   }
 
   return (
