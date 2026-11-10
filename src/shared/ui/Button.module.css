@@ -46,7 +46,8 @@
 }
 
 .quiet {
-  padding: 0 var(--space-1);
+  /* No side padding: the word itself lines up with what's above and below it */
+  padding: 0;
   border: none;
   background: none;
   color: var(--ink-muted);
