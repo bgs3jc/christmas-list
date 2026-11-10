@@ -77,6 +77,13 @@ function firestoreValue(v) {
 }
 const fieldsOf = (record) => Object.fromEntries(Object.entries(record).map(([k, v]) => [k, firestoreValue(v)]))
 
+// One record as plain values. Fields sorted by name: the real database sends
+// them in a different order each time, which isn't a change.
+function recordOf(d) {
+  const fields = Object.entries(d.fields ?? {}).sort(([a], [b]) => a.localeCompare(b))
+  return { id: decodeURIComponent(d.name.split('/').pop()), updateTime: d.updateTime, data: Object.fromEntries(fields.map(([k, v]) => [k, plain(v)])) }
+}
+
 // ---- The database, as the owner ----
 
 async function list(name) {
@@ -84,9 +91,7 @@ async function list(name) {
   let pageToken = ''
   do {
     const j = await must(`${DB}/${name}?pageSize=300${pageToken ? `&pageToken=${pageToken}` : ''}`)
-    for (const d of j.documents ?? []) {
-      out.push({ id: decodeURIComponent(d.name.split('/').pop()), updateTime: d.updateTime, data: Object.fromEntries(Object.entries(d.fields ?? {}).map(([k, v]) => [k, plain(v)])) })
-    }
+    out.push(...(j.documents ?? []).map(recordOf))
     pageToken = j.nextPageToken ?? ''
   } while (pageToken)
   return out
@@ -184,7 +189,7 @@ async function writeAs(personId, name, id, record) {
 
 module.exports = {
   LIVE, FAMILY, API_KEY, AUTH, PROJECT, SITE, DB, COLLECTIONS, MARK, TEST_PEOPLE, testEmail,
-  call, must, plain, list, snapshot, fingerprint, putDoc, deleteDoc, fieldsOf,
+  call, must, plain, recordOf, list, snapshot, fingerprint, putDoc, deleteDoc, fieldsOf,
   liveRules, publishRules, pointRulesAt,
   findAccount, createAccount, deleteAccount, signInToken,
   PEOPLE, emailOf, passwordOf, tokenOf, writeAs, remove,

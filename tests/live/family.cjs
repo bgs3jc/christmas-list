@@ -75,11 +75,7 @@ async function must(url, options) {
 
 // ---- Reading, as the three together ----
 
-const record = (d) => ({
-  id: decodeURIComponent(d.name.split('/').pop()),
-  updateTime: d.updateTime,
-  data: Object.fromEntries(Object.entries(d.fields ?? {}).map(([k, v]) => [k, A.plain(v)])),
-})
+const record = A.recordOf
 
 async function listAll(name, personId) {
   const out = []
