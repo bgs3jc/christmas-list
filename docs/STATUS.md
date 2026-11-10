@@ -8,7 +8,7 @@ Update this at the end of every session. Keep it short.
 
 - **M1–M4 done; M5 (surprise protection) in progress.** Not launched to the family yet: Brady decides when it's finished. Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`. Real sign-in (Google, or an email link for April) and the Firestore database are on. The family list, people and homes are typed into the Firebase console (`docs/FIREBASE-SETUP.md`). The database started empty: the old sample data was prototype only.
 - **Privacy is enforced by the server:** `firestore.rules` hides gifts, claims and overheard notes from the person they're about. Tested as each person against the local emulator (`npm run test:rules`). Brady publishes rule changes by pasting the file into the console.
-- **Tested so far (2026-11-10):** the live database refuses all reads and writes from outside; 16 rule checks as each person pass; a click-through of every gift and list flow on the emulator (`tests/site-flows.e2e.cjs`) passes, including that Kevin sees no trace of gifts or notes about him. Not yet tested on the real site as anyone but Brady: that's M5.
+- **Tested so far (2026-11-10):** the live database refuses all reads and writes from outside, and refuses an account someone creates for themselves; 16 rule checks as each person pass; a click-through of every gift and list flow on the emulator (`tests/site-flows.e2e.cjs`) passes, including that Kevin sees no trace of gifts or notes about him. Not yet tested on the real site as anyone but Brady: that's M5.
 - **The plain sign-in page stays as is for now** (Brady: beautification, not critical). Its design round (the matching-pajamas idea), a real name and an icon are in BACKLOG. Sign-in emails land in spam; Brady decided April can check Junk.
 - **The prototype still exists:** `realSignIn: false` in `src/config/features.ts` brings back browser storage, sample data and the "Viewing as" bar.
 - **What the site does:**
@@ -25,7 +25,7 @@ Update this at the end of every session. Keep it short.
 
 ## Next steps
 
-1. **M5:** tighten the rules (only real people, only known fields) and verify on the real site, with Brady signed in as "April" through a Gmail alias. See DECISIONS.
+1. **M5, open:** the stricter rules (only real people, only known fields) are written and tested but **not published**: the live project still runs the M4 rules. Checked on the real site so far: the database refuses outsiders and self-made accounts. Brady won't do manual testing, so the plan is a one-time `gcloud auth login` in a session, letting Claude publish rules and test the real project as each person with temporary test accounts (deleted after). Not yet approved by Brady.
 2. **Then:** Brady names what else must work before the family starts. Launch (M6) only when Brady says it's finished. At launch, April bookmarks the site in Safari, not "Add to Home Screen" (BACKLOG).
 3. **Next feature, in a new chat:** "What I'm getting", everything you're Santa for, grouped by person, with where each ships (BACKLOG). Start with: "Read CLAUDE.md and docs/STATUS.md, then let's build What I'm getting."
 4. Brady's personal snow globe still needs a scene. Recipe: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass. The scripts and how to run them are in `tools/print-pass/`.
