@@ -152,3 +152,11 @@ Newest at the bottom. Each entry: what we decided, and why.
 - **Pasted spreadsheet rows:** a header row is skipped only when it's the first line and has tabs; cells are trimmed, and a row that's only a link is named from the link.
 - **Step 7:** `--plaid-red-shadow` is no longer used (Home's button lost its shadow); kept in the theme so the change is one line to undo.
 - **Review screenshots** are now taken by `tools/review/take-screenshots.cjs`, so the next retake is one command.
+
+**2026-11-10: How M5 tests the real site.**
+- **One script, two places:** `tests/live-site.e2e.cjs` runs the same checks on the emulator (default) and on the real project (`TARGET=live`). Admin calls live in `tests/live/admin.cjs`. Brady and April open the sign-in link where they asked for it; Allie and Kevin open it "on another device" and type their email, so both paths get tested. April runs at 390px wide with text at 120%.
+- **Safe on real data:** test accounts are `m5-test-<person>@example.com`, mapped by temporary `members` entries. Everything the test makes starts with "TEST M5". Cleanup deletes only records that weren't in the before snapshot and carry the mark, then compares every record, including its last-changed time, with the snapshot. It stops at the start if an earlier run left anything behind.
+- **Doesn't spoil Brady:** Brady is shopped for too, so the test never prints or screenshots real records about anyone. It reports counts and a fingerprint per collection, and failures about real records say "a real record". Snapshots, spreadsheets and screenshots go to a temp folder, never the repo.
+- **Cloud sessions can't use gcloud for Firebase:** the session's proxy swaps Google's access token for a placeholder, so even `gcloud` itself is refused. The live run happens on Brady's computer.
+- **Not tested by fake accounts:** the Google button (Brady uses it on the live site, so it works) and the "Email me a sign-in link" button (it would send a real email to a made-up address).
+- **Fixed: an old sign-in link was a dead end.** On another device, an old or used link said "Send yourself a new one" with no way to do it, and reloading kept the old code. Now it says "That link didn't work" with one button, "Send a new link", that goes back to the plain sign-in page.
