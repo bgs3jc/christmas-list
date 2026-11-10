@@ -232,6 +232,8 @@
   .bigButton {
     flex-direction: row;
     align-items: center;
+    /* From the left edge, so the two icons line up one above the other */
+    justify-content: flex-start;
     gap: var(--space-5);
     padding: var(--space-5) var(--space-6);
   }
@@ -257,6 +259,7 @@
   .bigButton {
     flex-direction: column;
     align-items: flex-start;
+    justify-content: center;
     gap: var(--space-3);
   }
 }
