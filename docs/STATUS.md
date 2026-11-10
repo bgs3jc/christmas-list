@@ -2,11 +2,12 @@
 
 Update this at the end of every session. Keep it short.
 
-**Last updated:** 2026-11-05
+**Last updated:** 2026-11-10
 
 ## Where things stand
 
-- **M4 in progress (2026-11-05).** Brady created the Firebase project, published the rules and typed in homes, people and members. Real sign-in is on (`realSignIn: true`): the live site now asks you to sign in and reads from Firestore, which starts empty of wishes and gifts (the sample data was prototype only). How the console is set up: `docs/FIREBASE-SETUP.md`. The sign-in page is a plain first version; its design round is still to do.
+- **M4 done; family launch (M6) starts 2026-11-10.** Brady decided the plain sign-in page is good enough to launch with; its design round (with the matching-pajamas idea) is in BACKLOG. M5's checks on the real site happen during launch.
+- **M4 (2026-11-05).** Brady created the Firebase project, published the rules and typed in homes, people and members. Real sign-in is on (`realSignIn: true`): the live site now asks you to sign in and reads from Firestore, which starts empty of wishes and gifts (the sample data was prototype only). How the console is set up: `docs/FIREBASE-SETUP.md`. The sign-in page is a plain first version; its design round is still to do.
 
 - **M1, M2 and M3 done, plus a UX review, design round 8 and a modern-web pass.** Live at https://bgs3jc.github.io/christmas-list/, deployed on every push to `main`. The prototype runs on browser storage with made-up sample data; a "Viewing as" bar stands in for sign-in until M4.
 - **What the prototype does now:**
@@ -25,7 +26,7 @@ Update this at the end of every session. Keep it short.
 
 1. **Brady clicks through today's changes** on the live site, as April on a phone especially (try her iPhone with larger text), and notes anything that feels off.
 2. **Sign-in works on the live site (2026-11-05):** Brady signed in with Google and with an email link. The link email landed in Gmail's spam; Brady decided April can check Junk. Still worth one test link to April's address before launch, to see where iCloud puts it.
-3. **M4, then:** design the sign-in page in the print (April's first impression), pick a real name, and add a home-screen icon cropped from the print (see BACKLOG). Brady's personal inspiration comes first.
+3. **Launch:** Brady sends the site to April, Allie and Kevin. April uses a Safari bookmark, not "Add to Home Screen" (see BACKLOG). Once someone adds a gift for Brady, Brady checks he can't see it anywhere (the first real-site M5 check).
 4. **Small, before or after M4:** "What I'm getting", everything you're Santa for in one place (BACKLOG).
 5. Brady's personal snow globe still needs a scene. Recipe: ask ChatGPT for the scene only (square, no glass, no base, no falling snow, flat silkscreen style, subject above the bottom quarter), then run the flat-ink pass. The scripts and how to run them are in `tools/print-pass/`.
 
@@ -38,7 +39,7 @@ One chat each. M1–M3 are firm; the order and scope after that can change as we
 | M1 | Design direction | Brady picks one of 2–3 mockup styles; theme tokens recorded |
 | M2 | App scaffold + deploy | Empty themed app is live on GitHub Pages via GitHub Actions |
 | M3 ✅ | Clickable prototype | Wish lists, gifts, claims and ideas work on browser storage; Brady has clicked through it |
-| M4 | Firebase + sign-in | Brady has set up Firebase; Google + email-link sign-in work; data in Firestore. Hiding rules written and emulator-tested here too |
+| M4 ✅ | Firebase + sign-in | Brady has set up Firebase; Google + email-link sign-in work; data in Firestore. Hiding rules written and emulator-tested here too |
 | M5 | Surprise protection | Verified on the real site by signing in as each person; rules tightened (field checks) |
 | M6 | Family launch | April, Allie and Kevin signed in on their devices; feedback captured in BACKLOG |
 
