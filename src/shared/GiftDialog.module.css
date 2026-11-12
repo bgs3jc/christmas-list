@@ -6,6 +6,12 @@
   font-weight: 700;
 }
 
+/* Said first, where the doubt is: who sees a gift once it's saved */
+.whoSees {
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
 .removeButton {
   margin-right: auto;
   color: var(--plaid-red);

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { addGift, removeGift, updateGift, type Gift, type GiftPlace, type Home, type Person } from '../data'
-import { isLink, nameFromLink } from './format'
+import { isLink, joinNames, nameFromLink } from './format'
 import { Button } from './ui/Button'
 import { Dialog } from './ui/Dialog'
 import { Choice, TextField } from './ui/Form'
@@ -51,6 +51,8 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
   const [notes, setNotes] = useState(gift?.notes ?? setup.notes ?? '')
   const [shipTo, setShipTo] = useState(gift?.shipTo ?? NOT_SHIPPING)
 
+  // Who else sees the gift: the family, minus you and the person it's for.
+  const alsoSee = joinNames(others.filter((p) => p.id !== viewer.id).map((p) => p.name))
   const nameFor = (p: Person) => (p.id === viewer.id ? 'Me' : p.name)
   const shipOptions = [
     { value: NOT_SHIPPING, label: 'Not shipping' },
@@ -121,6 +123,10 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
         </>
       }
     >
+      <p className={styles.whoSees}>
+        {alsoSee ? `${alsoSee} will see this gift. ` : ''}
+        {recipient.name} won't.
+      </p>
       {setup.fromList ? (
         <p className={styles.dialogItem}>{title}</p>
       ) : (

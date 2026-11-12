@@ -33,6 +33,11 @@ export function Rows({ children }: { children: ReactNode }) {
   return <ul className={styles.rows}>{children}</ul>
 }
 
+// One quiet line under a section's heading: what goes here.
+export function SectionNote({ children }: { children: ReactNode }) {
+  return <p className={styles.sectionNote}>{children}</p>
+}
+
 export function EmptyRow({ children }: { children: ReactNode }) {
   return <p className={styles.empty}>{children}</p>
 }

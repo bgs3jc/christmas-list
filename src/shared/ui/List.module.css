@@ -121,6 +121,12 @@
   white-space: nowrap;
 }
 
+.sectionNote {
+  padding: var(--space-3) 0 var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
 .empty {
   padding: var(--space-4) 0;
   color: var(--ink-muted);

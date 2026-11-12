@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { addGift, markIdeaGifted, updateGift, useHomes, usePeople, usualShipTo, useShopping, useViewer, type Gift, type HomeId, type WishItem } from '../../data'
-import { coverLabel, storeFromLink } from '../../shared/format'
+import { coverLabel, joinNames, storeFromLink } from '../../shared/format'
 import { GiftDialog, type GiftDialogSetup } from '../../shared/GiftDialog'
 import { LockIcon, StarIcon } from '../../shared/icons'
 import { SnowGlobe } from '../../shared/SnowGlobe'
 import { Shelf } from '../../shared/ui/Shelf'
 import { StatusPill } from '../../shared/StatusPill'
 import { Button } from '../../shared/ui/Button'
-import { EmptyRow, ListSection, NoteLine, Row, Rows, TitleNote } from '../../shared/ui/List'
+import { EmptyRow, ListSection, NoteLine, Row, Rows, SectionNote, TitleNote } from '../../shared/ui/List'
 import { Overheard } from './Overheard'
 import styles from './Shopping.module.css'
 
@@ -36,6 +36,8 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
 
   const { person, wishes, gifts, ideas } = view
   const others = people.filter((p) => p.id !== person.id)
+  // Who else sees this page: the family, minus you and the person it's about.
+  const alsoSee = joinNames(others.filter((p) => p.id !== viewer.id).map((p) => p.name))
   const nameOf = (id: string) => (id === viewer.id ? 'You' : (people.find((p) => p.id === id)?.name ?? 'Someone'))
   const houseOf = (id: string) => (id === viewer.homeId ? 'your place' : (homes.find((h) => h.id === id)?.name ?? 'somewhere'))
 
@@ -116,6 +118,7 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
               <LockIcon />
               {person.name} can't see this page
             </p>
+            {alsoSee && <p className={styles.shared}>{alsoSee} can.</p>}
           </div>
         </>
       }
@@ -243,8 +246,11 @@ export function ShoppingPage({ recipientId }: { recipientId: string }) {
           </Button>
         }
       >
+        <SectionNote>
+          Gifts that aren't on {person.name}'s list.{alsoSee && ` ${alsoSee} see them too, so nobody doubles up.`}
+        </SectionNote>
         {surprises.length === 0 ? (
-          <EmptyRow>Nothing yet. Gifts that aren't on {person.name}'s list go here.</EmptyRow>
+          <EmptyRow>Nothing yet.</EmptyRow>
         ) : (
           <Rows>
             {surprises.map((gift) => (

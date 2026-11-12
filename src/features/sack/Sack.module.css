@@ -17,13 +17,6 @@
   text-wrap: balance;
 }
 
-/* One line under a section's heading */
-.sectionNote {
-  padding: var(--space-3) 0 var(--space-1);
-  font-size: var(--text-sm);
-  color: var(--ink-muted);
-}
-
 /* "Allie's page": as quiet as the Change buttons */
 .pageLink {
   display: inline-flex;

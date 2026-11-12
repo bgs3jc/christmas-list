@@ -25,6 +25,13 @@
   font-weight: 600;
 }
 
+/* Who else can: said once, where it's always in view */
+.shared {
+  margin-top: 2px;
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+}
+
 .favorite {
   display: inline-flex;
   margin-left: var(--space-2);
@@ -85,8 +92,16 @@
 
 .ideaForm {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-2);
-  margin-top: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+/* The label gets its own line above the box and Save */
+.ideaLabel {
+  flex-basis: 100%;
+  font-size: var(--text-sm);
+  font-weight: 700;
 }
 
 .ideaInput {
@@ -99,30 +114,6 @@
   background: var(--white);
 }
 
-/* A narrow list (a phone, or large text): the box gets the whole width so
-   its hint isn't cut off, and Save goes under it. */
-@container (width < 30rem) {
-  .ideaForm {
-    flex-wrap: wrap;
-  }
-
-  .ideaInput {
-    flex-basis: 100%;
-  }
-
-  .ideaInput::placeholder {
-    font-size: var(--text-xs);
-  }
-}
-
-.visuallyHidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
 
 /* In the slim bar on narrower screens */
 @media (width < 60em) {
@@ -135,6 +126,11 @@
   .private {
     justify-content: flex-start;
     margin-top: 2px;
+    font-size: var(--text-xs);
+  }
+
+  .shared {
+    margin-top: 0;
     font-size: var(--text-xs);
   }
 }

@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { addIdea, type Idea, type Person } from '../../data'
 import { Button } from '../../shared/ui/Button'
-import { EmptyRow, ListSection, Row, Rows, TitleNote } from '../../shared/ui/List'
+import { EmptyRow, ListSection, Row, Rows, SectionNote, TitleNote } from '../../shared/ui/List'
 import styles from './Shopping.module.css'
 
 interface OverheardProps {
@@ -27,8 +27,9 @@ export function Overheard({ person, ideas, nameOf, onMakeGift }: OverheardProps)
 
   return (
     <ListSection title="Overheard">
+      <SectionNote>Things {person.name} has mentioned, to remember for later. Nobody's getting these yet.</SectionNote>
       {notes.length === 0 ? (
-        <EmptyRow>Nothing yet. Heard {person.name} mention something? Add it below.</EmptyRow>
+        <EmptyRow>Nothing yet.</EmptyRow>
       ) : (
         <Rows>
           {notes.map((idea) => (
@@ -50,7 +51,7 @@ export function Overheard({ person, ideas, nameOf, onMakeGift }: OverheardProps)
         </Rows>
       )}
       <form onSubmit={save} className={styles.ideaForm}>
-        <label htmlFor="new-idea" className={styles.visuallyHidden}>
+        <label htmlFor="new-idea" className={styles.ideaLabel}>
           Add something you heard
         </label>
         <input
@@ -60,7 +61,6 @@ export function Overheard({ person, ideas, nameOf, onMakeGift }: OverheardProps)
           onChange={(e) => setText(e.target.value)}
           required
           enterKeyHint="done"
-          placeholder={`Heard ${person.name} mention something? Add it here`}
         />
         <Button type="submit">
           Save

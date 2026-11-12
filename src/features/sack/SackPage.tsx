@@ -5,7 +5,7 @@ import { GiftDialog } from '../../shared/GiftDialog'
 import { links } from '../../shared/router'
 import { SnowGlobe } from '../../shared/SnowGlobe'
 import { Button } from '../../shared/ui/Button'
-import { EmptyRow, ListSection, NoteLine, Row, Rows, TitleNote } from '../../shared/ui/List'
+import { EmptyRow, ListSection, NoteLine, Row, Rows, SectionNote, TitleNote } from '../../shared/ui/List'
 import { Shelf } from '../../shared/ui/Shelf'
 import { SantasSack } from './SantasSack'
 import styles from './Sack.module.css'
@@ -42,7 +42,7 @@ export function SackPage() {
     >
       {landing.length > 0 && (
         <ListSection title="Landing at your place">
-          <p className={styles.sectionNote}>Boxes the family is shipping to your house.</p>
+          <SectionNote>Boxes the family is shipping to your house.</SectionNote>
           <Rows>
             {landing.map((gift) => (
               <Row
