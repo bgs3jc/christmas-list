@@ -67,9 +67,7 @@ export function SackPage() {
           }
         >
           {gifts.length === 0 ? (
-            <EmptyRow>
-              Nothing yet. <a href={links.shop(person.id)}>See {person.name}'s list</a>
-            </EmptyRow>
+            <EmptyRow>Nothing yet.</EmptyRow>
           ) : (
             <Rows>
               {gifts.map(({ gift, wish }) => (
