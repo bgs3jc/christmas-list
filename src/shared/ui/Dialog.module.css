@@ -115,6 +115,12 @@
   border-top: 1px solid var(--line-row);
 }
 
+/* "Are you sure?" takes the buttons' place: the question, then two answers */
+.confirmMessage {
+  flex-basis: 100%;
+  font-weight: 600;
+}
+
 @media (width < 40em) {
   .dialog {
     --dialog-top: var(--space-4);

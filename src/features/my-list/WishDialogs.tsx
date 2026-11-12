@@ -3,7 +3,7 @@ import { addWishes, removeWish, updateWish, type WishItem } from '../../data'
 import { storeFromLink } from '../../shared/format'
 import { StarIcon } from '../../shared/icons'
 import { Button } from '../../shared/ui/Button'
-import { Dialog } from '../../shared/ui/Dialog'
+import { Dialog, type DialogConfirm } from '../../shared/ui/Dialog'
 import { TextField } from '../../shared/ui/Form'
 import { parsePaste } from './parsePaste'
 import styles from './MyList.module.css'
@@ -18,11 +18,22 @@ interface WishDialogProps {
 
 const blankToUndefined = (value: string) => value.trim() || undefined
 
-function confirmRemove(item: WishItem, onClose: () => void) {
-  if (window.confirm(`Take "${item.title}" off your list?`)) {
-    removeWish(item.id)
-    onClose()
-  }
+// "Take off my list" asks first, in the pop-up itself.
+function useRemoveWish(item: WishItem | undefined, onClose: () => void) {
+  const [asking, setAsking] = useState(false)
+  const confirm: DialogConfirm | null =
+    item && asking
+      ? {
+          message: `Take "${item.title}" off your list?`,
+          yes: 'Yes, take it off',
+          onYes: () => {
+            removeWish(item.id)
+            onClose()
+          },
+          onNo: () => setAsking(false),
+        }
+      : null
+  return { confirm, ask: () => setAsking(true) }
 }
 
 // "Gimme, gimme, gimme": one specific thing, or several pasted at once.
@@ -32,6 +43,7 @@ export function GimmeDialog({ item, onClose, onAdded }: WishDialogProps) {
   const [nameEdited, setNameEdited] = useState(Boolean(item))
   const [notes, setNotes] = useState(item?.notes ?? '')
   const [topPick, setTopPick] = useState(item?.topPick ?? false)
+  const removal = useRemoveWish(item, onClose)
 
   const pasted = item ? [] : parsePaste(linkText)
   const several = pasted.length > 1
@@ -73,10 +85,11 @@ export function GimmeDialog({ item, onClose, onAdded }: WishDialogProps) {
       title={item ? 'Change this' : 'Gimme, gimme, gimme'}
       onClose={onClose}
       onSubmit={save}
+      confirm={removal.confirm}
       footer={
         <>
           {item && (
-            <Button variant="quiet" className={styles.removeButton} onClick={() => confirmRemove(item, onClose)}>
+            <Button variant="quiet" className={styles.removeButton} onClick={removal.ask}>
               Take off my list
             </Button>
           )}
@@ -149,6 +162,7 @@ export function GimmeDialog({ item, onClose, onAdded }: WishDialogProps) {
 export function MaybeDialog({ item, onClose, onAdded }: WishDialogProps) {
   const [title, setTitle] = useState(item?.title ?? '')
   const [notes, setNotes] = useState(item?.notes ?? '')
+  const removal = useRemoveWish(item, onClose)
 
   function save() {
     if (!title.trim()) return
@@ -163,10 +177,11 @@ export function MaybeDialog({ item, onClose, onAdded }: WishDialogProps) {
       title={item ? 'Change this' : 'An idea…'}
       onClose={onClose}
       onSubmit={save}
+      confirm={removal.confirm}
       footer={
         <>
           {item && (
-            <Button variant="quiet" className={styles.removeButton} onClick={() => confirmRemove(item, onClose)}>
+            <Button variant="quiet" className={styles.removeButton} onClick={removal.ask}>
               Take off my list
             </Button>
           )}

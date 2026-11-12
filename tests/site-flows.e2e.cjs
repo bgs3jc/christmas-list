@@ -37,7 +37,6 @@ async function signIn(browser, email) {
   const errors = []
   page.on('pageerror', (e) => errors.push(String(e)))
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
-  page.on('dialog', (d) => d.accept())
   await page.goto(BASE)
   await page.getByLabel('Your email').fill(email)
   await page.getByLabel('Family password').fill(PASSWORD)
@@ -92,6 +91,8 @@ const settle = (page) => page.waitForTimeout(700)
   // 4. Not getting it after all.
   await row(a, 'Wireless earbuds').getByRole('button', { name: /Change/ }).click()
   await a.getByRole('dialog').getByRole('button', { name: 'Not getting it' }).click()
+  // The pop-up asks first; say yes.
+  await a.getByRole('dialog').getByRole('button', { name: 'Yes, not getting it' }).click()
   await row(a, 'Wireless earbuds').getByText('Needs Santa').waitFor()
   await settle(a)
   check('"Not getting it" deletes the gift', !(await docs('gifts')).some((d) => d.id === g.id))
@@ -210,6 +211,8 @@ const settle = (page) => page.waitForTimeout(700)
   await a.goto(BASE + '#/my-list')
   await a.getByRole('button', { name: 'Change Gooseneck pour-over kettle' }).click()
   await a.getByRole('dialog').getByRole('button', { name: 'Take off my list' }).click()
+  // The pop-up asks first; say yes.
+  await a.getByRole('dialog').getByRole('button', { name: 'Yes, take it off' }).click()
   await settle(a)
   await b.getByText("No longer on Allie's list").waitFor({ timeout: 5000 }).catch(() => {})
   check("Sack: a wish taken off the list shows \"No longer on Allie's list\"", (await row(forAllie, 'Gooseneck pour-over kettle').innerText()).includes("No longer on Allie's list"))

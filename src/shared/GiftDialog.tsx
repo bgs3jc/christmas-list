@@ -81,16 +81,18 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
   // Someone else's gift can be taken off too, but they should hear about it first.
   const giverName = gift && gift.giverId !== viewer.id ? others.find((p) => p.id === gift.giverId)?.name ?? 'someone else' : undefined
 
+  // Removing asks first, in the pop-up itself.
+  const [removing, setRemoving] = useState(false)
+  const removeQuestion = giverName
+    ? `Take off "${gift?.title}"? It's ${giverName}'s gift, so check with them first.`
+    : gift?.wishItemId
+      ? `Not getting "${gift.title}" after all? It goes back to needing a Santa.`
+      : `Not getting "${gift?.title}" after all? It comes off this page.`
+
   function remove() {
-    const message = giverName
-      ? `Take off "${gift?.title}"? It's ${giverName}'s gift, so check with them first.`
-      : gift?.wishItemId
-        ? `Not getting "${gift.title}" after all? It goes back to needing a Santa.`
-        : `Not getting "${gift?.title}" after all? It comes off this page.`
-    if (gift && window.confirm(message)) {
-      removeGift(gift.id)
-      onClose()
-    }
+    if (!gift) return
+    removeGift(gift.id)
+    onClose()
   }
 
   return (
@@ -98,10 +100,15 @@ export function GiftDialog({ setup, recipient, others, homes, viewer, onClose }:
       title={setup.heading}
       onClose={onClose}
       onSubmit={save}
+      confirm={
+        removing
+          ? { message: removeQuestion, yes: giverName ? 'Yes, take it off' : 'Yes, not getting it', onYes: remove, onNo: () => setRemoving(false) }
+          : null
+      }
       footer={
         <>
           {gift && (
-            <Button variant="quiet" className={styles.removeButton} onClick={remove}>
+            <Button variant="quiet" className={styles.removeButton} onClick={() => setRemoving(true)}>
               {giverName ? 'Take it off' : 'Not getting it'}
             </Button>
           )}

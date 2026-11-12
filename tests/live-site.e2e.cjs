@@ -110,7 +110,6 @@ async function signIn(browser, personId) {
   page.errors = []
   page.on('pageerror', (e) => page.errors.push(String(e)))
   page.on('console', (m) => m.type() === 'error' && page.errors.push(m.text()))
-  page.on('dialog', (d) => d.accept())
   if (phone) await page.addInitScript(() => document.addEventListener('DOMContentLoaded', () => (document.documentElement.style.fontSize = '120%')))
   page.person = personId
 
@@ -289,6 +288,8 @@ async function run(browser, realSecrets) {
       // Take one off.
       await pg.getByRole('button', { name: `Change ${T(`${name} pasted two`)}` }).click()
       await dialog(pg).getByRole('button', { name: 'Take off my list' }).click()
+      // The pop-up asks first; say yes.
+      await dialog(pg).getByRole('button', { name: 'Yes, take it off' }).click()
       await settle(pg)
       const gone = await eventually(async () => !(await A.list('wishes')).some((w) => w.data.title === T(`${name} pasted two`)))
       await check(`${name}: Take off my list removes it`, gone, pg)
@@ -342,6 +343,8 @@ async function run(browser, realSecrets) {
 
     await row(a, kevinWish).getByRole('button', { name: /Change/ }).click()
     await dialog(a).getByRole('button', { name: 'Not getting it' }).click()
+    // The pop-up asks first; say yes.
+    await dialog(a).getByRole('button', { name: 'Yes, not getting it' }).click()
     await row(a, kevinWish).getByText('Needs Santa').waitFor()
     await check('"Not getting it" deletes the gift and the wish needs a Santa again', await eventually(async () => !(await A.list('gifts')).some((x) => x.id === g.id)), a)
 
@@ -469,6 +472,8 @@ async function run(browser, realSecrets) {
     await go(ap, '#/shop/kevin', 'Kevin')
     await row(ap, T('surprise for Kevin from Allie')).first().getByRole('button', { name: /Change/ }).click()
     await dialog(ap).getByRole('button', { name: 'Take it off' }).click()
+    // The pop-up asks first; say yes.
+    await dialog(ap).getByRole('button', { name: 'Yes, take it off' }).click()
     await settle(ap)
     await check("Take it off removes Allie's gift", await eventually(async () => !(await A.list('gifts')).some((x) => x.data.title === T('surprise for Kevin from Allie'))), ap)
   })
@@ -502,6 +507,8 @@ async function run(browser, realSecrets) {
     await go(a, '#/my-list', 'My list')
     await a.getByRole('button', { name: `Change ${T("Allie's wish")}` }).click()
     await dialog(a).getByRole('button', { name: 'Take off my list' }).click()
+    // The pop-up asks first; say yes.
+    await dialog(a).getByRole('button', { name: 'Yes, take it off' }).click()
     await settle(a)
     await go(shipper, '#/sack', "Santa's sack")
     const gone = await shipper.getByText("No longer on Allie's list").first().waitFor({ timeout: 10000 }).then(() => true, () => false)
