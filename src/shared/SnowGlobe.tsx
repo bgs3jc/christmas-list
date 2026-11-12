@@ -70,6 +70,8 @@ export function SnowGlobe({ size = 220, gifts, label, scene }: SnowGlobeProps) {
           <circle cx="168" cy="82" r="1.8" />
         </g>
       </g>
+      {/* The glass's edge, so the snowy bottom doesn't melt into the paper */}
+      <circle cx="110" cy="108" r="91" className={styles.glass} />
       <path d="M44 74 A72 72 0 0 1 98 28 L101 37 A63 63 0 0 0 54 78 Z" className={styles.glare} />
       <path d="M34 192h152l14 56H20z" className={styles.base} />
       <path d="M118 192h68l14 56h-74z" className={styles.baseShade} />

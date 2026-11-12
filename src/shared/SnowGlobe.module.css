@@ -72,6 +72,12 @@
 }
 
 /* A hard sliver of light on the glass, like a print's highlight */
+.glass {
+  fill: none;
+  stroke: var(--globe-shadow);
+  stroke-width: 2;
+}
+
 .glare {
   fill: var(--globe-snow);
 }
