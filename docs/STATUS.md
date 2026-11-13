@@ -2,7 +2,7 @@
 
 Update this at the end of every session. Keep it short.
 
-**Last updated:** 2026-11-10 (M5 finish chat: family password, real-site test, launch email)
+**Last updated:** 2026-11-13 (UI polish chat: polish pass, who-sees-what wording, in-page "are you sure?")
 
 ## Where things stand
 
@@ -29,11 +29,12 @@ Update this at the end of every session. Keep it short.
 - **UX review (2026-10-29):** ten findings, all approved and built: rows show everything, undo in the row, phone rows wrap, one add-pop-up pattern, Overheard notes move into gifts, contrast, short Amazon links, feedback when adding. Details in `DECISIONS.md`.
 - **Modern web pass (2026-10-29):** checked against Google Chrome's Modern Web Guidance. Layout follows the phone's text size, pop-ups don't close on a stray click, Save buttons are never greyed out, reduced motion per animation. Details in `DECISIONS.md`.
 - **Pre-launch review (2026-11-10):** what would make December clearly better than the spreadsheets. Brady kept seven items and turned down the rest, including anything for wrapping night; both lists are in `DECISIONS.md`. **All seven are built** (see "Pre-launch build" below).
+- **UI polish pass (2026-11-13), live:** twelve small fixes (44px tap targets, rows lined up with their headings, phone wrapping, pop-up text boxes that grow) plus four bigger ones Brady picked: "are you sure?" inside the pop-up, shopping pages that say who sees what, an edge on the globes' glass, one link per person in Santa's sack. One commit each; before/after screenshots at https://claude.ai/artifact/Hr4G6PQFKJEU3xLsMDZ4XN (private). Details in `DECISIONS.md` (2026-11-13). No change to `firestore.rules` or the data shapes, so nothing to publish.
 - **Lessons:** Brady's click-through finds what self-testing doesn't (bookkeeping nobody would keep up). Default to fewer states and fewer fields. When a fix is clear, build it. Mockups show only two widths: check the in-between widths (tablets, large text) before building. Brady prefers one row of choices over stacked blocks.
 
 ## Next steps
 
-1. **Brady: launch (M6) when ready.** Optional first: the UI polish pass (Brady has the starter prompt from the M5 chat; it works on a branch and shows before/after screenshots before anything reaches `main`). Then send the launch email below to April, Allie and Kevin, each at the address they sign in with.
+1. **Brady: launch (M6) when ready** (April is already using it: her text, 2026-11-12). The UI polish pass is done. Send the launch email below to April, Allie and Kevin, each at the address they sign in with.
    - **Allie and Kevin: the family password, not "Sign in with Google".** Google sign-in replaces their password account (their emails are Gmail), and the family password then stops working for them. Brady's email doesn't say this; if it happens, delete their account in Authentication > Users and Claude makes it again. Details in `FIREBASE-SETUP.md`.
    - **April:** a Safari bookmark is the safe choice. "Add to Home Screen" should work too (she'd type the password once more there), but it's untested on a real iPhone.
 2. **Brady: Naughty or Nice.** Firebase console > **Firestore** > **Data** tab > `people` > click a person (`allie`, `april`, `brady`, `kevin`). If there's no `santasList` field: **+ Add field**, Field `santasList`, Type `string`, Value `nice`, **Add**. If there is one: hover its value, click the pencil, change it, **Update**. The choices are `nice`, `fence` (on the fence) and `naughty`, all lowercase. Each person sees their own tag on My list. The site can't change it (the rules refuse), only the console.
